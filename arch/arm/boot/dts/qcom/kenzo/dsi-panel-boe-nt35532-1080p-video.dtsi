@@ -436,6 +436,9 @@
 				05 01 00 00 00 00 02 29 00];
 		qcom,mdss-dsi-off-command = [05 01 00 00 96 00 02 28 00
 				05 01 00 00 96 00 02 10 00];
+		cm,mdss-livedisplay-sre-weak-value = <0x50>;
+		cm,mdss-livedisplay-sre-medium-value = <0x60>;
+		cm,mdss-livedisplay-sre-strong-value = <0x70>;
 		qcom,mdss-dsi-on-command-state = "dsi_lp_mode";
 		qcom,mdss-dsi-off-command-state = "dsi_lp_mode";
 		qcom,mdss-dsi-bl-pmic-control-type = "bl_ctrl_wled";
