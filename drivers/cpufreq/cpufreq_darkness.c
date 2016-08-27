@@ -81,7 +81,7 @@ static atomic_t max_freq_limit[NR_CPUS];*/
 static struct darkness_tuners {
 	atomic_t sampling_rate;
 } darkness_tuners_ins = {
-	.sampling_rate = ATOMIC_INIT(55000),
+	.sampling_rate = ATOMIC_INIT(30000),
 };
 
 
