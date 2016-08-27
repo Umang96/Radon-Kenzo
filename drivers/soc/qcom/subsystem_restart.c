@@ -973,7 +973,7 @@ static void device_restart_work_hdlr(struct work_struct *work)
 	panic("subsys-restart: Resetting the SoC - %s crashed.",
 							dev->desc->name);
 }
-
+extern int download_mode;
 int subsystem_restart_dev(struct subsys_device *dev)
 {
 	const char *name;
@@ -998,7 +998,9 @@ int subsystem_restart_dev(struct subsys_device *dev)
 		pr_err("%s crashed during a system poweroff/shutdown.\n", name);
 		return -EBUSY;
 	}
-
+	if (download_mode == 0) {
+		dev->restart_level = 1;
+	}
 	pr_info("Restart sequence requested for %s, restart_level = %s.\n",
 		name, restart_levels[dev->restart_level]);
 
