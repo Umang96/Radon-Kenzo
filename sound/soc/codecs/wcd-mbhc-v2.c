@@ -819,6 +819,7 @@ static void wcd_mbhc_find_plug_and_report(struct wcd_mbhc *mbhc,
 			WCD_MBHC_REG_UPDATE_BITS(WCD_MBHC_FSM_EN, 0);
 			WCD_MBHC_REG_UPDATE_BITS(WCD_MBHC_BTN_ISRC_CTL, 0);
 			mbhc->mbhc_cb->mbhc_micbias_control(mbhc->codec,
+				mbhc->mbhc_cfg->anc_micbias,
 				MICB_PULLUP_DISABLE);
 			/* Setup for insertion detection */
 			WCD_MBHC_REG_UPDATE_BITS(WCD_MBHC_ELECT_DETECTION_TYPE,
@@ -991,6 +992,7 @@ static void wcd_mbhc_update_fsm_source(struct wcd_mbhc *mbhc,
 	case MBHC_PLUG_TYPE_ANC_HEADPHONE:
 		WCD_MBHC_REG_UPDATE_BITS(WCD_MBHC_BTN_ISRC_CTL, 0);
 		mbhc->mbhc_cb->mbhc_micbias_control(mbhc->codec,
+			mbhc->mbhc_cfg->anc_micbias,
 			MICB_PULLUP_ENABLE);
 		break;
 	default:
@@ -1487,6 +1489,7 @@ static void wcd_mbhc_swch_irq_handler(struct wcd_mbhc *mbhc)
 		WCD_MBHC_REG_UPDATE_BITS(WCD_MBHC_FSM_EN, 0);
 		WCD_MBHC_REG_UPDATE_BITS(WCD_MBHC_BTN_ISRC_CTL, 0);
 		mbhc->mbhc_cb->mbhc_micbias_control(mbhc->codec,
+			mbhc->mbhc_cfg->anc_micbias,
 			MICB_PULLUP_DISABLE);
 		if (mbhc->mbhc_cb->mbhc_common_micb_ctrl)
 			mbhc->mbhc_cb->mbhc_common_micb_ctrl(codec,
