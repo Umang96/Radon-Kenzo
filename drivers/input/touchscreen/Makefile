@@ -92,3 +92,4 @@ obj-y	+= lct_ctp_selftest.o
 obj-y	+= lct_ctp_upgrade.o
 obj-y	+= lct_if_ctp_upgrade.o
 obj-$(CONFIG_TOUCHSCREEN_GESTURE)	+= lct_ctp_gesture.o
+obj-$(CONFIG_WAKE_GESTURES)		+= wake_gestures.o
