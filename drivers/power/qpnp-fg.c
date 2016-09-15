@@ -1500,10 +1500,7 @@ static int fg_mem_masked_write(struct fg_chip *chip, u16 addr,
 
 static int soc_to_setpoint(int soc)
 {
-	if (soc == 0)
-		return 1;
-	else
-		return DIV_ROUND_CLOSEST(soc * 255, 100);
+	return DIV_ROUND_CLOSEST(soc * 255, 100);
 }
 
 static void batt_to_setpoint_adc(int vbatt_mv, u8 *data)
