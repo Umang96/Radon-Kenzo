@@ -2632,7 +2632,7 @@ unsigned long sched_get_busy(int cpu)
 	 * that the window stats are current by doing an update.
 	 */
 	raw_spin_lock_irqsave(&rq->lock, flags);
-	update_task_ravg(rq->curr, rq, TASK_UPDATE, sched_clock(), 0);
+	update_task_ravg(rq->curr, rq, TASK_UPDATE, sched_ktime_clock(), 0);
 	load = rq->old_busy_time = rq->prev_runnable_sum;
 
 	/*
