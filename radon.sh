@@ -1,7 +1,7 @@
 #
 # Custom build script for Radon kernel
 #
-# Copyright 2016 Umang Leekha
+# Copyright 2016 Umang Leekha (Umang96@xda)
 #
 # This software is licensed under the terms of the GNU General Public
 # License version 2, as published by the Free Software Foundation, and
@@ -20,7 +20,7 @@ white='\033[0m'
 red='\033[0;31m'
 gre='\e[0;32m'
 echo -e ""
-echo -e "$yellow ====================================\n Welcome to Radon building program !\n ====================================\n 1.Build Radon stable version\n 2.Build Radon test version"
+echo -e "$yellow ====================================\n\n Welcome to Radon building program !\n\n ====================================\n\n 1.Build Radon stable version\n\n 2.Build Radon test version\n"
 echo -n " Enter your choice:"
 read choice
 echo -e "$white"
@@ -55,9 +55,9 @@ echo -e "$red << Failed to compile zImage, fix the errors first >>$white"
 else
 cd $KERNEL_DIR/build
 if [ $choice == 2 ]; then
-zip -r Radon-Kenzo-Test-$time-Cm.zip *
+zip -r Radon-Kenzo-Test-$time.zip *
 else
-zip -r Radon-Kenzo-Stable-Cm.zip *
+zip -r Radon-Kenzo-Stable.zip *
 fi
 End=$(date +"%s")
 Diff=$(($End - $Start))
