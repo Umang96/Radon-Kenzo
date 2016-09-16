@@ -520,6 +520,9 @@ repeat:
 		return;
 	}
 
+	if (unlikely(dentry->d_flags & DCACHE_DISCONNECTED))
+		goto kill_it;
+
 	if (dentry->d_flags & DCACHE_OP_DELETE) {
 		if (dentry->d_op->d_delete(dentry))
 			goto kill_it;
@@ -1308,7 +1311,7 @@ struct dentry *d_alloc(struct dentry * parent, const struct qstr *name)
 	struct dentry *dentry = __d_alloc(parent->d_sb, name);
 	if (!dentry)
 		return NULL;
-
+	dentry->d_flags |= DCACHE_RCUACCESS;
 	spin_lock(&parent->d_lock);
 	/*
 	 * don't need child lock because it is not subject
@@ -2098,7 +2101,6 @@ static void __d_rehash(struct dentry * entry, struct hlist_bl_head *b)
 {
 	BUG_ON(!d_unhashed(entry));
 	hlist_bl_lock(b);
-	entry->d_flags |= DCACHE_RCUACCESS;
 	hlist_bl_add_head_rcu(&entry->d_hash, b);
 	hlist_bl_unlock(b);
 }
@@ -2282,6 +2284,7 @@ static void __d_move(struct dentry * dentry, struct dentry * target)
 
 	/* ... and switch the parents */
 	if (IS_ROOT(dentry)) {
+		dentry->d_flags |= DCACHE_RCUACCESS;
 		dentry->d_parent = target->d_parent;
 		target->d_parent = target;
 		INIT_LIST_HEAD(&target->d_child);
@@ -2398,6 +2401,7 @@ static void __d_materialise_dentry(struct dentry *dentry, struct dentry *anon)
 	switch_names(dentry, anon);
 	swap(dentry->d_name.hash, anon->d_name.hash);
 
+	dentry->d_flags |= DCACHE_RCUACCESS;
 	dentry->d_parent = dentry;
 	list_del_init(&dentry->d_child);
 	anon->d_parent = dparent;
@@ -2531,6 +2535,8 @@ static int prepend_path(const struct path *path,
 	struct dentry *dentry = path->dentry;
 	struct vfsmount *vfsmnt = path->mnt;
 	struct mount *mnt = real_mount(vfsmnt);
+	char *orig_buffer = *buffer;
+	int orig_len = *buflen;
 	bool slash = false;
 	int error = 0;
 
@@ -2538,6 +2544,14 @@ static int prepend_path(const struct path *path,
 		struct dentry * parent;
 
 		if (dentry == vfsmnt->mnt_root || IS_ROOT(dentry)) {
+			/* Escaped? */
+			if (dentry != vfsmnt->mnt_root) {
+				*buffer = orig_buffer;
+				*buflen = orig_len;
+				slash = false;
+				error = 3;
+				goto global_root;
+			}
 			/* Global root? */
 			if (!mnt_has_parent(mnt))
 				goto global_root;
@@ -2566,15 +2580,6 @@ static int prepend_path(const struct path *path,
 	return error;
 
 global_root:
-	/*
-	 * Filesystems needing to implement special "root names"
-	 * should do so with ->d_dname()
-	 */
-	if (IS_ROOT(dentry) &&
-	    (dentry->d_name.len != 1 || dentry->d_name.name[0] != '/')) {
-		WARN(1, "Root dentry has weird name <%.*s>\n",
-		     (int) dentry->d_name.len, dentry->d_name.name);
-	}
 	if (!slash)
 		error = prepend(buffer, buflen, "/", 1);
 	if (!error)
