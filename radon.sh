@@ -12,7 +12,7 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
-# Please maintain this if you use this script or any part of it
+# Please maintain this if you use this script or any part of it.
 #
 
 yellow='\033[0;33m'
@@ -45,7 +45,6 @@ rm -rf $KEREL_DIR/build/system
 mkdir -p $KERNEL_DIR/build/system/lib/modules
 cp $KERNEL_DIR/drivers/staging/prima/wlan.ko $KERNEL_DIR/build/system/lib/modules/wlan.ko
 cd $KERNEL_DIR/build
-rm *.zip
 cd $KERNEL_DIR/build/system/lib/modules/
 $STRIP --strip-unneeded *.ko
 zimage=$KERNEL_DIR/arch/arm64/boot/Image
@@ -54,6 +53,7 @@ then
 echo -e "$red << Failed to compile zImage, fix the errors first >>$white"
 else
 cd $KERNEL_DIR/build
+rm *.zip
 if [ $choice == 2 ]; then
 zip -r Radon-Kenzo-Test-$time.zip *
 else
