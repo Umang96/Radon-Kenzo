@@ -96,3 +96,4 @@ x509.genkey
 build/*.zip
 build/tools/dt.img
 build/tools/Image
+build/tools/Imageg

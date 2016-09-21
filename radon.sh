@@ -23,6 +23,9 @@ echo -e ""
 echo -e "$yellow ====================================\n\n Welcome to Radon building program !\n\n ====================================\n\n 1.Build Radon stable version\n\n 2.Build Radon test version\n"
 echo -n " Enter your choice:"
 read choice
+echo -e "\n"
+echo -n " Make gestures version (y/n):"
+read gestures
 echo -e "$white"
 Start=$(date +"%s")
 KERNEL_DIR=$PWD
@@ -40,7 +43,11 @@ make -j4
 time=$(date +"%d-%m-%y-%T")
 $DTBTOOL -2 -o $KERNEL_DIR/arch/arm64/boot/dt.img -s 2048 -p $KERNEL_DIR/scripts/dtc/ $KERNEL_DIR/arch/arm/boot/dts/
 mv $KERNEL_DIR/arch/arm64/boot/dt.img $KERNEL_DIR/build/tools/dt.img
+if [ $gestures == "y" ]; then
+cp $KERNEL_DIR/arch/arm64/boot/Image $KERNEL_DIR/build/tools/Imageg
+elif [ $gestures == "n" ]; then
 cp $KERNEL_DIR/arch/arm64/boot/Image $KERNEL_DIR/build/tools/Image
+fi
 rm -rf $KEREL_DIR/build/system
 mkdir -p $KERNEL_DIR/build/system/lib/modules
 cp $KERNEL_DIR/drivers/staging/prima/wlan.ko $KERNEL_DIR/build/system/lib/modules/wlan.ko
