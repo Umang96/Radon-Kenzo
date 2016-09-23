@@ -95,5 +95,5 @@ x509.genkey
 # Compiled kernel
 build/*.zip
 build/tools/dt.img
-build/tools/Image
-build/tools/Imageg
+build/tools/Image1
+build/tools/Image2

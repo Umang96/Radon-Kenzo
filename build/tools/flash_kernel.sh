@@ -16,12 +16,11 @@
  # Please maintain this if you use this script or any part of it
  #
 GESTURES=$(cat /tmp/aroma/gestures.prop | cut -d '=' -f2)
-if [ $GESTURES = 2 ]; then
-zim=/tmp/Image
-elif [ $GESTURES = 1 ]; then
-zim=/tmp/Imageg
+if [ $GESTURES = 1 ]; then
+zim=/tmp/Image1
+elif [ $GESTURES = 2 ]; then
+zim=/tmp/Image2
 fi
-echo "test $GESTURES"
 cd /tmp/
 /sbin/busybox dd if=/dev/block/bootdevice/by-name/boot of=./boot.img
 ./unpackbootimg -i /tmp/boot.img

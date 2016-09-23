@@ -20,7 +20,7 @@ white='\033[0m'
 red='\033[0;31m'
 gre='\e[0;32m'
 echo -e ""
-echo -e "$yellow ====================================\n\n Welcome to Radon building program !\n\n ====================================\n\n 1.Build Radon stable version\n\n 2.Build Radon test version\n"
+echo -e "$gre ====================================\n\n Welcome to Radon building program !\n\n ====================================\n\n 1.Build Radon stable version\n\n 2.Build Radon test version\n"
 echo -n " Enter your choice:"
 read choice
 echo -e "\n"
@@ -35,7 +35,16 @@ export ARCH=arm64
 export CROSS_COMPILE="/home/umang/toolchain/aarch64-linux-linaro-android-4.9/bin/aarch64-linux-android-"
 export LD_LIBRARY_PATH=home/umang/toolchain/aarch64-linux-linaro-android-4.9/lib/
 STRIP="/home/umang/toolchain/aarch64-linux-linaro-android-4.9/bin/aarch64-linux-android-strip"
+cp $KERNEL_DIR/build/modules/wlan1.ko ~/wlan1.ko
+cp $KERNEL_DIR/build/modules/wlan2.ko ~/wlan2.ko
 make clean
+mv ~/wlan1.ko $KERNEL_DIR/build/modules/wlan1.ko
+mv ~/wlan2.ko $KERNEL_DIR/build/modules/wlan2.ko
+if [ $gestures == "y" ]; then
+echo "CONFIG_WAKE_GESTURES=y" >> $KERNEL_DIR/arch/arm64/configs/cyanogenmod_kenzo_defconfig
+elif [ $gestures == "n" ]; then
+echo "CONFIG_WAKE_GESTURES=n" >> $KERNEL_DIR/arch/arm64/configs/cyanogenmod_kenzo_defconfig
+fi
 make cyanogenmod_kenzo_defconfig
 export KBUILD_BUILD_HOST="G5070"
 export KBUILD_BUILD_USER="Umang"
@@ -44,16 +53,16 @@ time=$(date +"%d-%m-%y-%T")
 $DTBTOOL -2 -o $KERNEL_DIR/arch/arm64/boot/dt.img -s 2048 -p $KERNEL_DIR/scripts/dtc/ $KERNEL_DIR/arch/arm/boot/dts/
 mv $KERNEL_DIR/arch/arm64/boot/dt.img $KERNEL_DIR/build/tools/dt.img
 if [ $gestures == "y" ]; then
-cp $KERNEL_DIR/arch/arm64/boot/Image $KERNEL_DIR/build/tools/Imageg
+cp $KERNEL_DIR/arch/arm64/boot/Image $KERNEL_DIR/build/tools/Image1
+cp $KERNEL_DIR/drivers/staging/prima/wlan.ko $KERNEL_DIR/build/modules/wlan1.ko
+cd $KERNEL_DIR/build/modules/
+$STRIP --strip-unneeded wlan1.ko
 elif [ $gestures == "n" ]; then
-cp $KERNEL_DIR/arch/arm64/boot/Image $KERNEL_DIR/build/tools/Image
+cp $KERNEL_DIR/arch/arm64/boot/Image $KERNEL_DIR/build/tools/Image2
+cp $KERNEL_DIR/drivers/staging/prima/wlan.ko $KERNEL_DIR/build/modules/wlan2.ko
+cd $KERNEL_DIR/build/modules/
+$STRIP --strip-unneeded wlan2.ko
 fi
-rm -rf $KEREL_DIR/build/system
-mkdir -p $KERNEL_DIR/build/system/lib/modules
-cp $KERNEL_DIR/drivers/staging/prima/wlan.ko $KERNEL_DIR/build/system/lib/modules/wlan.ko
-cd $KERNEL_DIR/build
-cd $KERNEL_DIR/build/system/lib/modules/
-$STRIP --strip-unneeded *.ko
 zimage=$KERNEL_DIR/arch/arm64/boot/Image
 if ! [ -a $zimage ];
 then
@@ -71,3 +80,5 @@ Diff=$(($End - $Start))
 echo -e "$gre << Build completed in $(($Diff / 60)) minutes and $(($Diff % 60)) seconds >>$white"
 fi
 cd $KERNEL_DIR
+head -n -1 $KERNEL_DIR/arch/arm64/configs/cyanogenmod_kenzo_defconfig > $KERNEL_DIR/arch/arm64/configs/temp
+mv $KERNEL_DIR/arch/arm64/configs/temp $KERNEL_DIR/arch/arm64/configs/cyanogenmod_kenzo_defconfig
