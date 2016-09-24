@@ -26,7 +26,7 @@ viewbox(
 );
 
 selectbox(
-  "\nWant To Include Gestures ?","<@center><b>\nIncluding gestures will consume little more battery.\n</b></@>","","gestures.prop",
+  "\nWant To Include Gestures ?","<@center><b>\n\n\n\n\n\nRemember !\n\nIncluding gestures will consume little more battery.\n</b></@>","","gestures.prop",
   "Yes, I want gestures","",0,
   "No, I don't want gestures","",1
 );

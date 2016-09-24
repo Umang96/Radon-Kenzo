@@ -46,8 +46,8 @@ elif [ $gestures == "n" ]; then
 echo "CONFIG_WAKE_GESTURES=n" >> $KERNEL_DIR/arch/arm64/configs/cyanogenmod_kenzo_defconfig
 fi
 make cyanogenmod_kenzo_defconfig
-export KBUILD_BUILD_HOST="G5070"
-export KBUILD_BUILD_USER="Umang"
+export KBUILD_BUILD_HOST="lenovo"
+export KBUILD_BUILD_USER="umang"
 make -j4
 time=$(date +"%d-%m-%y-%T")
 $DTBTOOL -2 -o $KERNEL_DIR/arch/arm64/boot/dt.img -s 2048 -p $KERNEL_DIR/scripts/dtc/ $KERNEL_DIR/arch/arm/boot/dts/
@@ -71,9 +71,9 @@ else
 cd $KERNEL_DIR/build
 rm *.zip
 if [ $choice == 2 ]; then
-zip -r Radon-Kenzo-Test-$time.zip *
+zip -r Radon-Kenzo-Test-$time-Cm-Mm.zip *
 else
-zip -r Radon-Kenzo-Stable.zip *
+zip -r Radon-Kenzo-Stable-Cm-Mm.zip *
 fi
 End=$(date +"%s")
 Diff=$(($End - $Start))
