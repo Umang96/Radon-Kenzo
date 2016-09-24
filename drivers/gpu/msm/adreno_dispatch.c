@@ -436,8 +436,7 @@ static struct kgsl_cmdbatch *_get_cmdbatch(struct adreno_context *drawctxt)
 		 * it hasn't already been started
 		 */
 		if (!cmdbatch->timeout_jiffies) {
-			cmdbatch->timeout_jiffies =
-				jiffies + msecs_to_jiffies(5000);
+			cmdbatch->timeout_jiffies = jiffies + 5 * HZ;
 			mod_timer(&cmdbatch->timer, cmdbatch->timeout_jiffies);
 		}
 
