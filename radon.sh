@@ -20,30 +20,31 @@ white='\033[0m'
 red='\033[0;31m'
 gre='\e[0;32m'
 echo -e ""
-echo -e "$gre ====================================\n\n Welcome to Radon building program !\n\n ====================================\n\n 1.Build Radon stable version\n\n 2.Build Radon test version\n"
+echo -e "$gre ====================================\n\n Welcome to Radon building program !\n\n ====================================\n\n 1.Build Radon kenzo fpc1020\n\n 2.Build Radon kenzo goodix\n"
 echo -n " Enter your choice:"
-read choice
-echo -e "\n"
-echo -n " Make gestures version (y/n):"
-read gestures
+read goodix
 echo -e "$white"
+cd arch/arm/boot/dts/
+rm .msm8956*
+rm *.dtb
+cd $KERNEL_DIR
 Start=$(date +"%s")
 KERNEL_DIR=$PWD
 DTBTOOL=$KERNEL_DIR/dtbTool
 cd $KERNEL_DIR
 export ARCH=arm64
-export CROSS_COMPILE="/home/umang/toolchain/aarch64-linux-linaro-android-4.9/bin/aarch64-linux-android-"
-export LD_LIBRARY_PATH=home/umang/toolchain/aarch64-linux-linaro-android-4.9/lib/
-STRIP="/home/umang/toolchain/aarch64-linux-linaro-android-4.9/bin/aarch64-linux-android-strip"
+export CROSS_COMPILE="/home/$USER/toolchain/aarch64-linux-linaro-android-4.9/bin/aarch64-linux-android-"
+export LD_LIBRARY_PATH=home/$USER/toolchain/aarch64-linux-linaro-android-4.9/lib/
+STRIP="/home/$USER/toolchain/aarch64-linux-linaro-android-4.9/bin/aarch64-linux-android-strip"
 cp $KERNEL_DIR/build/modules/wlan1.ko ~/wlan1.ko
 cp $KERNEL_DIR/build/modules/wlan2.ko ~/wlan2.ko
 make clean
 mv ~/wlan1.ko $KERNEL_DIR/build/modules/wlan1.ko
 mv ~/wlan2.ko $KERNEL_DIR/build/modules/wlan2.ko
-if [ $gestures == "y" ]; then
-echo "CONFIG_WAKE_GESTURES=y" >> $KERNEL_DIR/arch/arm64/configs/cyanogenmod_kenzo_defconfig
-elif [ $gestures == "n" ]; then
-echo "CONFIG_WAKE_GESTURES=n" >> $KERNEL_DIR/arch/arm64/configs/cyanogenmod_kenzo_defconfig
+if [ $goodix == 2 ]; then
+git apply goodix.patch
+elif [ $goodix == 1 ]; then
+git apply -R goodix.patch
 fi
 make cyanogenmod_kenzo_defconfig
 export KBUILD_BUILD_HOST="lenovo"
@@ -51,15 +52,16 @@ export KBUILD_BUILD_USER="umang"
 make -j4
 time=$(date +"%d-%m-%y-%T")
 $DTBTOOL -2 -o $KERNEL_DIR/arch/arm64/boot/dt.img -s 2048 -p $KERNEL_DIR/scripts/dtc/ $KERNEL_DIR/arch/arm/boot/dts/
-mv $KERNEL_DIR/arch/arm64/boot/dt.img $KERNEL_DIR/build/tools/dt.img
-if [ $gestures == "y" ]; then
+if [ $goodix == 1 ]; then
 cp $KERNEL_DIR/arch/arm64/boot/Image $KERNEL_DIR/build/tools/Image1
 cp $KERNEL_DIR/drivers/staging/prima/wlan.ko $KERNEL_DIR/build/modules/wlan1.ko
+mv $KERNEL_DIR/arch/arm64/boot/dt.img $KERNEL_DIR/build/tools/dt1.img
 cd $KERNEL_DIR/build/modules/
 $STRIP --strip-unneeded wlan1.ko
-elif [ $gestures == "n" ]; then
+elif [ $goodix == 2 ]; then
 cp $KERNEL_DIR/arch/arm64/boot/Image $KERNEL_DIR/build/tools/Image2
 cp $KERNEL_DIR/drivers/staging/prima/wlan.ko $KERNEL_DIR/build/modules/wlan2.ko
+mv $KERNEL_DIR/arch/arm64/boot/dt.img $KERNEL_DIR/build/tools/dt2.img
 cd $KERNEL_DIR/build/modules/
 $STRIP --strip-unneeded wlan2.ko
 fi
@@ -70,15 +72,12 @@ echo -e "$red << Failed to compile zImage, fix the errors first >>$white"
 else
 cd $KERNEL_DIR/build
 rm *.zip
-if [ $choice == 2 ]; then
-zip -r Radon-Kenzo-Test-$time-Cm-Mm.zip *
-else
 zip -r Radon-Kenzo-Stable-Cm-Mm.zip *
-fi
 End=$(date +"%s")
 Diff=$(($End - $Start))
 echo -e "$gre << Build completed in $(($Diff / 60)) minutes and $(($Diff % 60)) seconds >>$white"
 fi
 cd $KERNEL_DIR
-head -n -1 $KERNEL_DIR/arch/arm64/configs/cyanogenmod_kenzo_defconfig > $KERNEL_DIR/arch/arm64/configs/temp
-mv $KERNEL_DIR/arch/arm64/configs/temp $KERNEL_DIR/arch/arm64/configs/cyanogenmod_kenzo_defconfig
+if [ $goodix == 2 ]; then
+git apply -R goodix.patch
+fi
