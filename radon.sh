@@ -24,12 +24,12 @@ echo -e "$gre ====================================\n\n Welcome to Radon building
 echo -n " Enter your choice:"
 read goodix
 echo -e "$white"
+KERNEL_DIR=$PWD
 cd arch/arm/boot/dts/
 rm .msm8956*
 rm *.dtb
 cd $KERNEL_DIR
 Start=$(date +"%s")
-KERNEL_DIR=$PWD
 DTBTOOL=$KERNEL_DIR/dtbTool
 cd $KERNEL_DIR
 export ARCH=arm64
@@ -72,7 +72,7 @@ echo -e "$red << Failed to compile zImage, fix the errors first >>$white"
 else
 cd $KERNEL_DIR/build
 rm *.zip
-zip -r Radon-Kenzo-Stable-Cm-Mm.zip *
+zip -r Radon-Kenzo-Cm-Mm.zip *
 End=$(date +"%s")
 Diff=$(($End - $Start))
 echo -e "$gre << Build completed in $(($Diff / 60)) minutes and $(($Diff % 60)) seconds >>$white"
