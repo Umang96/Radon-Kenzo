@@ -1607,7 +1607,12 @@ int msm_sensor_check_id(struct msm_sensor_ctrl_t *s_ctrl)
 			CDBG("%s: It is old s5k5e8 lens\n", __func__);
 		else
 			goto sensor_error;
-	}
+	} else if (strcmp(s_ctrl->sensordata->sensor_name, "s5k5e8_yx13") == 0) {
+                if(g_s5k5e8_otp_lens_id)
+                        CDBG("%s: It is new s5k5e8 lens\n", __func__);
+                else
+                        goto sensor_error;
+        }
 
 	return rc;
 
