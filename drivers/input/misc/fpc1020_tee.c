@@ -145,7 +145,10 @@ static int hw_reset(struct fpc1020_data *fpc1020)
 	irq_gpio = gpio_get_value(fpc1020->irq_gpio);
 
 	dev_info(dev, "IRQ after reset %d\n", irq_gpio);
-	return 0;
+	if (irq_gpio == 0)
+		return -1;
+	else
+		return 0;
 }
 
 static ssize_t hw_reset_set(struct device *dev,
@@ -271,6 +274,7 @@ static int fpc1020_probe(struct platform_device* pdev)
 	struct device *dev = &pdev->dev;
 	int rc = 0;
 	int irqf;
+	int irq;
 	struct device_node *np = dev->of_node;
 
 	struct fpc1020_data *fpc1020 = devm_kzalloc(dev, sizeof(*fpc1020),
@@ -336,7 +340,9 @@ static int fpc1020_probe(struct platform_device* pdev)
 
 	wake_lock_init(&fpc1020->ttw_wl, WAKE_LOCK_SUSPEND, "fpc_ttw_wl");
 
-	hw_reset(fpc1020);
+	irq = hw_reset(fpc1020);
+	if (irq < 0)
+		goto not_irq;
 
 	rc = sysfs_create_group(&dev->kobj, &attribute_group);
 	if (rc) {
@@ -347,6 +353,14 @@ static int fpc1020_probe(struct platform_device* pdev)
 	dev_info(dev, "%s: ok\n", __func__);
 exit:
 	return rc;
+
+not_irq:
+	sysfs_remove_group(&fpc1020->dev->kobj, &attribute_group);
+	mutex_destroy(&fpc1020->lock);
+	wake_lock_destroy(&fpc1020->ttw_wl);
+	(void)vreg_setup(fpc1020, "vcc_spi", false);
+	dev_info(fpc1020->dev, "NOT_IRQ %s\n", __func__);
+	return -1;
 }
 
 static int fpc1020_remove(struct platform_device* pdev)
