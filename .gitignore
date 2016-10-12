@@ -96,6 +96,5 @@ x509.genkey
 build/*.zip
 build/tools/dt1.img
 build/tools/dt2.img
-build/tools/Image1
-build/tools/Image2
-!goodix.patch
+build/tools/Image
+!oc.patch

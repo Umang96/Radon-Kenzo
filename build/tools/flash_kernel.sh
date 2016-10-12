@@ -15,18 +15,36 @@
  #
  # Please maintain this if you use this script or any part of it
  #
+zim=/tmp/Image
 GOODIX=$(cat /tmp/aroma/goodix.prop | cut -d '=' -f2)
 if [ $GOODIX = 1 ]; then
-zim=/tmp/Image1
-dim=/tmp/dt1.img
 cmd="console=ttyHSL0,115200,n8 androidboot.console=ttyHSL0 androidboot.hardware=qcom ehci-hcd.park=3 androidboot.bootdevice=7824900.sdhci lpm_levels.sleep_disabled=1"
 elif [ $GOODIX = 2 ]; then
-zim=/tmp/Image2
-dim=/tmp/dt2.img
 cmd="console=ttyHSL0,115200,n8 androidboot.console=ttyHSL0 androidboot.hardware=qcom ehci-hcd.park=3 androidboot.bootdevice=7824900.sdhci lpm_levels.sleep_disabled=1 androidboot.selinux=permissive"
 fi
+OVERCLOCK=$(cat /tmp/aroma/overclock.prop | cut -d '=' -f2)
+if [ $OVERCLOCK = 1 ]; then
+dim=/tmp/dt1.img
+elif [ $OVERCLOCK = 2 ]; then
+dim=/tmp/dt2.img
+fi 
 cd /tmp/
 /sbin/busybox dd if=/dev/block/bootdevice/by-name/boot of=./boot.img
 ./unpackbootimg -i /tmp/boot.img
+mkdir /tmp/ramdisk
+cp /tmp/boot.img-ramdisk.gz /tmp/ramdisk/
+cd /tmp/ramdisk/
+gunzip -c /tmp/ramdisk/boot.img-ramdisk.gz | cpio -i
+rm /tmp/ramdisk/boot.img-ramdisk.gz
+rm /tmp/ramdisk/init.qcom.power.rc
+rm /tmp/boot.img-ramdisk.gz
+cp /tmp/init.qcom.power.rc /tmp/ramdisk/
+chmod 0750 /tmp/ramdisk/init.qcom.power.rc
+if [ $(grep -c "import /init.qcom.power.rc" /tmp/ramdisk/init.rc) == 0 ]; then
+   sed -i "/import \/init\.environ\.rc/aimport /init.qcom.power.rc" /tmp/ramdisk/init.rc
+fi
+find . | cpio -o -H newc | gzip > /tmp/boot.img-ramdisk.gz
+rm -r /tmp/ramdisk
+cd /tmp/
 ./mkbootimg --kernel $zim --ramdisk /tmp/boot.img-ramdisk.gz --cmdline "$cmd"  --base 0x80000000 --pagesize 2048 --ramdisk_offset 0x02000000 --tags_offset 0x01e00000 --dt $dim -o /tmp/newboot.img
 /sbin/busybox dd if=/tmp/newboot.img of=/dev/block/bootdevice/by-name/boot

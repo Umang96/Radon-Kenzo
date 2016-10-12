@@ -31,6 +31,12 @@ selectbox(
   "I have goodix","",0
 );
 
+selectbox(
+  "\n\nDo you need overclock ?","<@center><b>\n\n\n\n\n\nIf you don't understand then select stock frequencies only, oc is for advanced users.\n</b></@>","","overclock.prop",
+  "1440 Mhz, 1804 Mhz (stock)","",1,
+  "1478 Mhz, 1843 Mhz (oc)","",0
+);
+
 setvar("retstatus",
 install(
   "\nInstalling",
@@ -42,7 +48,7 @@ ini_set("text_next", "Finish");
 
 if getvar("retstatus")=="0" then
   viewbox(
-  "\nInstallation Completed",
+  "\n\nInstallation Completed",
   "<@center>\n\n\n\n\n\n\nCongratulations !\n"+
   "Radon has been successfully installed\n\n\n</@>",
   ""

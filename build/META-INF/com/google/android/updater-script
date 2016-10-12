@@ -6,6 +6,7 @@ ui_print("Extracting Files");
 set_perm(0, 0, 0777, "/tmp/mkbootimg");
 set_perm(0, 0, 0777, "/tmp/unpackbootimg");
 set_perm(0, 0, 0777, "/tmp/flash_kernel.sh");
+set_perm(0, 0, 0777, "/tmp/init.qcom.power.rc");
 run_program("/tmp/flash_kernel.sh");
 ui_print(" ");
 ui_print("Flashing Radon Kernel");

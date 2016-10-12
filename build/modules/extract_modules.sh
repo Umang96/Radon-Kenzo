@@ -15,11 +15,5 @@
  #
  # Please maintain this if you use this script or any part of it
  #
-GOODIX=$(cat /tmp/aroma/goodix.prop | cut -d '=' -f2)
-if [ $GOODIX = 1 ]; then
-cp /tmp/wlan1.ko /system/lib/modules/wlan.ko
-cp /tmp/wlan1.ko /system/lib/modules/pronto/pronto_wlan.ko
-elif [ $GOODIX = 2 ]; then
-cp /tmp/wlan2.ko /system/lib/modules/wlan.ko
-cp /tmp/wlan2.ko /system/lib/modules/pronto/pronto_wlan.ko
-fi
+cp /tmp/wlan.ko /system/lib/modules/wlan.ko
+cp /tmp/wlan.ko /system/lib/modules/pronto/pronto_wlan.ko
