@@ -92,8 +92,8 @@ static void msm_actuator_parse_i2c_params(struct msm_actuator_ctrl_t *a_ctrl,
 	struct msm_camera_i2c_reg_array *i2c_tbl = a_ctrl->i2c_reg_tbl;
 	CDBG("Enter\n");
 
-	if(i2c_tbl == NULL) {
-		pr_err("i2c_tbl is null!\n");
+	if (i2c_tbl == NULL) {
+		pr_err("msm_actuator_parse_i2c_params i2c tab is null \n");
 		return;
 	}
 
@@ -883,6 +883,13 @@ static int32_t msm_actuator_bivcm_init_step_table(
 	uint32_t qvalue = 0;
 	CDBG("Enter\n");
 
+	/* validate the actuator state */
+	if (a_ctrl->actuator_state != ACT_OPS_ACTIVE) {
+		pr_err("%s:%d invalid actuator_state %d\n"
+			, __func__, __LINE__, a_ctrl->actuator_state);
+		return -EINVAL;
+	}
+
 	for (; data_size > 0; data_size--) {
 		max_code_size *= 2;
 		mask |= (1 << i++);
@@ -977,13 +984,16 @@ static int32_t msm_actuator_init_step_table(struct msm_actuator_ctrl_t *a_ctrl,
 			, __func__, __LINE__, a_ctrl->actuator_state);
 		return -EINVAL;
 	}
+
 	for (; data_size > 0; data_size--)
 		max_code_size *= 2;
 
 	a_ctrl->max_code_size = max_code_size;
-
+	if ((a_ctrl->actuator_state == ACT_OPS_ACTIVE) &&
+		(a_ctrl->step_position_table != NULL)) {
 	/* free the step_position_table to allocate a new one */
 	kfree(a_ctrl->step_position_table);
+	}
 	a_ctrl->step_position_table = NULL;
 
 	if (set_info->af_tuning_params.total_steps
@@ -1054,7 +1064,7 @@ static int32_t msm_actuator_set_default_focus(
 {
 	int32_t rc = 0;
 	CDBG("Enter\n");
-
+	move_params->dest_step_pos += 150;
 	if (a_ctrl->curr_step_pos != 0)
 		rc = a_ctrl->func_tbl->actuator_move_focus(a_ctrl, move_params);
 	CDBG("Exit\n");
@@ -1438,17 +1448,25 @@ static int32_t msm_actuator_config(struct msm_actuator_ctrl_t *a_ctrl,
 		break;
 
 	case CFG_SET_DEFAULT_FOCUS:
+		if (a_ctrl && a_ctrl->func_tbl) {
 		rc = a_ctrl->func_tbl->actuator_set_default_focus(a_ctrl,
 			&cdata->cfg.move);
 		if (rc < 0)
 			pr_err("move focus failed %d\n", rc);
+		} else
+			pr_err("%s:CFG_SET_DEFAULT_FOCUS failed!\n", __func__);
+
 		break;
 
 	case CFG_MOVE_FOCUS:
+	if (a_ctrl && a_ctrl->func_tbl) {
 		rc = a_ctrl->func_tbl->actuator_move_focus(a_ctrl,
 			&cdata->cfg.move);
 		if (rc < 0)
 			pr_err("move focus failed %d\n", rc);
+	} else
+		pr_err("%s:CFG_MOVE_FOCUS failed!\n", __func__);
+
 		break;
 	case CFG_ACTUATOR_POWERDOWN:
 		rc = msm_actuator_power_down(a_ctrl);
