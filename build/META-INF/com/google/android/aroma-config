@@ -1,8 +1,8 @@
 ini_set("rom_name",             "Radon");
-ini_set("rom_version",          "V2.8");
+ini_set("rom_version",          "V2.9");
 ini_set("rom_author",           "Umang96");
 ini_set("rom_device",           "Kenzo");
-ini_set("rom_date",             "Sep 26, 2016");
+ini_set("rom_date",             "Oct 17, 2016");
 
 ini_set("force_colorspace","rgba");
 #ini_set("dp","6");
@@ -35,6 +35,18 @@ selectbox(
   "\n\nDo you need overclock ?","<@center><b>\n\n\n\n\n\nIf you don't understand then select stock frequencies only, oc is for advanced users.\n</b></@>","","overclock.prop",
   "1440 Mhz, 1804 Mhz (stock)","",1,
   "1478 Mhz, 1843 Mhz (oc)","",0
+);
+
+selectbox(
+  "\n\nDo you need dt2w ?","<@center><b>\n\n\n\n\n\nRemember !\n\nKeeping dt2w enabled will consume little more battery.\n</b></@>","","dt2w.prop",
+  "Yes, enable it","",0,
+  "No, disable it","",1
+);
+
+selectbox(
+  "\n\nWant enhanced colors ?","<@center><b>\n\n\n\n\n\nIf you choose yes then display colors will be more vibrant than stock.\n</b></@>","","color.prop",
+  "Yes, enhanced colors","",1,
+  "No, stock colors","",0
 );
 
 setvar("retstatus",
