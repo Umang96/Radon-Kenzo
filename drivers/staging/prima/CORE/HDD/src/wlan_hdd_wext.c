@@ -4182,15 +4182,15 @@ static int __iw_set_priv(struct net_device *dev,
     }
     else if (strcasecmp(cmd, "scan-active") == 0)
     {
-        hddLog(VOS_TRACE_LEVEL_ERROR,
-                   FL("making default scan to active"));
+        hddLog(LOG1,
+                FL("making default scan to active"));
         pHddCtx->scan_info.scan_mode = eSIR_ACTIVE_SCAN;
         ret = snprintf(cmd, cmd_len, "OK");
     }
     else if (strcasecmp(cmd, "scan-passive") == 0)
     {
-        hddLog(VOS_TRACE_LEVEL_ERROR,
-                   FL("making default scan to passive"));
+        hddLog(LOG1,
+               FL("making default scan to passive"));
         pHddCtx->scan_info.scan_mode = eSIR_PASSIVE_SCAN;
         ret = snprintf(cmd, cmd_len, "OK");
     }
@@ -4201,41 +4201,6 @@ static int __iw_set_priv(struct net_device *dev,
     else if( strcasecmp(cmd, "linkspeed") == 0 )
     {
         ret = iw_get_linkspeed(dev, info, wrqu, cmd);
-    }
-    else if( strncasecmp(cmd, "COUNTRY", 7) == 0 ) {
-        char *country_code;
-        long lrc;
-        eHalStatus eHal_status;
-
-        country_code =  cmd + 8;
-
-        init_completion(&pAdapter->change_country_code);
-
-        eHal_status = sme_ChangeCountryCode(pHddCtx->hHal,
-                                            (void *)(tSmeChangeCountryCallback)wlan_hdd_change_country_code_callback,
-                                            country_code,
-                                            pAdapter,
-                                            pHddCtx->pvosContext,
-                                            eSIR_TRUE,
-                                            eSIR_TRUE);
-
-        /* Wait for completion */
-        lrc = wait_for_completion_interruptible_timeout(&pAdapter->change_country_code,
-                                    msecs_to_jiffies(WLAN_WAIT_TIME_STATS));
-
-        if (lrc <= 0)
-        {
-            hddLog(VOS_TRACE_LEVEL_ERROR,"%s: SME %s while setting country code ",
-                   __func__, "Timed out");
-        }
-
-        if (eHAL_STATUS_SUCCESS != eHal_status)
-        {
-            VOS_TRACE( VOS_MODULE_ID_VOSS, VOS_TRACE_LEVEL_ERROR,
-                       "%s: SME Change Country code fail", __func__);
-            kfree(cmd);
-            return -EIO;
-        }
     }
     else if( strncasecmp(cmd, "rssi", 4) == 0 )
     {

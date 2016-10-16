@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2014 The Linux Foundation. All rights reserved.
+ * Copyright (c) 2011-2016 The Linux Foundation. All rights reserved.
  *
  * Previously licensed under the ISC license by Qualcomm Atheros, Inc.
  *
@@ -401,6 +401,9 @@ typedef struct tagCsrScanResultFilter
     tANI_BOOLEAN MFPEnabled;
     tANI_U8 MFPRequired;
     tANI_U8 MFPCapable;
+#endif
+#ifdef WLAN_FEATURE_ROAM_SCAN_OFFLOAD
+    tANI_BOOLEAN isPERRoamScan;
 #endif
 }tCsrScanResultFilter;
 
@@ -1169,6 +1172,14 @@ typedef struct tagCsrConfigParam
 #ifdef WLAN_FEATURE_ROAM_SCAN_OFFLOAD
     tANI_BOOLEAN isRoamOffloadScanEnabled;
     tANI_BOOLEAN bFastRoamInConIniFeatureEnabled;
+    v_BOOL_t isPERRoamEnabled;
+    v_BOOL_t isPERRoamCCAEnabled;
+    v_S15_t PERRoamFullScanThreshold;
+    v_U32_t rateUpThreshold;
+    v_U32_t rateDownThreshold;
+    v_U32_t waitPeriodForNextPERScan;
+    v_U32_t PERtimerThreshold;
+    v_U32_t PERroamTriggerPercent;
 #endif
 #endif
 
@@ -1194,6 +1205,19 @@ typedef struct tagCsrConfigParam
     tANI_U8 roamDelayStatsEnabled;
     tANI_BOOLEAN ignorePeerHTopMode;
     tANI_BOOLEAN disableP2PMacSpoofing;
+    uint32_t enable_edca_params;
+    uint32_t edca_vo_cwmin;
+    uint32_t edca_vi_cwmin;
+    uint32_t edca_bk_cwmin;
+    uint32_t edca_be_cwmin;
+    uint32_t edca_vo_cwmax;
+    uint32_t edca_vi_cwmax;
+    uint32_t edca_bk_cwmax;
+    uint32_t edca_be_cwmax;
+    uint32_t edca_vo_aifs;
+    uint32_t edca_vi_aifs;
+    uint32_t edca_bk_aifs;
+    uint32_t edca_be_aifs;
 }tCsrConfigParam;
 
 //Tush
