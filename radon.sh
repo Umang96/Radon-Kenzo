@@ -23,6 +23,9 @@ echo -e ""
 echo -e "$gre ====================================\n\n Welcome to Radon building program !\n\n ====================================\n\n 1.Build Radon kenzo stock\n\n 2.Build Radon kenzo overclock\n"
 echo -n " Enter your choice:"
 read overclock
+echo -e "\n 1.Build radon miui mm fpc\n\n 2.Build radon miui mm gdx\n"
+echo -n " Enter your choice:"
+read goodix
 echo -e "$white"
 KERNEL_DIR=$PWD
 cd arch/arm/boot/dts/
@@ -36,11 +39,20 @@ export ARCH=arm64
 export CROSS_COMPILE="/home/$USER/toolchain/aarch64-linux-linaro-android-4.9/bin/aarch64-linux-android-"
 export LD_LIBRARY_PATH=home/$USER/toolchain/aarch64-linux-linaro-android-4.9/lib/
 STRIP="/home/$USER/toolchain/aarch64-linux-linaro-android-4.9/bin/aarch64-linux-android-strip"
+cp $KERNEL_DIR/build/modules/wlan1.ko ~/wlan1.ko
+cp $KERNEL_DIR/build/modules/wlan2.ko ~/wlan2.ko
 make clean
+mv ~/wlan1.ko $KERNEL_DIR/build/modules/wlan1.ko
+mv ~/wlan2.ko $KERNEL_DIR/build/modules/wlan2.ko
 if [ $overclock == 2 ]; then
 git apply oc.patch
 elif [ $overclock == 1 ]; then
 git apply -R oc.patch
+fi
+if [ $goodix == 2 ]; then
+git apply goodix.patch
+elif [ $goodix == 1 ]; then
+git apply -R goodix.patch
 fi
 make cyanogenmod_kenzo_defconfig
 export KBUILD_BUILD_HOST="lenovo"
@@ -48,15 +60,24 @@ export KBUILD_BUILD_USER="umang"
 make -j4
 time=$(date +"%d-%m-%y-%T")
 $DTBTOOL -2 -o $KERNEL_DIR/arch/arm64/boot/dt.img -s 2048 -p $KERNEL_DIR/scripts/dtc/ $KERNEL_DIR/arch/arm/boot/dts/
-if [ $overclock == 1 ]; then
-mv $KERNEL_DIR/arch/arm64/boot/dt.img $KERNEL_DIR/build/tools/dt1.img
-elif [ $overclock == 2 ]; then
-mv $KERNEL_DIR/arch/arm64/boot/dt.img $KERNEL_DIR/build/tools/dt2.img
+if ([ $overclock -eq 1 ]&&[ $goodix -eq 1 ]); then
+mv $KERNEL_DIR/arch/arm64/boot/dt.img $KERNEL_DIR/build/tools/dt11.img
+elif ([ $overclock -eq 2 ]&&[ $goodix -eq 1 ]); then
+mv $KERNEL_DIR/arch/arm64/boot/dt.img $KERNEL_DIR/build/tools/dt21.img
+elif ([ $overclock -eq 1 ]&&[ $goodix -eq 2 ]); then
+mv $KERNEL_DIR/arch/arm64/boot/dt.img $KERNEL_DIR/build/tools/dt12.img
+elif ([ $overclock -eq 2 ]&&[ $goodix -eq 2 ]); then
+mv $KERNEL_DIR/arch/arm64/boot/dt.img $KERNEL_DIR/build/tools/dt22.img
 fi
-cp $KERNEL_DIR/arch/arm64/boot/Image $KERNEL_DIR/build/tools/Image
-cp $KERNEL_DIR/drivers/staging/prima/wlan.ko $KERNEL_DIR/build/modules/wlan.ko
+if [ $goodix == 1 ]; then
+cp $KERNEL_DIR/arch/arm64/boot/Image $KERNEL_DIR/build/tools/Image1
+cp $KERNEL_DIR/drivers/staging/prima/wlan.ko $KERNEL_DIR/build/modules/wlan1.ko
+elif [ $goodix == 2 ]; then
+cp $KERNEL_DIR/arch/arm64/boot/Image $KERNEL_DIR/build/tools/Image2
+cp $KERNEL_DIR/drivers/staging/prima/wlan.ko $KERNEL_DIR/build/modules/wlan2.ko
+fi
 cd $KERNEL_DIR/build/modules/
-$STRIP --strip-unneeded wlan.ko
+$STRIP --strip-unneeded *.ko
 zimage=$KERNEL_DIR/arch/arm64/boot/Image
 if ! [ -a $zimage ];
 then
@@ -72,4 +93,7 @@ fi
 cd $KERNEL_DIR
 if [ $overclock == 2 ]; then
 git apply -R oc.patch
+fi
+if [ $goodix == 2 ]; then
+git apply -R goodix.patch
 fi

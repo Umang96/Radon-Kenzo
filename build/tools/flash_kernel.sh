@@ -15,18 +15,24 @@
  #
  # Please maintain this if you use this script or any part of it
  #
-zim=/tmp/Image
-GOODIX=$(cat /tmp/aroma/goodix.prop | cut -d '=' -f2)
-if [ $GOODIX = 1 ]; then
+goodix=$(cat /tmp/aroma/goodix.prop | cut -d '=' -f2)
+overclock=$(cat /tmp/aroma/overclock.prop | cut -d '=' -f2)
+if ([ $overclock -eq 1 ]&&[ $goodix -eq 1 ]); then
 cmd="console=ttyHSL0,115200,n8 androidboot.console=ttyHSL0 androidboot.hardware=qcom ehci-hcd.park=3 androidboot.bootdevice=7824900.sdhci lpm_levels.sleep_disabled=1"
-elif [ $GOODIX = 2 ]; then
+dim=/tmp/dt11.img
+zim=/tmp/Image1
+elif ([ $overclock -eq 1 ]&&[ $goodix -eq 2 ]); then
 cmd="console=ttyHSL0,115200,n8 androidboot.console=ttyHSL0 androidboot.hardware=qcom ehci-hcd.park=3 androidboot.bootdevice=7824900.sdhci lpm_levels.sleep_disabled=1 androidboot.selinux=permissive"
-fi
-OVERCLOCK=$(cat /tmp/aroma/overclock.prop | cut -d '=' -f2)
-if [ $OVERCLOCK = 1 ]; then
-dim=/tmp/dt1.img
-elif [ $OVERCLOCK = 2 ]; then
-dim=/tmp/dt2.img
+dim=/tmp/dt12.img
+zim=/tmp/Image2
+elif ([ $overclock -eq 2 ]&&[ $goodix -eq 1 ]); then
+cmd="console=ttyHSL0,115200,n8 androidboot.console=ttyHSL0 androidboot.hardware=qcom ehci-hcd.park=3 androidboot.bootdevice=7824900.sdhci lpm_levels.sleep_disabled=1"
+dim=/tmp/dt21.img
+zim=/tmp/Image1
+elif ([ $overclock -eq 2 ]&&[ $goodix -eq 2 ]); then
+cmd="console=ttyHSL0,115200,n8 androidboot.console=ttyHSL0 androidboot.hardware=qcom ehci-hcd.park=3 androidboot.bootdevice=7824900.sdhci lpm_levels.sleep_disabled=1 androidboot.selinux=permissive"
+dim=/tmp/dt22.img
+zim=/tmp/Image2
 fi 
 cd /tmp/
 /sbin/busybox dd if=/dev/block/bootdevice/by-name/boot of=./boot.img
@@ -37,7 +43,6 @@ cd /tmp/ramdisk/
 gunzip -c /tmp/ramdisk/boot.img-ramdisk.gz | cpio -i
 rm /tmp/ramdisk/boot.img-ramdisk.gz
 rm /tmp/boot.img-ramdisk.gz
-cp /tmp/init.qcom.power.rc /tmp/ramdisk/
 cp /tmp/init.radon.rc /tmp/ramdisk/
 chmod 0750 /tmp/ramdisk/init.radon.rc
 if [ $(grep -c "import /init.radon.rc" /tmp/ramdisk/init.rc) == 0 ]; then

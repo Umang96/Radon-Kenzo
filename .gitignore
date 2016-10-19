@@ -94,7 +94,7 @@ x509.genkey
 
 # Compiled kernel
 build/*.zip
-build/tools/dt1.img
-build/tools/dt2.img
-build/tools/Image
+build/tools/*.img
+build/tools/Image*
 !oc.patch
+!goodix.patch
