@@ -474,12 +474,13 @@ static void __init mm_init(void)
 	pgtable_cache_init();
 	vmalloc_init();
 }
+int lct_hardwareid = 2;
 
 asmlinkage void __init start_kernel(void)
 {
 	char * command_line;
 	extern const struct kernel_param __start___param[], __stop___param[];
-	char * board_id_ptr;
+	char * board_id_ptr = NULL;
 
 	/*
 	 * Need to run as early as possible, to initialize the
@@ -516,11 +517,21 @@ asmlinkage void __init start_kernel(void)
 	build_all_zonelists(NULL, NULL);
 	page_alloc_init();
 
-	pr_notice("Kernel command line: %s\n", boot_command_line);
-
-	board_id_ptr = strstr(boot_command_line, "androidboot.boardID=");
-	if (board_id_ptr)
-		kenzo_boardid = simple_strtoul(&board_id_ptr[strlen("androidboot.boardID=")], NULL, 10);
+		pr_notice("Kernel command line: %s\n", boot_command_line);
+	board_id_ptr = strstr(boot_command_line, "androidboot.boardID=0");
+	if (board_id_ptr) {
+		lct_hardwareid = 0;
+	}
+	board_id_ptr = NULL;
+	board_id_ptr = strstr(boot_command_line, "androidboot.boardID=2");
+	if (board_id_ptr) {
+		lct_hardwareid = 2;
+	}
+	board_id_ptr = NULL;
+	board_id_ptr = strstr(boot_command_line, "androidboot.boardID=3");
+	if (board_id_ptr) {
+		lct_hardwareid = 3;
+	}
 
 	parse_early_param();
 	parse_args("Booting kernel", static_command_line, __start___param,

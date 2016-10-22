@@ -22,6 +22,7 @@
 #undef CDBG
 #define CDBG(fmt, args...) pr_debug(fmt, ##args)
 
+static struct v4l2_file_operations msm_sensor_v4l2_subdev_fops;
 extern uint8_t g_s5k3p3_otp_module_id;
 extern uint8_t g_s5k3p3_otp_vcm_id;
 extern uint8_t g_ov16880_otp_module_id;
@@ -30,7 +31,6 @@ extern uint8_t g_s5k5e8_otp_month;
 extern uint8_t g_s5k5e8_otp_day;
 extern uint8_t g_s5k5e8_otp_lens_id;
 
-static struct v4l2_file_operations msm_sensor_v4l2_subdev_fops;
 static void msm_sensor_adjust_mclk(struct msm_camera_power_ctrl_t *ctrl)
 {
 	int idx;
@@ -1559,10 +1559,10 @@ int msm_sensor_check_id(struct msm_sensor_ctrl_t *s_ctrl)
 	if (rc < 0)
 	{
 		pr_err("%s:%d match id failed rc %d\n", __func__, __LINE__, rc);
-		return rc;
+	return rc;
 	}
 
-	if (strcmp(s_ctrl->sensordata->sensor_name, "s5k3p3_omida01") == 0) {
+if (strcmp(s_ctrl->sensordata->sensor_name, "s5k3p3_omida01") == 0) {
 		if(g_s5k3p3_otp_module_id == 2)
 			CDBG("%s: It is ofilm s5k3p3\n", __func__);
 		else
