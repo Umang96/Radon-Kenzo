@@ -1099,17 +1099,17 @@ case "$target" in
                 echo 1 > /sys/devices/system/cpu/cpu0/online
                 echo "interactive" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
                 echo 80 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/go_hispeed_load
-                echo 20000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/timer_rate
+                echo 40000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/timer_rate
                 echo 0 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/io_is_busy
                 echo 40000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/min_sample_time
                 echo 400000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
-		echo "40 1017600:50 1190400:60 1305600:70 1382400:80" > /sys/devices/system/cpu/cpu0/cpufreq/interactive/target_loads
+		echo "60 1017600:70 1190400:80 1305600:90 1382400:95 1401600:98" > /sys/devices/system/cpu/cpu0/cpufreq/interactive/target_loads
 
                 # enable governor for perf cluster
                 echo 1 > /sys/devices/system/cpu/cpu4/online
                 echo "interactive" > /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor
                 echo 85 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/go_hispeed_load
-                echo 20000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/timer_rate
+                echo 40000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/timer_rate
                 echo 0 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/io_is_busy
                 echo 40000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/min_sample_time
                 echo 40000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/sampling_down_factor
@@ -1126,7 +1126,7 @@ case "$target" in
                 echo "691200:60 806400:80" > /sys/devices/system/cpu/cpu0/cpufreq/interactive/target_loads
                 echo 1382400 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/hispeed_freq
                 echo "19000 1382400:39000" > /sys/devices/system/cpu/cpu4/cpufreq/interactive/above_hispeed_delay
-                echo "70 1190400:80 1382400:90 1747200:95" > /sys/devices/system/cpu/cpu4/cpufreq/interactive/target_loads
+                echo "70 1113600:80 1190400:90 1382400:95 1747200:98" > /sys/devices/system/cpu/cpu4/cpufreq/interactive/target_loads
                 # HMP Task packing settings for 8976
                 echo 30 > /proc/sys/kernel/sched_small_task
                 echo 20 > /sys/devices/system/cpu/cpu0/sched_mostly_idle_load

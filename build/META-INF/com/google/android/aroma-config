@@ -1,8 +1,8 @@
 ini_set("rom_name",             "Radon");
-ini_set("rom_version",          "V2.9");
+ini_set("rom_version",          "V2.9.5");
 ini_set("rom_author",           "Umang96");
 ini_set("rom_device",           "Kenzo");
-ini_set("rom_date",             "Oct 17, 2016");
+ini_set("rom_date",             "Oct 25, 2016");
 
 ini_set("force_colorspace","rgba");
 #ini_set("dp","6");
@@ -35,6 +35,13 @@ selectbox(
   "\n\nDo you need overclock ?","<@center><b>\n\n\n\n\n\nIf you don't understand then select stock frequencies only, oc is for advanced users.\n</b></@>","","overclock.prop",
   "1440 Mhz, 1804 Mhz (stock)","",1,
   "1478 Mhz, 1843 Mhz (oc)","",0
+);
+
+selectbox(
+  "\n\nSelect default interactive tuning","<@center><b>\n\n\n\n\n\nThis will tune your interactive target loads and timer rate according to your choice.\n</b></@>","","interactive.prop",
+  "Balanced (for normal users)","",1,
+  "Battery biased","",0,
+  "Performance biased","",0
 );
 
 selectbox(
