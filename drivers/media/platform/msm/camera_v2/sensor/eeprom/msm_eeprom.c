@@ -1,5 +1,4 @@
 /* Copyright (c) 2011-2015, The Linux Foundation. All rights reserved.
- * Copyright (C) 2016 XiaoMi, Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -23,6 +22,10 @@
 #define CDBG(fmt, args...) pr_debug(fmt, ##args)
 
 DEFINE_MSM_MUTEX(msm_eeprom_mutex);
+#ifdef CONFIG_COMPAT
+static struct v4l2_file_operations msm_eeprom_v4l2_subdev_fops;
+#endif
+
 uint8_t g_s5k3p3_otp_module_id = 0;
 uint8_t g_s5k3p3_otp_vcm_id = 0;
 uint8_t g_ov16880_otp_module_id = 0;
@@ -30,12 +33,6 @@ uint8_t g_ov5670_otp_module_id = 0;
 uint8_t g_s5k5e8_otp_month = 0;
 uint8_t g_s5k5e8_otp_day = 0;
 uint8_t g_s5k5e8_otp_lens_id = 0;
-
-#ifdef CONFIG_COMPAT
-static struct v4l2_file_operations msm_eeprom_v4l2_subdev_fops;
-static long msm_eeprom_subdev_fops_ioctl32(struct file *file,
-	unsigned int cmd,unsigned long arg);
-#endif
 
 /**
   * msm_get_read_mem_size - Get the total size for allocation
@@ -146,73 +143,6 @@ static uint32_t msm_eeprom_match_crc(struct msm_eeprom_memory_block_t *data)
 	return ret;
 }
 
-static int ov5670_read_eeprom_memory(struct msm_eeprom_ctrl_t *e_ctrl,
-			      struct msm_eeprom_memory_block_t *block)
-{
-	int rc = 0;
-	uint8_t temp;
-	uint8_t *memptr = block->mapdata;
-	int i = 0;
-	CDBG("%s Enter\n", __func__);
-	if (!e_ctrl) {
-		pr_err("%s e_ctrl is NULL", __func__);
-		return -EINVAL;
-	}
-	if (memptr == NULL) {
-		pr_err("%s please check dts config", __func__);
-		return -EINVAL;
-	}
-
-	e_ctrl->i2c_client.addr_type = MSM_CAMERA_I2C_WORD_ADDR;
-
-	rc = e_ctrl->i2c_client.i2c_func_tbl->i2c_read(&(e_ctrl->i2c_client), 0x5002, (uint16_t *)&temp, MSM_CAMERA_I2C_BYTE_DATA);
-	CDBG("%s temp = %x value =%x\n", __func__, temp, temp&(~0x08));
-	rc = e_ctrl->i2c_client.i2c_func_tbl->i2c_write(&(e_ctrl->i2c_client), 0x5002, temp&(~0x08), MSM_CAMERA_I2C_BYTE_DATA);
-	if (rc < 0)
-		return rc;
-
-	rc = e_ctrl->i2c_client.i2c_func_tbl->i2c_write(&(e_ctrl->i2c_client), 0x100, 0x01, MSM_CAMERA_I2C_BYTE_DATA);
-	for (i = 0x7010; i <= 0x7029; i++)
-		e_ctrl->i2c_client.i2c_func_tbl->i2c_write(&(e_ctrl->i2c_client), i, 0x0, MSM_CAMERA_I2C_BYTE_DATA);
-
-	rc = e_ctrl->i2c_client.i2c_func_tbl->i2c_write(&(e_ctrl->i2c_client), 0x3d84, 0xC0, MSM_CAMERA_I2C_BYTE_DATA);
-	if (rc < 0)
-		return rc;
-
-	rc = e_ctrl->i2c_client.i2c_func_tbl->i2c_write(&(e_ctrl->i2c_client), 0x3d88, 0x70, MSM_CAMERA_I2C_BYTE_DATA);
-	if (rc < 0)
-		return rc;
-	rc = e_ctrl->i2c_client.i2c_func_tbl->i2c_write(&(e_ctrl->i2c_client), 0x3d89, 0x10, MSM_CAMERA_I2C_BYTE_DATA);
-	if (rc < 0)
-		return rc;
-	rc = e_ctrl->i2c_client.i2c_func_tbl->i2c_write(&(e_ctrl->i2c_client), 0x3d8A, 0x70, MSM_CAMERA_I2C_BYTE_DATA);
-	if (rc < 0)
-		return rc;
-	rc = e_ctrl->i2c_client.i2c_func_tbl->i2c_write(&(e_ctrl->i2c_client), 0x3d8B, 0x29, MSM_CAMERA_I2C_BYTE_DATA);
-	if (rc < 0)
-		return rc;
-	rc = e_ctrl->i2c_client.i2c_func_tbl->i2c_write(&(e_ctrl->i2c_client), 0x3d81, 0x1, MSM_CAMERA_I2C_BYTE_DATA);
-	if (rc < 0)
-		return rc;
-
-	msleep(50);
-	rc = e_ctrl->i2c_client.i2c_func_tbl->i2c_read_seq(&(e_ctrl->i2c_client), 0x7010, memptr, 26);
-
-	if (rc < 0)
-		return rc;
-	msleep(30);
-	for (i = 0x7010; i <= 0x7029; i++) {
-		e_ctrl->i2c_client.i2c_func_tbl->i2c_write(&(e_ctrl->i2c_client), i, 0x0, MSM_CAMERA_I2C_BYTE_DATA);
-	}
-
-	rc = e_ctrl->i2c_client.i2c_func_tbl->i2c_write(&(e_ctrl->i2c_client), 0x100, 0x00, MSM_CAMERA_I2C_BYTE_DATA);
-
-	rc = e_ctrl->i2c_client.i2c_func_tbl->i2c_read(&(e_ctrl->i2c_client), 0x5002, (uint16_t *)&temp, MSM_CAMERA_I2C_BYTE_DATA);
-
-	e_ctrl->i2c_client.i2c_func_tbl->i2c_write(&(e_ctrl->i2c_client), 0x5002, temp|0x08, MSM_CAMERA_I2C_BYTE_DATA);
-	return rc;
-
-}
 /**
   * read_eeprom_memory() - read map data into buffer
   * @e_ctrl:	eeprom control struct
@@ -922,14 +852,6 @@ static int msm_eeprom_i2c_probe(struct i2c_client *client,
 	e_ctrl->msm_sd.sd.entity.type = MEDIA_ENT_T_V4L2_SUBDEV;
 	e_ctrl->msm_sd.sd.entity.group_id = MSM_CAMERA_SUBDEV_EEPROM;
 	msm_sd_register(&e_ctrl->msm_sd);
-
-#ifdef CONFIG_COMPAT
-	msm_eeprom_v4l2_subdev_fops = v4l2_subdev_fops;
-	msm_eeprom_v4l2_subdev_fops.compat_ioctl32 =
-		msm_eeprom_subdev_fops_ioctl32;
-	e_ctrl->msm_sd.sd.devnode->fops = &msm_eeprom_v4l2_subdev_fops;
-#endif
-
 	CDBG("%s success result=%d X\n", __func__, rc);
 	return rc;
 
@@ -1277,7 +1199,6 @@ static int msm_eeprom_spi_setup(struct spi_device *spi)
 	e_ctrl->msm_sd.sd.entity.type = MEDIA_ENT_T_V4L2_SUBDEV;
 	e_ctrl->msm_sd.sd.entity.group_id = MSM_CAMERA_SUBDEV_EEPROM;
 	msm_sd_register(&e_ctrl->msm_sd);
-
 	e_ctrl->is_supported = (e_ctrl->is_supported << 1) | 1;
 	CDBG("%s success result=%d supported=%x X\n", __func__, rc,
 	     e_ctrl->is_supported);
@@ -1623,22 +1544,24 @@ static long msm_eeprom_subdev_do_ioctl32(
 }
 
 static long msm_eeprom_subdev_fops_ioctl32(struct file *file, unsigned int cmd,
-	unsigned long arg) {
+	unsigned long arg)
+{
 	return video_usercopy(file, cmd, arg, msm_eeprom_subdev_do_ioctl32);
 }
 
 #endif
 
-static void s5k3p3_set_otp_module_id(struct msm_eeprom_ctrl_t *e_ctrl)
-{
-	if (e_ctrl->cal_data.mapdata[0] == 1) {
-		g_s5k3p3_otp_module_id = (uint8_t)(e_ctrl->cal_data.mapdata[11]);
-		if (g_s5k3p3_otp_module_id != 0x02) {
-			g_s5k3p3_otp_module_id = (uint8_t)(e_ctrl->cal_data.mapdata[2]);
+ static void s5k3p3_set_otp_module_id(struct msm_eeprom_ctrl_t *e_ctrl)
+ {
+ 	if (e_ctrl->cal_data.mapdata[0] == 1) {
+  		g_s5k3p3_otp_module_id = (uint8_t)(e_ctrl->cal_data.mapdata[11]);
+  		if (g_s5k3p3_otp_module_id != 0x02) {
+  			g_s5k3p3_otp_module_id = (uint8_t)(e_ctrl->cal_data.mapdata[2]);
 			if(g_s5k3p3_otp_module_id == 0x0f || g_s5k3p3_otp_module_id == 0x11 || g_s5k3p3_otp_module_id == 0x10)
-				g_s5k3p3_otp_vcm_id = (uint8_t)(e_ctrl->cal_data.mapdata[6]);
-		}
-	}
+  				g_s5k3p3_otp_vcm_id = (uint8_t)(e_ctrl->cal_data.mapdata[6]);
+  		}
+  	}
+
 }
 
 static void ov16880_set_otp_module_id(struct msm_eeprom_ctrl_t *e_ctrl)
@@ -1812,20 +1735,16 @@ static int msm_eeprom_platform_probe(struct platform_device *pdev)
 			pr_err("failed rc %d\n", rc);
 			goto memdata_free;
 		}
-		if ((eb_info->eeprom_name != NULL)
-			&& (strcmp(eb_info->eeprom_name, "sunny_omi5f06") == 0))
-			rc = ov5670_read_eeprom_memory(e_ctrl, &e_ctrl->cal_data);
-		else
-			rc = read_eeprom_memory(e_ctrl, &e_ctrl->cal_data);
+		rc = read_eeprom_memory(e_ctrl, &e_ctrl->cal_data);
 		if (rc < 0) {
-			pr_err("  %s read_eeprom_memory failed\n", __func__);
+			pr_err("%s read_eeprom_memory failed\n", __func__);
 			goto power_down;
 		}
 		for (j = 0; j < e_ctrl->cal_data.num_data; j++)
 			CDBG("memory_data[%d] = 0x%X\n", j,
 				e_ctrl->cal_data.mapdata[j]);
 
-if (eb_info->eeprom_name != NULL)
+		if (eb_info->eeprom_name != NULL)
 		{
 			if (strcmp(eb_info->eeprom_name, "s5k3p3_omida01") == 0 ||
 	       		    strcmp(eb_info->eeprom_name, "s5k3p3_gt24c64") == 0 ||
