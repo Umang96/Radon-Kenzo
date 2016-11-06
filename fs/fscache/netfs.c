@@ -45,6 +45,9 @@ int __fscache_register_netfs(struct fscache_netfs *netfs)
 	netfs->primary_index->parent		= &fscache_fsdef_index;
 	netfs->primary_index->netfs_data	= netfs;
 
+	atomic_inc(&netfs->primary_index->parent->usage);
+	atomic_inc(&netfs->primary_index->parent->n_children);
+
 	spin_lock_init(&netfs->primary_index->lock);
 	INIT_HLIST_HEAD(&netfs->primary_index->backing_objects);
 
@@ -57,9 +60,6 @@ int __fscache_register_netfs(struct fscache_netfs *netfs)
 			goto already_registered;
 	}
 
-	atomic_inc(&netfs->primary_index->parent->usage);
-	atomic_inc(&netfs->primary_index->parent->n_children);
-
 	list_add(&netfs->link, &fscache_netfs_list);
 	ret = 0;
 
@@ -70,7 +70,8 @@ already_registered:
 	up_write(&fscache_addremove_sem);
 
 	if (ret < 0) {
-		kmem_cache_free(fscache_cookie_jar, netfs->primary_index);
+		netfs->primary_index->parent = NULL;
+		__fscache_cookie_put(netfs->primary_index);
 		netfs->primary_index = NULL;
 	}
 

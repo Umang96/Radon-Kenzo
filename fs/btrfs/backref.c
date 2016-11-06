@@ -1228,8 +1228,7 @@ char *btrfs_ref_to_path(struct btrfs_root *fs_root, struct btrfs_path *path,
 			read_extent_buffer(eb, dest + bytes_left,
 					   name_off, name_len);
 		if (eb != eb_in) {
-			if (!path->skip_locking)
-				btrfs_tree_read_unlock_blocking(eb);
+			btrfs_tree_read_unlock_blocking(eb);
 			free_extent_buffer(eb);
 		}
 		ret = inode_ref_info(parent, 0, fs_root, path, &found_key);
@@ -1248,10 +1247,9 @@ char *btrfs_ref_to_path(struct btrfs_root *fs_root, struct btrfs_path *path,
 		eb = path->nodes[0];
 		/* make sure we can use eb after releasing the path */
 		if (eb != eb_in) {
-			if (!path->skip_locking)
-				btrfs_set_lock_blocking_rw(eb, BTRFS_READ_LOCK);
-			path->nodes[0] = NULL;
-			path->locks[0] = 0;
+			atomic_inc(&eb->refs);
+			btrfs_tree_read_lock(eb);
+			btrfs_set_lock_blocking_rw(eb, BTRFS_READ_LOCK);
 		}
 		btrfs_release_path(path);
 		iref = btrfs_item_ptr(eb, slot, struct btrfs_inode_ref);

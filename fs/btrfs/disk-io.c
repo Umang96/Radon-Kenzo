@@ -2437,7 +2437,6 @@ int open_ctree(struct super_block *sb,
 		       "unsupported option features (%Lx).\n",
 		       (unsigned long long)features);
 		err = -EINVAL;
-		brelse(bh);
 		goto fail_alloc;
 	}
 

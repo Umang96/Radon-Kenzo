@@ -385,7 +385,6 @@ static int acpi_pci_root_add(struct acpi_device *device,
 	int result;
 	struct acpi_pci_root *root;
 	u32 flags, base_flags;
-	bool no_aspm = false, clear_aspm = false;
 
 	root = kzalloc(sizeof(struct acpi_pci_root), GFP_KERNEL);
 	if (!root)
@@ -446,10 +445,31 @@ static int acpi_pci_root_add(struct acpi_device *device,
 	flags = base_flags = OSC_PCI_SEGMENT_GROUPS_SUPPORT;
 	acpi_pci_osc_support(root, flags);
 
+	/*
+	 * TBD: Need PCI interface for enumeration/configuration of roots.
+	 */
+
 	mutex_lock(&acpi_pci_root_lock);
 	list_add_tail(&root->node, &acpi_pci_roots);
 	mutex_unlock(&acpi_pci_root_lock);
 
+	/*
+	 * Scan the Root Bridge
+	 * --------------------
+	 * Must do this prior to any attempt to bind the root device, as the
+	 * PCI namespace does not get created until this call is made (and
+	 * thus the root bridge's pci_dev does not exist).
+	 */
+	root->bus = pci_acpi_scan_root(root);
+	if (!root->bus) {
+		printk(KERN_ERR PREFIX
+			    "Bus %04x:%02x not present in PCI namespace\n",
+			    root->segment, (unsigned int)root->secondary.start);
+		result = -ENODEV;
+		goto out_del_root;
+	}
+
+	/* Indicate support for various _OSC capabilities. */
 	if (pci_ext_cfg_avail())
 		flags |= OSC_EXT_PCI_CONFIG_SUPPORT;
 	if (pcie_aspm_support_enabled()) {
@@ -463,7 +483,7 @@ static int acpi_pci_root_add(struct acpi_device *device,
 		if (ACPI_FAILURE(status)) {
 			dev_info(&device->dev, "ACPI _OSC support "
 				"notification failed, disabling PCIe ASPM\n");
-			no_aspm = true;
+			pcie_no_aspm();
 			flags = base_flags;
 		}
 	}
@@ -495,7 +515,7 @@ static int acpi_pci_root_add(struct acpi_device *device,
 				 * We have ASPM control, but the FADT indicates
 				 * that it's unsupported. Clear it.
 				 */
-				clear_aspm = true;
+				pcie_clear_aspm(root->bus);
 			}
 		} else {
 			dev_info(&device->dev,
@@ -504,47 +524,13 @@ static int acpi_pci_root_add(struct acpi_device *device,
 				acpi_format_exception(status), flags);
 			pr_info("ACPI _OSC control for PCIe not granted, "
 				"disabling ASPM\n");
-			/*
-			 * We want to disable ASPM here, but aspm_disabled
-			 * needs to remain in its state from boot so that we
-			 * properly handle PCIe 1.1 devices.  So we set this
-			 * flag here, to defer the action until after the ACPI
-			 * root scan.
-			 */
-			no_aspm = true;
+			pcie_no_aspm();
 		}
 	} else {
 		dev_info(&device->dev,
 			 "Unable to request _OSC control "
 			 "(_OSC support mask: 0x%02x)\n", flags);
 	}
-
-	/*
-	 * TBD: Need PCI interface for enumeration/configuration of roots.
-	 */
-
-	/*
-	 * Scan the Root Bridge
-	 * --------------------
-	 * Must do this prior to any attempt to bind the root device, as the
-	 * PCI namespace does not get created until this call is made (and
-	 * thus the root bridge's pci_dev does not exist).
-	 */
-	root->bus = pci_acpi_scan_root(root);
-	if (!root->bus) {
-		dev_err(&device->dev,
-			"Bus %04x:%02x not present in PCI namespace\n",
-			root->segment, (unsigned int)root->secondary.start);
-		result = -ENODEV;
-		goto end;
-	}
-
-	if (clear_aspm) {
-		dev_info(&device->dev, "Disabling ASPM (FADT indicates it is unsupported)\n");
-		pcie_clear_aspm(root->bus);
-	}
-	if (no_aspm)
-		pcie_no_aspm();
 
 	pci_acpi_add_bus_pm_notifier(device, root->bus);
 	if (device->wakeup.flags.run_wake)
@@ -561,6 +547,11 @@ static int acpi_pci_root_add(struct acpi_device *device,
 
 	pci_bus_add_devices(root->bus);
 	return 1;
+
+out_del_root:
+	mutex_lock(&acpi_pci_root_lock);
+	list_del(&root->node);
+	mutex_unlock(&acpi_pci_root_lock);
 
 end:
 	kfree(root);

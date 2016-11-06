@@ -324,21 +324,6 @@ static void death_by_timeout(unsigned long ul_conntrack)
 	nf_ct_put(ct);
 }
 
-static inline bool
-nf_ct_key_equal(struct nf_conntrack_tuple_hash *h,
-			const struct nf_conntrack_tuple *tuple,
-			u16 zone)
-{
-	struct nf_conn *ct = nf_ct_tuplehash_to_ctrack(h);
-
-	/* A conntrack can be recreated with the equal tuple,
-	 * so we need to check that the conntrack is confirmed
-	 */
-	return nf_ct_tuple_equal(tuple, &h->tuple) &&
-		nf_ct_zone(ct) == zone &&
-		nf_ct_is_confirmed(ct);
-}
-
 /*
  * Warning :
  * - Caller must take a reference on returned object
@@ -360,7 +345,8 @@ ____nf_conntrack_find(struct net *net, u16 zone,
 	local_bh_disable();
 begin:
 	hlist_nulls_for_each_entry_rcu(h, n, &net->ct.hash[bucket], hnnode) {
-		if (nf_ct_key_equal(h, tuple, zone)) {
+		if (nf_ct_tuple_equal(tuple, &h->tuple) &&
+		    nf_ct_zone(nf_ct_tuplehash_to_ctrack(h)) == zone) {
 			NF_CT_STAT_INC(net, found);
 			local_bh_enable();
 			return h;
@@ -407,7 +393,8 @@ begin:
 			     !atomic_inc_not_zero(&ct->ct_general.use)))
 			h = NULL;
 		else {
-			if (unlikely(!nf_ct_key_equal(h, tuple, zone))) {
+			if (unlikely(!nf_ct_tuple_equal(tuple, &h->tuple) ||
+				     nf_ct_zone(ct) != zone)) {
 				nf_ct_put(ct);
 				goto begin;
 			}

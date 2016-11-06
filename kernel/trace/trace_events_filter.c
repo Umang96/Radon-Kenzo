@@ -1015,9 +1015,6 @@ static void parse_init(struct filter_parse_state *ps,
 
 static char infix_next(struct filter_parse_state *ps)
 {
-	if (!ps->infix.cnt)
-		return 0;
-
 	ps->infix.cnt--;
 
 	return ps->infix.string[ps->infix.tail++];
@@ -1033,9 +1030,6 @@ static char infix_peek(struct filter_parse_state *ps)
 
 static void infix_advance(struct filter_parse_state *ps)
 {
-	if (!ps->infix.cnt)
-		return;
-
 	ps->infix.cnt--;
 	ps->infix.tail++;
 }
@@ -1348,9 +1342,7 @@ static int check_preds(struct filter_parse_state *ps)
 			continue;
 		}
 		n_normal_preds++;
-		/* all ops should have operands */
-		if (cnt < 0)
-			break;
+		WARN_ON_ONCE(cnt < 0);
 	}
 
 	if (cnt != 1 || !n_normal_preds || n_logical_preds >= n_normal_preds) {
