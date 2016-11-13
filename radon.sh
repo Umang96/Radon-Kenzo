@@ -85,7 +85,7 @@ echo -e "$red << Failed to compile zImage, fix the errors first >>$white"
 else
 cd $KERNEL_DIR/build
 rm *.zip
-zip -r Radon-Kenzo-Cm-Mm.zip *
+zip -r Radon-Kenzo-Mi-Mm.zip *
 End=$(date +"%s")
 Diff=$(($End - $Start))
 echo -e "$gre << Build completed in $(($Diff / 60)) minutes and $(($Diff % 60)) seconds >>$white"

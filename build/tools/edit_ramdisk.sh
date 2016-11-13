@@ -35,7 +35,7 @@ echo "write /sys/devices/soc.0/qcom,bcl.56/mode enable" >> $CONFIGFILE
 echo "" >> $CONFIGFILE
 
 if [ $INTERACTIVE == 1 ]; then
-tld1="\"55 1017600:65 1190400:75 1305600:85 1382400:90 1401600:95"\"
+tld1="\"55 1017600:65 1190400:75 1305600:80 1382400:90 1401600:95"\"
 tld2="\"75 1190400:85 1382400:90 1747200:95"\"
 rate=30000
 elif [ $INTERACTIVE == 2 ]; then
