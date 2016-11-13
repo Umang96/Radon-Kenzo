@@ -616,15 +616,29 @@ typedef enum
 #define CFG_ACTIVE_MIN_CHANNEL_TIME_MAX        ( 10000 )
 #define CFG_ACTIVE_MIN_CHANNEL_TIME_DEFAULT    ( 20 )
 
+/* Max Dwell time during BTC eSCO call in msec*/
 #define CFG_ACTIVE_MAX_CHANNEL_TIME_BTC_NAME       "gActiveMaxChannelTimeBtc"
 #define CFG_ACTIVE_MAX_CHANNEL_TIME_BTC_MIN        ( 0 )
 #define CFG_ACTIVE_MAX_CHANNEL_TIME_BTC_MAX        ( 10000 )
 #define CFG_ACTIVE_MAX_CHANNEL_TIME_BTC_DEFAULT    ( 120 )
 
+/* Min Dwell time during BTC eSCO call in msec*/
 #define CFG_ACTIVE_MIN_CHANNEL_TIME_BTC_NAME       "gActiveMinChannelTimeBtc"
 #define CFG_ACTIVE_MIN_CHANNEL_TIME_BTC_MIN        ( 0 )
 #define CFG_ACTIVE_MIN_CHANNEL_TIME_BTC_MAX        ( 10000 )
 #define CFG_ACTIVE_MIN_CHANNEL_TIME_BTC_DEFAULT    ( 60 )
+
+/* Min Dwell time during BTC SCO call in msec*/
+#define CFG_ACTIVE_MIN_CHANNEL_TIME_BTC_SCO_NAME    "gActiveMinChannelTimeBtcSCO"
+#define CFG_ACTIVE_MIN_CHANNEL_TIME_BTC_SCO_MIN     (0)
+#define CFG_ACTIVE_MIN_CHANNEL_TIME_BTC_SCO_MAX     (10000)
+#define CFG_ACTIVE_MIN_CHANNEL_TIME_BTC_SCO_DEFAULT (20)
+
+/* Max Dwell time during BTC SCO call in msec*/
+#define CFG_ACTIVE_MAX_CHANNEL_TIME_BTC_SCO_NAME    "gActiveMaxChannelTimeBtcSCO"
+#define CFG_ACTIVE_MAX_CHANNEL_TIME_BTC_SCO_MIN     (0)
+#define CFG_ACTIVE_MAX_CHANNEL_TIME_BTC_SCO_MAX     (10000)
+#define CFG_ACTIVE_MAX_CHANNEL_TIME_BTC_SCO_DEFAULT (40)
 
 #define CFG_RETRY_LIMIT_ZERO_NAME       "gRetryLimitZero"
 #define CFG_RETRY_LIMIT_ZERO_MIN        ( 0 )
@@ -2033,6 +2047,17 @@ static __inline tANI_U32 defHddRateToDefCfgRate( tANI_U32 defRateIndex )
 #define CFG_TDLS_SCAN_COEX_SUPPORT_ENABLE_MAX        (1)
 #define CFG_TDLS_SCAN_COEX_SUPPORT_ENABLE_DEFAULT    (0)
 
+/* Enable/Disable Consecutive Beacon miss */
+#define CFG_ENABLE_CONSECUTIVE_BMISS_NAME        "gEnableconcBmiss"
+#define CFG_ENABLE_CONSECUTIVE_BMISS_MIN         ( 2 )
+#define CFG_ENABLE_CONSECUTIVE_BMISS_MAX         ( 10 )
+#define CFG_ENABLE_CONSECUTIVE_BMISS_DEFAULT     ( 5 )
+
+/* Enable/Disable units of beacon wait time */
+#define CFG_ENABLE_UNITS_BEACON_WAIT_NAME        "gEnableunitBwait"
+#define CFG_ENABLE_UNITS_BEACON_WAIT_MIN         ( 2 )
+#define CFG_ENABLE_UNITS_BEACON_WAIT_MAX         ( 10 )
+#define CFG_ENABLE_UNITS_BEACON_WAIT_DEFAULT     ( 2 )
 
 /* if gEnableTDLSScan
  * 0: Same as gEnableTDLSScanCoexistence ; driver will do disconnect if
@@ -2924,8 +2949,10 @@ typedef struct
 
    v_U32_t        nInitialDwellTime;     //in units of milliseconds
 
-   v_U32_t        nActiveMinChnTimeBtc;     //in units of milliseconds
-   v_U32_t        nActiveMaxChnTimeBtc;     //in units of milliseconds
+   uint32_t       min_chntime_btc_esco;     //in units of milliseconds
+   uint32_t       max_chntime_btc_esco;     //in units of milliseconds
+   uint32_t       min_chntime_btc_sco;
+   uint32_t       max_chntime_btc_sco;
 #ifdef WLAN_AP_STA_CONCURRENCY
    v_U32_t        nPassiveMinChnTimeConc;    //in units of milliseconds
    v_U32_t        nPassiveMaxChnTimeConc;    //in units of milliseconds
@@ -3163,6 +3190,8 @@ typedef struct
    v_BOOL_t                    fEnableActiveModeOffload;
 #endif
    v_U32_t                     enableLpwrImgTransition;
+   v_U8_t                      enable_conc_bmiss;
+   v_U8_t                      enable_units_bwait;
    v_U8_t                      scanAgingTimeout;
    v_BOOL_t                    enableTxLdpc;
    v_U8_t                      disableLDPCWithTxbfAP;

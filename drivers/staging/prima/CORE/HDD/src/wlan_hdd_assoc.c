@@ -3380,7 +3380,8 @@ eHalStatus hdd_smeRoamCallback( void *pContext, tCsrRoamInfo *pRoamInfo, tANI_U3
                 if((pHddCtx) &&
                    (VOS_TRUE == pHddStaCtx->hdd_ReassocScenario) &&
                    (TRUE == pHddCtx->hdd_wlan_suspended) &&
-                   (eCSR_ROAM_RESULT_NONE == roamResult))
+                   ((eCSR_ROAM_RESULT_NONE == roamResult)||
+                     (pRoamInfo && pRoamInfo->is11rAssoc)))
                 {
                     /* Send DTIM period to the FW; only if the wlan is already
                        in suspend. This is the case with roaming (reassoc),
@@ -3407,7 +3408,8 @@ eHalStatus hdd_smeRoamCallback( void *pContext, tCsrRoamInfo *pRoamInfo, tANI_U3
                 if ((pHddCtx) &&
                     (FULL_POWER == pmcGetPmcState(pHddCtx->hHal)) &&
                     (VOS_TRUE == pHddStaCtx->hdd_ReassocScenario) &&
-                    (eCSR_ROAM_RESULT_NONE == roamResult))
+                    ((eCSR_ROAM_RESULT_NONE == roamResult) ||
+                      (pRoamInfo && pRoamInfo->is11rAssoc)))
                 {
                     hddLog( LOG1, FL("Device in full power."
                            "Stop and start traffic timer for roaming"));
@@ -3420,7 +3422,8 @@ eHalStatus hdd_smeRoamCallback( void *pContext, tCsrRoamInfo *pRoamInfo, tANI_U3
                 }
 
                 halStatus = hdd_RoamSetKeyCompleteHandler( pAdapter, pRoamInfo, roamId, roamStatus, roamResult );
-                if (eCSR_ROAM_RESULT_NONE == roamResult)
+                if ((eCSR_ROAM_RESULT_NONE == roamResult) ||
+                     (pRoamInfo && pRoamInfo->is11rAssoc))
                     pHddStaCtx->hdd_ReassocScenario = FALSE;
             }
             break;
