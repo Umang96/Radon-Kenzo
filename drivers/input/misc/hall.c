@@ -20,6 +20,8 @@
 
 #define GPIO_HALL_EINT_PIN 107
 #define CONFIG_HALL_SYS
+#define LID_DEV_NAME "hall_sensor"
+#define HALL_INPUT "/dev/input/hall_dev"
 
 
 struct hall_switch_info {
@@ -50,14 +52,13 @@ static irqreturn_t hall_interrupt(int irq, void *data)
 		pr_err("Macle report key s ");
 	}
 	if (hall_gpio) {
-			input_report_key(hall_info->ipdev, KEY_HALL_OPEN, 1);
-			input_report_key(hall_info->ipdev, KEY_HALL_OPEN, 0);
-			input_sync(hall_info->ipdev);
+		input_report_switch(hall_info->ipdev, SW_LID, 0);
+		dev_dbg(&hall_info->ipdev->dev, "far\n");
 	} else {
-			input_report_key(hall_info->ipdev, KEY_HALL_CLOSE, 1);
-			input_report_key(hall_info->ipdev, KEY_HALL_CLOSE, 0);
-			input_sync(hall_info->ipdev);
+		input_report_switch(hall_info->ipdev, SW_LID, 1);
+		dev_dbg(&hall_info->ipdev->dev, "near\n");
 	}
+	input_sync(hall_info->ipdev);
 
      return IRQ_HANDLED;
 }
@@ -179,9 +180,10 @@ static int hall_probe(struct platform_device *pdev)
 		pr_err("hall_probe: input_allocate_device fail\n");
 		goto input_error;
 	}
-	hall_info->ipdev->name = "hall-switch-input";
-	input_set_capability(hall_info->ipdev, EV_KEY, KEY_HALL_OPEN);
-	input_set_capability(hall_info->ipdev, EV_KEY, KEY_HALL_CLOSE);
+	hall_info->ipdev->name = LID_DEV_NAME;
+	hall_info->ipdev->phys = HALL_INPUT;
+	__set_bit(EV_SW, hall_info->ipdev->evbit);
+	__set_bit(SW_LID, hall_info->ipdev->swbit);
 	set_bit(INPUT_PROP_NO_DUMMY_RELEASE, hall_info->ipdev->propbit);
 	rc = input_register_device(hall_info->ipdev);
 	if (rc) {
