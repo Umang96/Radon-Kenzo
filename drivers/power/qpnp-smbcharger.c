@@ -5209,16 +5209,16 @@ static int rerun_apsd(struct smbchg_chip *chip)
 	return rc;
 }
 
-static void smbchg_redetect_work(struct work_struct *work)
+/*static void smbchg_reg_work(struct work_struct *work)
 {
 	struct smbchg_chip *chip = container_of(work,
 				struct smbchg_chip,
-				redetect_work.work);
+				reg_work.work);
 	int rc;
 	rc = rerun_apsd(chip);
 	if (rc)
 		pr_err("rerun_apsd error,exit\n");
-}
+}*/
 
 #define SCHG_LITE_USBIN_HVDCP_5_9V		0x8
 #define SCHG_LITE_USBIN_HVDCP_5_9V_SEL_MASK	0x38

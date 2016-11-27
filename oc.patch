@@ -1,7 +1,7 @@
-diff --git a/arch/arm/boot/dts/qcom/msm8956.dtsi b/arch/arm/boot/dts/qcom/msm8956.dtsi
+diff --git a/arch/arm/boot/dts/qcom/kenzo/msm8956-kenzo.dtsi b/arch/arm/boot/dts/qcom/kenzo/msm8956-kenzo.dtsi
 index 3e43fe4..5d05be5 100644
---- a/arch/arm/boot/dts/qcom/msm8956.dtsi
-+++ b/arch/arm/boot/dts/qcom/msm8956.dtsi
+--- a/arch/arm/boot/dts/qcom/kenzo/msm8956-kenzo.dtsi
++++ b/arch/arm/boot/dts/qcom/kenzo/msm8956-kenzo.dtsi
 @@ -317,7 +317,7 @@
  			< 1305600000 6>,
  			< 1382400000 7>,
