@@ -23,7 +23,7 @@ echo -e ""
 echo -e "$gre ====================================\n\n Welcome to Radon building program !\n\n ====================================\n\n 1.Build Radon kenzo stock\n\n 2.Build Radon kenzo overclock\n"
 echo -n " Enter your choice:"
 read overclock
-echo -e "\n 1.Build radon fpc\n\n 2.Build radon gdx\n"
+echo -e "\n 1.Build radon cm ng fpc\n\n 2.Build radon cm ng gdx\n"
 echo -n " Enter your choice:"
 read goodix
 echo -e "$white"
@@ -88,7 +88,7 @@ rm *.zip
 zip -r Radon-Kenzo-Cm-Ng.zip *
 End=$(date +"%s")
 Diff=$(($End - $Start))
-echo -e "$gre << Build completed in $(($Diff / 60)) minutes and $(($Diff % 60)) seconds >>$white"
+echo -e "$gre << Build completed in $(($Diff / 60)) minutes and $(($Diff % 60)) seconds, variant($overclock$goodix) >>$white"
 fi
 cd $KERNEL_DIR
 if [ $overclock == 2 ]; then
