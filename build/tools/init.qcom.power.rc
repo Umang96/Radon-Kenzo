@@ -141,7 +141,7 @@ on enable-low-power
     write /proc/sys/kernel/sched_enable_thread_grouping 1
 
     # set cpu_boost parameters
-    write /sys/module/cpu_boost/parameters/input_boost_freq "0:1305600"
+    write /sys/module/cpu_boost/parameters/input_boost_freq 0:1305600
     write /sys/module/cpu_boost/parameters/input_boost_ms "40"
     write /proc/sys/kernel/sched_upmigrate_min_nice 9
 
