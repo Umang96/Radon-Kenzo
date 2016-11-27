@@ -39,11 +39,7 @@ export ARCH=arm64
 export CROSS_COMPILE="/home/$USER/toolchain/aarch64-linux-linaro-android-4.9/bin/aarch64-linux-android-"
 export LD_LIBRARY_PATH=home/$USER/toolchain/aarch64-linux-linaro-android-4.9/lib/
 STRIP="/home/$USER/toolchain/aarch64-linux-linaro-android-4.9/bin/aarch64-linux-android-strip"
-cp $KERNEL_DIR/build/modules/wlan1.ko ~/wlan1.ko
-cp $KERNEL_DIR/build/modules/wlan2.ko ~/wlan2.ko
 make clean
-mv ~/wlan1.ko $KERNEL_DIR/build/modules/wlan1.ko
-mv ~/wlan2.ko $KERNEL_DIR/build/modules/wlan2.ko
 if [ $overclock == 2 ]; then
 git apply oc.patch
 elif [ $overclock == 1 ]; then
@@ -71,10 +67,8 @@ mv $KERNEL_DIR/arch/arm64/boot/dt.img $KERNEL_DIR/build/tools/dt22.img
 fi
 if [ $goodix == 1 ]; then
 cp $KERNEL_DIR/arch/arm64/boot/Image $KERNEL_DIR/build/tools/Image1
-cp $KERNEL_DIR/drivers/staging/prima/wlan.ko $KERNEL_DIR/build/modules/wlan1.ko
 elif [ $goodix == 2 ]; then
 cp $KERNEL_DIR/arch/arm64/boot/Image $KERNEL_DIR/build/tools/Image2
-cp $KERNEL_DIR/drivers/staging/prima/wlan.ko $KERNEL_DIR/build/modules/wlan2.ko
 fi
 cd $KERNEL_DIR/build/modules/
 $STRIP --strip-unneeded *.ko
