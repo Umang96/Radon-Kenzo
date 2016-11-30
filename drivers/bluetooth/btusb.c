@@ -1239,8 +1239,6 @@ static int btusb_setup_intel(struct hci_dev *hdev)
 	}
 	fw_ptr = fw->data;
 
-	kfree_skb(skb);
-
 	/* This Intel specific command enables the manufacturer mode of the
 	 * controller.
 	 *
