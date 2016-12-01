@@ -88,7 +88,7 @@ rm *.zip
 zip -r Radon-Kenzo-Mi-Mm.zip *
 End=$(date +"%s")
 Diff=$(($End - $Start))
-echo -e "$gre << Build completed in $(($Diff / 60)) minutes and $(($Diff % 60)) seconds >>$white"
+echo -e "$gre << Build completed in $(($Diff / 60)) minutes and $(($Diff % 60)) seconds, variant($overclock$goodix) >>$white"
 fi
 cd $KERNEL_DIR
 if [ $overclock == 2 ]; then
