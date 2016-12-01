@@ -18,7 +18,7 @@ delete("/tmp/unpackbootimg");
 delete("/tmp/flash_kernel.sh");
 delete("/tmp/edit_ramdisk.sh");
 ui_print(" ");
-ui_print("Installing kernel modules");
+ui_print("Installing kernel tweaks");
 ui_print(" ");
 ui_print("Done, Enjoy Radon Power !");
 ui_print(" ");
