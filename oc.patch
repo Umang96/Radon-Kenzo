@@ -1,0 +1,152 @@
+diff --git a/arch/arm/boot/dts/qcom/msm8956.dtsi b/arch/arm/boot/dts/qcom/msm8956.dtsi
+index 3e43fe4..5d05be5 100644
+--- a/arch/arm/boot/dts/qcom/msm8956.dtsi
++++ b/arch/arm/boot/dts/qcom/msm8956.dtsi
+@@ -317,7 +317,7 @@
+ 			< 1305600000 6>,
+ 			< 1382400000 7>,
+ 			< 1401600000 8>,
+-			< 1440000000 9>;
++			< 1478400000 9>;
+ 		qcom,speed0-bin-v0-c1 =
+ 			<          0 0>,
+ 			<  400000000 1>,
+@@ -326,7 +326,8 @@
+ 			< 1382400000 4>,
+ 			< 1612800000 5>,
+ 			< 1747200000 6>,
+-			< 1804800000 7>;
++			< 1804800000 7>,
++			< 1843200000 8>;
+ 		qcom,speed0-bin-v0-cci =
+ 			<          0 0>,
+ 			<  307200000 1>,
+@@ -344,7 +345,7 @@
+ 			< 1305600000 6>,
+ 			< 1382400000 7>,
+ 			< 1401600000 8>,
+-			< 1440000000 9>;
++			< 1478400000 9>;
+ 		qcom,speed1-bin-v0-c1 =
+ 			<          0 0>,
+ 			<  400000000 1>,
+@@ -353,7 +354,8 @@
+ 			< 1382400000 4>,
+ 			< 1612800000 5>,
+ 			< 1747200000 6>,
+-			< 1804800000 7>;
++			< 1804800000 7>,
++			< 1843200000 8>;
+ 		qcom,speed1-bin-v0-cci =
+ 			<          0 0>,
+ 			<  307200000 1>,
+@@ -439,13 +441,13 @@
+ 				<  806400  4101 >,	/* SVS+  */
+ 				< 1017600  5712 >,	/* NOM   */
+ 				< 1190400  6152 >,	/* TURBO */
+-				< 1440000  7104 >;
++				< 1478400  7104 >;
+ 			cpu-to-dev-map-4 =
+ 				<  883200   805 >,	/* SVS   */
+ 				< 1190400  4101 >,	/* SVS+  */
+ 				< 1382400  5712 >,	/* NOM   */
+ 				< 1612800  6152 >,	/* TURBO */
+-				< 1804800  7104 >;
++				< 1843200  7104 >;
+ 		};
+ 
+ 		mincpubw-cpufreq {
+@@ -453,7 +455,7 @@
+ 			cpu-to-dev-map-0 =
+ 				<  691200 2929 >,
+ 				< 1017600 2929 >,
+-				< 1440000 4101 >;
++				< 1478400 4101 >;
+ 			cpu-to-dev-map-4 =
+ 				<  883200 2929 >,
+ 				< 1382400 2929 >,
+@@ -467,13 +469,13 @@
+ 				<  806400  403200 >,
+ 				< 1017600  441600 >,
+ 				< 1190400  556800 >,
+-				< 1440000  614400 >;
++				< 1478400  614400 >;
+ 			cpu-to-dev-map-4 =
+ 				<  883200 307200 >,
+ 				< 1190400 403200 >,
+ 				< 1382400 441600 >,
+ 				< 1612800 556800 >,
+-				< 1804800 614400 >;
++				< 1843200 614400 >;
+ 		};
+ 	};
+ 
+@@ -498,7 +500,7 @@
+ 			< 1305600 >,
+ 			< 1382400 >,
+ 			< 1401600 >,
+-			< 1440000 >;
++			< 1478400 >;
+ 		qcom,cpufreq-table-4 =
+ 			<  400000 >,
+ 			<  883200 >,
+@@ -512,7 +514,8 @@
+ 			< 1382400 >,
+ 			< 1612800 >,
+ 			< 1747200 >,
+-			< 1804800 >;
++			< 1804800 >,
++			< 1843200 >;
+ 	};
+ 
+ 	timer {
+ 
+diff --git a/arch/arm/boot/dts/qcom/msm8976-regulator.dtsi b/arch/arm/boot/dts/qcom/msm8976-regulator.dtsi
+index 081f973..3bd79a2 100644
+--- a/arch/arm/boot/dts/qcom/msm8976-regulator.dtsi
++++ b/arch/arm/boot/dts/qcom/msm8976-regulator.dtsi
+@@ -451,7 +451,7 @@
+ 				<6  1305600000>,
+ 				<7  1382400000>,
+ 				<8  1401600000>,
+-				<9  1440000000>;
++				<9  1478400000>;
+ 		qcom,cpr-speed-bin-max-corners =
+ 				<0 0 2 4 8>,
+ 				<1 0 2 4 9>;
+@@ -479,7 +479,7 @@
+ 		interrupts = <0 19 0>;
+ 		regulator-name = "apc1_corner";
+ 		regulator-min-microvolt = <1>;
+-		regulator-max-microvolt = <7>;
++		regulator-max-microvolt = <8>;
+ 
+ 		qcom,cpr-fuse-corners = <3>;
+ 		qcom,cpr-voltage-ceiling = <920000 1020000 1140000>;
+@@ -495,6 +495,7 @@
+ 					 <RPM_SMD_REGULATOR_LEVEL_NOM>,
+ 					 <RPM_SMD_REGULATOR_LEVEL_TURBO>,
+ 					 <RPM_SMD_REGULATOR_LEVEL_TURBO>,
++					 <RPM_SMD_REGULATOR_LEVEL_TURBO>,
+ 					 <RPM_SMD_REGULATOR_LEVEL_TURBO>;
+ 
+ 		qcom,cpr-ref-clk = <19200>;
+@@ -535,7 +536,7 @@
+ 		qcom,cpr-init-voltage-ref = <920000 1020000 1140000>;
+ 		qcom,cpr-init-voltage-step = <10000>;
+ 
+-		qcom,cpr-corner-map = <1 1 2 2 3 3 3>;
++		qcom,cpr-corner-map = <1 1 2 2 3 3 3 3>;
+ 		qcom,cpr-scaled-init-voltage-as-ceiling;
+ 		qcom,cpr-voltage-scaling-factor-max = <0 2000 2000>;
+ 		qcom,cpr-quot-adjust-scaling-factor-max = <0 1400 1400>;
+@@ -546,7 +547,8 @@
+ 				<4  1382400000>,
+ 				<5  1612800000>,
+ 				<6  1747200000>,
+-				<7  1804800000>;
++				<7  1804800000>,
++				<8  1843200000>;
+ 		qcom,cpr-speed-bin-max-corners =
+ 				<0 0 2 4 6>,
+ 				<1 0 2 4 7>;

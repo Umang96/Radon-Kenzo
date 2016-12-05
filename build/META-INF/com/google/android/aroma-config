@@ -1,0 +1,66 @@
+ini_set("rom_name",             "Radon");
+ini_set("rom_version",          "V3.1");
+ini_set("rom_author",           "Umang96");
+ini_set("rom_device",           "Kenzo");
+ini_set("rom_date",             "Dec 01, 2016");
+
+ini_set("force_colorspace","rgba");
+#ini_set("dp","6");
+
+fontresload( "0", "ttf/Roboto-Regular.ttf", "12" );
+fontresload( "1", "ttf/Roboto-Regular.ttf", "18" ); 
+
+theme("default");
+
+
+viewbox(
+    "\nRadon Kernel",
+
+    "<@center><b>\n" + ini_get("rom_device") + "</b>\n\n</@>" +
+    "\n\n\n\n  VERSION\t: <b><#selectbg_g>"+ini_get("rom_version")+"</#></b>\n" +
+    "  AUTHOR \t: <b><#selectbg_g>"+ini_get("rom_author")+"</#></b>\n" +
+    "  RELEASED\t: <b><#selectbg_g>"+ini_get("rom_date")+"</#></b>\n\n\n" +
+    "Press Next to Continue...",
+
+    "@welcome"
+);
+
+selectbox(
+  "\n\nWhich fingerprint sensor you have ?","<@center><b>\n\n\n\n\n\nRemember !\n\nIf you don't know then try fpc1020 first, if fingerprint doesn't work, then re-flash kernel and choose goodix.\n</b></@>","","goodix.prop",
+  "I have fpc1020","",1,
+  "I have goodix","",0
+);
+
+selectbox(
+  "\n\nDo you need overclock ?","<@center><b>\n\n\n\n\n\nIf you don't understand then select stock frequencies only, oc is for advanced users.\n</b></@>","","overclock.prop",
+  "1440 Mhz, 1804 Mhz (stock)","",1,
+  "1478 Mhz, 1843 Mhz (oc)","",0
+);
+
+selectbox(
+  "\n\nSelect default interactive tuning","<@center><b>\n\n\n\n\n\nThis will tune your interactive target loads and timer rate according to your choice.\n</b></@>","","interactive.prop",
+  "Balanced (for normal users)","",1,
+  "Battery biased","",0,
+  "Performance biased","",0
+);
+
+selectbox(
+  "\n\nDo you need dt2w ?","<@center><b>\n\n\n\n\n\nRemember !\n\nKeeping dt2w enabled will consume little more battery.\n</b></@>","","dt2w.prop",
+  "Yes, enable it","",0,
+  "No, disable it","",1
+);
+
+selectbox(
+  "\n\nWant enhanced colors ?","<@center><b>\n\n\n\n\n\nIf you choose yes then display colors will be more vibrant than stock.\n</b></@>","","color.prop",
+  "Yes, enhanced colors","",1,
+  "No, stock colors","",0
+);
+
+setvar("retstatus",
+install(
+  "\nInstalling",
+  "<@center>\nInstalling Radon Kernel\nPlease wait</@>",
+  "")
+);
+
+ini_set("text_next", "Finish");
