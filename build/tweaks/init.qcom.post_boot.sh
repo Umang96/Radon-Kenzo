@@ -1092,41 +1092,14 @@ case "$target" in
                 done
                 for mode in /sys/devices/soc.0/qcom,bcl.*/mode
                 do
-                    echo -n enable > $mode
+                    echo -n disable > $mode
                 done
-
-                # enable governor for power cluster
-                echo 1 > /sys/devices/system/cpu/cpu0/online
-                echo "interactive" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
-                echo 80 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/go_hispeed_load
-                echo 20000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/timer_rate
-                echo 0 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/io_is_busy
-                echo 40000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/min_sample_time
-                echo 400000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
-		echo "40 1017600:50 1190400:60 1305600:70 1382400:80 1401600:90" > /sys/devices/system/cpu/cpu0/cpufreq/interactive/target_loads
-
-                # enable governor for perf cluster
-                echo 1 > /sys/devices/system/cpu/cpu4/online
-                echo "interactive" > /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor
-                echo 85 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/go_hispeed_load
-                echo 20000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/timer_rate
-                echo 0 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/io_is_busy
-                echo 40000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/min_sample_time
-                echo 40000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/sampling_down_factor
-                echo 400000 > /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
-                echo 60000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/max_freq_hysteresis
 
                 if [ $panel -gt 1080 ]; then
                     #set texture cache size for resolution greater than 1080p
                     setprop ro.hwui.texture_cache_size 72
                 fi
 
-                echo 59000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/above_hispeed_delay
-                echo 1305600 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/hispeed_freq
-                echo "691200:60 806400:80" > /sys/devices/system/cpu/cpu0/cpufreq/interactive/target_loads
-                echo 1382400 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/hispeed_freq
-                echo "19000 1382400:39000" > /sys/devices/system/cpu/cpu4/cpufreq/interactive/above_hispeed_delay
-                echo "60 1190400:70 1382400:80 1747200:90" > /sys/devices/system/cpu/cpu4/cpufreq/interactive/target_loads
                 # HMP Task packing settings for 8976
                 echo 30 > /proc/sys/kernel/sched_small_task
                 echo 20 > /sys/devices/system/cpu/cpu0/sched_mostly_idle_load
@@ -1201,7 +1174,7 @@ case "$target" in
                 done
                 for mode in /sys/devices/soc.0/qcom,bcl.*/mode
                 do
-                    echo -n enable > $mode
+                    echo -n disable > $mode
                 done
 
                 # Enable timer migration to little cluster

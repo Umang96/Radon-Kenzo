@@ -52,7 +52,7 @@ selectbox(
 );
 
 selectbox(
-  "\n\nSmart hotplugging ?","<@center><b>\n\n\n\n\n\nIf you choose yes then big cluseter will go offline when cpu load in low and come back online when cpu load is high, this might save battery for light users.\n</b></@>","","hotplug.prop",
+  "\n\nSmart hotplugging ?","<@center><b>\n\n\n\n\n\nIf you choose yes then big cluseter will go offline when cpu load is low and come back online when cpu load is high, this might save battery for light users.\n</b></@>","","hotplug.prop",
   "Yes, enable hotplug","",1,
   "No, disable hotplug","",0
 );
