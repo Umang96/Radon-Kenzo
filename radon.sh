@@ -23,7 +23,7 @@ echo -e ""
 echo -e "$gre ====================================\n\n Welcome to Radon building program !\n\n ====================================\n\n 1.Build Radon kenzo stock\n\n 2.Build Radon kenzo overclock\n"
 echo -n " Enter your choice:"
 read overclock
-echo -e "\n 1.Build radon miui mm fpc\n\n 2.Build radon miui mm gdx\n"
+echo -e "\n 1.Build radon cm mm fpc\n\n 2.Build radon cm mm gdx\n"
 echo -n " Enter your choice:"
 read goodix
 echo -e "$white"
@@ -85,7 +85,7 @@ echo -e "$red << Failed to compile zImage, fix the errors first >>$white"
 else
 cd $KERNEL_DIR/build
 rm *.zip
-zip -r Radon-Kenzo-Mi-Mm.zip *
+zip -r Radon-Kenzo-Cm-Mm.zip *
 End=$(date +"%s")
 Diff=$(($End - $Start))
 echo -e "$gre << Build completed in $(($Diff / 60)) minutes and $(($Diff % 60)) seconds, variant($overclock$goodix) >>$white"

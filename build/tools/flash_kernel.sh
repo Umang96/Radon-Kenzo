@@ -44,6 +44,8 @@ gunzip -c /tmp/ramdisk/boot.img-ramdisk.gz | cpio -i
 rm /tmp/ramdisk/boot.img-ramdisk.gz
 rm /tmp/boot.img-ramdisk.gz
 cp /tmp/init.radon.rc /tmp/ramdisk/
+cp /tmp/init.qcom.power.rc /tmp/ramdisk/
+chmod 0750 /tmp/ramdisk/init.qcom.power.rc
 chmod 0750 /tmp/ramdisk/init.radon.rc
 if [ $(grep -c "import /init.radon.rc" /tmp/ramdisk/init.rc) == 0 ]; then
    sed -i "/import \/init\.environ\.rc/aimport /init.radon.rc" /tmp/ramdisk/init.rc
