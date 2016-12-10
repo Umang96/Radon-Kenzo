@@ -262,6 +262,7 @@ struct smbchg_chip {
 	struct work_struct		usb_set_online_work;
 	struct delayed_work		vfloat_adjust_work;
 	struct delayed_work		hvdcp_det_work;
+	struct delayed_work		redetect_work;
 	spinlock_t			sec_access_lock;
 	struct mutex			therm_lvl_lock;
 	struct mutex			usb_set_online_lock;
@@ -5210,17 +5211,6 @@ static int rerun_apsd(struct smbchg_chip *chip)
 	}
 
 	return rc;
-}
-
-static void smbchg_redetect_work(struct work_struct *work)
-{
-	struct smbchg_chip *chip = container_of(work,
-				struct smbchg_chip,
-				redetect_work.work);
-	int rc;
-	rc = rerun_apsd(chip);
-	if (rc)
-		pr_err("rerun_apsd error,exit\n");
 }
 
 #define SCHG_LITE_USBIN_HVDCP_5_9V		0x8
