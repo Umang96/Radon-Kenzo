@@ -1,8 +1,8 @@
 ini_set("rom_name",             "Radon");
-ini_set("rom_version",          "V3.1");
+ini_set("rom_version",          "V3.2");
 ini_set("rom_author",           "Umang96");
 ini_set("rom_device",           "Kenzo");
-ini_set("rom_date",             "Dec 01, 2016");
+ini_set("rom_date",             "Dec 10, 2016");
 
 ini_set("force_colorspace","rgba");
 #ini_set("dp","6");
@@ -32,6 +32,13 @@ selectbox(
 );
 
 selectbox(
+  "\n\nDo you need dt2w ?","<@center><b>\n\n\n\n\n\nRemember !\n\nKeeping dt2w enabled will consume little more battery.\n</b></@>","","dt2w.prop",
+  "Yes, enable it (with vibration)","",0,
+  "Yes, enable it (without vibration)","",0,
+  "No, disable it (saves battery)","",1
+);
+
+selectbox(
   "\n\nDo you need overclock ?","<@center><b>\n\n\n\n\n\nIf you don't understand then select stock frequencies only, oc is for advanced users.\n</b></@>","","overclock.prop",
   "1440 Mhz, 1804 Mhz (stock)","",1,
   "1478 Mhz, 1843 Mhz (oc)","",0
@@ -45,13 +52,23 @@ selectbox(
 );
 
 selectbox(
-  "\n\nDo you need dt2w ?","<@center><b>\n\n\n\n\n\nRemember !\n\nKeeping dt2w enabled will consume little more battery.\n</b></@>","","dt2w.prop",
-  "Yes, enable it","",0,
-  "No, disable it","",1
+  "\n\nSmart hotplugging ?","<@center><b>\n\n\n\n\n\nIf you choose yes then big cluseter will go offline when cpu load is low and come back online when cpu load is high, this might save battery for light users.\n</b></@>","","hotplug.prop",
+  "Yes, enable hotplug","",1,
+  "No, disable hotplug","",0
+);
+
+
+selectbox(
+  "\n\n<@center>Select charging rate limit\nWarning ! </@>","<@center><b>\n\n\n\n\n\nThis will set your max charging rate limit.\nThe stock 2000 mA is recommended, go above that at your own risk.\n</b></@>","","crate.prop",
+  "1600 mA","",0,
+  "1800 mA","",0,
+  "2000 mA (stock)","",1,
+  "2200 mA","",0,
+  "2400 mA","",0
 );
 
 selectbox(
-  "\n\nWant enhanced colors ?","<@center><b>\n\n\n\n\n\nIf you choose yes then display colors will be more vibrant than stock.\n</b></@>","","color.prop",
+  "\n\nWant enhanced colors ?","<@center><b>\n\n\n\n\n\nIf you choose yes then display colors will be better than stock.\n</b></@>","","color.prop",
   "Yes, enhanced colors","",1,
   "No, stock colors","",0
 );

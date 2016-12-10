@@ -1,6 +1,6 @@
 #!/sbin/sh
  #
- # Copyright © 2014, Varun Chitre "varun.chitre15" <varun.chitre15@gmail.com> 
+ # Copyright © 2014, Umang Leekha "umang96" <umangleekha3@gmail.com> 
  #
  # Live ramdisk patching script
  #
