@@ -31,10 +31,6 @@ extern uint8_t g_s5k5e8_otp_day;
 extern uint8_t g_s5k5e8_otp_lens_id;
 
 static struct v4l2_file_operations msm_sensor_v4l2_subdev_fops;
-extern uint8_t g_ov5670_otp_module_id;
-extern uint8_t g_s5k3p3_otp_module_id;
-extern uint8_t g_ov16880_otp_module_id;
-
 static void msm_sensor_adjust_mclk(struct msm_camera_power_ctrl_t *ctrl)
 {
 	int idx;
