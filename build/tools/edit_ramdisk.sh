@@ -91,18 +91,18 @@ echo "write /sys/devices/soc.0/qcom,bcl.56/mode disable" >> $CONFIGFILE
 echo "" >> $CONFIGFILE
 echo "# HOTPLUGGING" >> $CONFIGFILE
 if [ $HOTPLUG == 1 ]; then
-echo "write /sys/devices/system/cpu/cpu4/core_ctl/min_cpus 0" >> $CONFIGFILE
+echo "write /sys/devices/system/cpu/cpu4/core_ctl/min_cpus 1" >> $CONFIGFILE
 echo "write /sys/devices/system/cpu/cpu4/core_ctl/max_cpus 2" >> $CONFIGFILE
 echo "write /sys/devices/system/cpu/cpu4/core_ctl/busy_up_thres 25" >> $CONFIGFILE
 echo "write /sys/devices/system/cpu/cpu4/core_ctl/busy_down_thres 20" >> $CONFIGFILE
-echo "write /sys/devices/system/cpu/cpu4/core_ctl/offline_delay_ms 1800" >> $CONFIGFILE
+echo "write /sys/devices/system/cpu/cpu4/core_ctl/offline_delay_ms 1600" >> $CONFIGFILE
 echo "write /sys/devices/system/cpu/cpu4/core_ctl/task_thres 4" >> $CONFIGFILE
 echo "write /sys/devices/system/cpu/cpu4/core_ctl/is_big_cluster 1" >> $CONFIGFILE
-echo "write /sys/devices/system/cpu/cpu0/core_ctl/min_cpus 4" >> $CONFIGFILE
+echo "write /sys/devices/system/cpu/cpu0/core_ctl/min_cpus 2" >> $CONFIGFILE
 echo "write /sys/devices/system/cpu/cpu0/core_ctl/max_cpus 4" >> $CONFIGFILE
-echo "write /sys/devices/system/cpu/cpu0/core_ctl/busy_up_thres 3" >> $CONFIGFILE
-echo "write /sys/devices/system/cpu/cpu0/core_ctl/busy_down_thres 2" >> $CONFIGFILE
-echo "write /sys/devices/system/cpu/cpu0/core_ctl/offline_delay_ms 5000" >> $CONFIGFILE
+echo "write /sys/devices/system/cpu/cpu0/core_ctl/busy_up_thres 25" >> $CONFIGFILE
+echo "write /sys/devices/system/cpu/cpu0/core_ctl/busy_down_thres 20" >> $CONFIGFILE
+echo "write /sys/devices/system/cpu/cpu0/core_ctl/offline_delay_ms 4000" >> $CONFIGFILE
 echo "write /sys/devices/system/cpu/cpu0/core_ctl/not_preferred 1" >> $CONFIGFILE
 echo "write /sys/devices/system/cpu/cpu0/core_ctl/is_big_cluster 0" >> $CONFIGFILE
 elif [ $HOTPLUG == 2 ]; then
@@ -121,6 +121,7 @@ echo "write /sys/devices/system/cpu/cpu0/core_ctl/offline_delay_ms 5000" >> $CON
 echo "write /sys/devices/system/cpu/cpu0/core_ctl/not_preferred 1" >> $CONFIGFILE
 echo "write /sys/devices/system/cpu/cpu0/core_ctl/is_big_cluster 0" >> $CONFIGFILE
 fi
+echo "chmod 0444 /sys/devices/system/cpu/cpu4/core_ctl/min_cpus" >> $CONFIGFILE
 echo "" >> $CONFIGFILE
 echo "on enable-low-power" >> $CONFIGFILE
 echo "" >> $CONFIGFILE

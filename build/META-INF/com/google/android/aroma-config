@@ -51,14 +51,14 @@ selectbox(
 );
 
 selectbox(
-  "\n\nSelect default interactive tuning","<@center><b>\n\n\n\n\n\nThis will tune your interactive target loads and timer rate according to your choice.\n</b></@>","","interactive.prop",
+  "\n\nSelect default interactive tuning","<@center><b>\n\n\n\n\n\nThis will tune your interactive target loads and timer rate according to your choice. Only use interactive governor to enjoy this tuning.\n</b></@>","","interactive.prop",
   "Balanced (for normal users)","",1,
   "Battery biased","",0,
   "Performance biased","",0
 );
 
 selectbox(
-  "\n\nSmart hotplugging ?","<@center><b>\n\n\n\n\n\nIf you choose yes then big cluseter will go offline when cpu load is low and come back online when cpu load is high, this might save battery for light users.\n</b></@>","","hotplug.prop",
+  "\n\nSmart hotplugging ?","<@center><b>\n\n\n\n\n\nIf you choose yes then some cores will go offline when cpu load is low and come back online when cpu load is high, this might save battery for light users.\n</b></@>","","hotplug.prop",
   "Yes, enable hotplug","",1,
   "No, disable hotplug","",0
 );
