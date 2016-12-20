@@ -80,21 +80,6 @@ echo "write /sys/devices/platform/kcal_ctrl.0/kcal_cont 255" >> $CONFIGFILE
 echo "write /sys/devices/platform/kcal_ctrl.0/kcal \"256 256 256"\" >> $CONFIGFILE
 fi
 echo "" >> $CONFIGFILE
-echo "# CHARGING RATE" >> $CONFIGFILE
-CRATE=$(cat /tmp/aroma/crate.prop | cut -d '=' -f2)
-if [ $CRATE == 5 ]; then
-CHG=2400
-elif [ $CRATE == 4 ]; then
-CHG=2200
-elif [ $CRATE == 3 ]; then
-CHG=2000
-elif [ $CRATE == 2 ]; then
-CHG=1800
-elif [ $CRATE == 1 ]; then
-CHG=1600
-fi 
-echo "write /sys/module/qpnp_smbcharger/parameters/default_dcp_icl_ma $CHG" >> $CONFIGFILE
-echo "write /sys/module/qpnp_smbcharger/parameters/default_hvdcp_icl_ma $CHG" >> $CONFIGFILE
 HOTPLUG=$(cat /tmp/aroma/hotplug.prop | cut -d '=' -f2)
 echo "" >> $CONFIGFILE
 echo "# DISABLE BCL & CORE CTL" >> $CONFIGFILE
