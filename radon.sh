@@ -36,9 +36,9 @@ Start=$(date +"%s")
 DTBTOOL=$KERNEL_DIR/dtbTool
 cd $KERNEL_DIR
 export ARCH=arm64
-export CROSS_COMPILE="/home/$USER/toolchain/aarch64-linux-linaro-android-4.9/bin/aarch64-linux-android-"
-export LD_LIBRARY_PATH=home/$USER/toolchain/aarch64-linux-linaro-android-4.9/lib/
-STRIP="/home/$USER/toolchain/aarch64-linux-linaro-android-4.9/bin/aarch64-linux-android-strip"
+export CROSS_COMPILE="/home/$USER/toolchain/aarch64-linux-google-android-4.9/bin/aarch64-linux-android-"
+export LD_LIBRARY_PATH=home/$USER/toolchain/aarch64-linux-google-android-4.9/lib/
+STRIP="/home/$USER/toolchain/aarch64-linux-google-android-4.9/bin/aarch64-linux-android-strip"
 cp $KERNEL_DIR/build/modules/wlan1.ko ~/wlan1.ko
 cp $KERNEL_DIR/build/modules/wlan2.ko ~/wlan2.ko
 make clean
