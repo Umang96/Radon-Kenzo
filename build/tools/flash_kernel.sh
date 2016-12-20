@@ -17,23 +17,25 @@
  #
 goodix=$(cat /tmp/aroma/goodix.prop | cut -d '=' -f2)
 overclock=$(cat /tmp/aroma/overclock.prop | cut -d '=' -f2)
+selinx=$(cat /tmp/aroma/sel.prop | cut -d '=' -f2)
 if ([ $overclock -eq 1 ]&&[ $goodix -eq 1 ]); then
-cmd="console=ttyHSL0,115200,n8 androidboot.console=ttyHSL0 androidboot.hardware=qcom ehci-hcd.park=3 androidboot.bootdevice=7824900.sdhci lpm_levels.sleep_disabled=1"
 dim=/tmp/dt11.img
 zim=/tmp/Image1
 elif ([ $overclock -eq 1 ]&&[ $goodix -eq 2 ]); then
-cmd="console=ttyHSL0,115200,n8 androidboot.console=ttyHSL0 androidboot.hardware=qcom ehci-hcd.park=3 androidboot.bootdevice=7824900.sdhci lpm_levels.sleep_disabled=1 androidboot.selinux=permissive"
 dim=/tmp/dt12.img
 zim=/tmp/Image2
 elif ([ $overclock -eq 2 ]&&[ $goodix -eq 1 ]); then
-cmd="console=ttyHSL0,115200,n8 androidboot.console=ttyHSL0 androidboot.hardware=qcom ehci-hcd.park=3 androidboot.bootdevice=7824900.sdhci lpm_levels.sleep_disabled=1"
 dim=/tmp/dt21.img
 zim=/tmp/Image1
 elif ([ $overclock -eq 2 ]&&[ $goodix -eq 2 ]); then
-cmd="console=ttyHSL0,115200,n8 androidboot.console=ttyHSL0 androidboot.hardware=qcom ehci-hcd.park=3 androidboot.bootdevice=7824900.sdhci lpm_levels.sleep_disabled=1 androidboot.selinux=permissive"
 dim=/tmp/dt22.img
 zim=/tmp/Image2
-fi 
+fi
+if ([ $selinx -eq 1 ]); then
+cmd="console=ttyHSL0,115200,n8 androidboot.console=ttyHSL0 androidboot.hardware=qcom ehci-hcd.park=3 androidboot.bootdevice=7824900.sdhci lpm_levels.sleep_disabled=1 androidboot.selinux=permissive"
+elif ([ $selinx -eq 2 ]); then
+cmd="console=ttyHSL0,115200,n8 androidboot.console=ttyHSL0 androidboot.hardware=qcom ehci-hcd.park=3 androidboot.bootdevice=7824900.sdhci lpm_levels.sleep_disabled=1 androidboot.selinux=enforcing"
+fi
 cd /tmp/
 /sbin/busybox dd if=/dev/block/bootdevice/by-name/boot of=./boot.img
 ./unpackbootimg -i /tmp/boot.img
