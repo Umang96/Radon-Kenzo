@@ -12,7 +12,7 @@ on enable-low-power
     write /proc/sys/kernel/sched_upmigrate 95
     write /proc/sys/kernel/sched_downmigrate 85
 
-    write /proc/sys/kernel/sched_window_stats_policy 5
+    write /proc/sys/kernel/sched_window_stats_policy 2
     write /proc/sys/kernel/sched_ravg_hist_size 5
 
     write /sys/devices/system/cpu/cpu0/sched_mostly_idle_nr_run 3
@@ -60,12 +60,15 @@ on enable-low-power
     write /sys/devices/system/cpu/cpu4/online 1
     write /sys/devices/system/cpu/cpu5/online 1
 
-    # Disable L2 GDHS on 8956
-    write /sys/module/lpm_levels/system/a53/a53-l2-gdhs/idle_enabled N
-    write /sys/module/lpm_levels/system/a72/a72-l2-gdhs/idle_enabled N
+    # Enable LPM Prediction
+    write /sys/module/lpm_levels/parameters/lpm_prediction 
 
     # Enable Low power modes
     write /sys/module/lpm_levels/parameters/sleep_disabled 0
+
+    # Disable L2 GDHS on 8956
+    write /sys/module/lpm_levels/system/a53/a53-l2-gdhs/idle_enabled N
+    write /sys/module/lpm_levels/system/a72/a72-l2-gdhs/idle_enabled N
 
     # Enable sched guided freq control
     write /sys/devices/system/cpu/cpu0/cpufreq/interactive/use_sched_load 1
@@ -78,9 +81,6 @@ on enable-low-power
     # Enable timer migration to little cluster
     write /proc/sys/kernel/power_aware_timer_migration 1
 
-    # disallow upmigrate for cgroup's tasks
-    write /dev/cpuctl/bg_non_interactive/cpu.upmigrate_discourage 1
-
     # Enable sched colocation and colocation inheritance
     write /proc/sys/kernel/sched_grp_upmigrate 130
     write /proc/sys/kernel/sched_grp_downmigrate 110
@@ -88,8 +88,8 @@ on enable-low-power
 
     # set cpu_boost parameters
     write /sys/module/cpu_boost/parameters/input_boost_freq 0:1305600
-    write /sys/module/cpu_boost/parameters/input_boost_ms "40"
-    write /proc/sys/kernel/sched_upmigrate_min_nice 9
+    write /sys/module/cpu_boost/parameters/input_boost_ms 40
+    write /proc/sys/kernel/sched_upmigrate_min_nice 15
 
     # set (super) packing parameters
     write /sys/devices/system/cpu/cpu0/sched_mostly_idle_freq 1017600
