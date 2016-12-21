@@ -994,12 +994,6 @@ case "$target" in
 
                 # Enable core control
                 insmod /system/lib/modules/core_ctl.ko
-                echo 2 > /sys/devices/system/cpu/cpu0/core_ctl/min_cpus
-                echo 4 > /sys/devices/system/cpu/cpu0/core_ctl/max_cpus
-                echo 68 > /sys/devices/system/cpu/cpu0/core_ctl/busy_up_thres
-                echo 40 > /sys/devices/system/cpu/cpu0/core_ctl/busy_down_thres
-                echo 100 > /sys/devices/system/cpu/cpu0/core_ctl/offline_delay_ms
-                echo 1 > /sys/devices/system/cpu/cpu0/core_ctl/is_big_cluster
 
                 # re-enable thermal & BCL core_control now
                 echo 1 > /sys/module/msm_thermal/core_control/enabled
@@ -1092,13 +1086,38 @@ case "$target" in
                 done
                 for mode in /sys/devices/soc.0/qcom,bcl.*/mode
                 do
-                    echo -n disable > $mode
+                    echo -n enable > $mode
                 done
+
+                # enable governor for power cluster
+                echo 1 > /sys/devices/system/cpu/cpu0/online
+                echo "interactive" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+                echo 80 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/go_hispeed_load
+                echo 20000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/timer_rate
+                echo 0 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/io_is_busy
+                echo 40000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/min_sample_time
+                echo 400000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+
+                # enable governor for perf cluster
+                echo 1 > /sys/devices/system/cpu/cpu4/online
+                echo "interactive" > /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor
+                echo 85 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/go_hispeed_load
+                echo 20000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/timer_rate
+                echo 0 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/io_is_busy
+                echo 40000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/min_sample_time
+                echo 40000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/sampling_down_factor
+                echo 400000 > /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
+                echo 60000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/max_freq_hysteresis
 
                 if [ $panel -gt 1080 ]; then
                     #set texture cache size for resolution greater than 1080p
                     setprop ro.hwui.texture_cache_size 72
                 fi
+
+                echo 59000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/above_hispeed_delay
+                echo 1305600 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/hispeed_freq
+                echo 1382400 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/hispeed_freq
+                echo "19000 1382400:39000" > /sys/devices/system/cpu/cpu4/cpufreq/interactive/above_hispeed_delay
 
                 # HMP Task packing settings for 8976
                 echo 30 > /proc/sys/kernel/sched_small_task
@@ -1138,10 +1157,6 @@ case "$target" in
 		    echo N > /sys/module/lpm_levels/system/a53/a53-l2-pc/idle_enabled
 		    echo N > /sys/module/lpm_levels/system/a72/a72-l2-pc/idle_enabled
 		fi
-
-		# Disable L2 GDHS on 8976
-		echo N > /sys/module/lpm_levels/system/a53/a53-l2-gdhs/idle_enabled
-		echo N > /sys/module/lpm_levels/system/a72/a72-l2-gdhs/idle_enabled
 
                 # Enable Low power modes
                 echo 0 > /sys/module/lpm_levels/parameters/sleep_disabled
@@ -1633,4 +1648,47 @@ if [ -f /sys/devices/soc0/select_image ]; then
     echo $image_version > /sys/devices/soc0/image_version
     echo $image_variant > /sys/devices/soc0/image_variant
     echo $oem_version > /sys/devices/soc0/image_crm_version
+fi
+
+## Xiaomi EU / Acid Tweaks ##
+
+real_model=`getprop ro.product.model`
+
+case "$target" in
+
+    "msm8960") # MI2/MI2A
+	    echo "512" > /sys/block/mmcblk0/bdi/read_ahead_kb
+        echo "512" > /sys/block/mmcblk0/queue/read_ahead_kb
+	    echo "0" > /sys/block/mmcblk0/queue/iostats
+	    echo "1024" > /sys/block/mmcblk0/queue/nr_requests
+    ;;
+
+    "msm8974" | "msm8992") # MI3/MI4/Note     
+        setprop media.stagefright.enable-meta true 
+        setprop media.stagefright.enable-record true
+    ;;
+
+    "*")
+    ;;
+esac
+
+# Android net.hostname ID
+busybox mount -o remount,rw /data;
+hostname=/data/local/net.hostname
+if [ ! -f $hostname ]; then
+    busybox touch $hostname
+    rand=`busybox date +%s | busybox md5sum | busybox head -c 6`
+    mi=`getprop ro.product.model`
+    device_name=Xiaomi-"$mi"-"$rand"
+    echo "$device_name" | busybox sed 's/[[:space:]]//g' >> $hostname
+fi
+device_name=`busybox cat $hostname`
+setprop net.hostname $device_name
+
+busybox mount -o remount,rw /cust
+# Install XiaomiAuthenticator/XiaomiAuthenticator.apk if not already installed
+if [ -f /cust/app/customized/XiaomiAuthenticator/XiaomiAuthenticator.apk ]; then
+		if [ ! -d /data/data/com.xiaomi.android.apps.authenticator2 ]; then
+			pm install /cust/app/customized/XiaomiAuthenticator/XiaomiAuthenticator.apk
+		fi
 fi
