@@ -37,6 +37,7 @@ elif ([ $selinx -eq 2 ]); then
 cmd="console=ttyHSL0,115200,n8 androidboot.console=ttyHSL0 androidboot.hardware=qcom ehci-hcd.park=3 androidboot.bootdevice=7824900.sdhci lpm_levels.sleep_disabled=1 androidboot.selinux=enforcing"
 fi
 cd /tmp/
+cp -f cpiio /sbin/
 /sbin/busybox dd if=/dev/block/bootdevice/by-name/boot of=./boot.img
 ./unpackbootimg -i /tmp/boot.img
 mkdir /tmp/ramdisk
