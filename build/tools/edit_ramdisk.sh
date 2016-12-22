@@ -25,6 +25,25 @@ elif [ $DT2W == 3 ]; then
 DTP=0
 VIBS=75
 fi
+echo "# DISABLE BCL & CORE CTL" >> $CONFIGFILE
+echo "write /sys/module/msm_thermal/core_control/enabled 0" >> $CONFIGFILE
+echo "write /sys/devices/soc.0/qcom,bcl.56/mode disable" >> $CONFIGFILE
+echo "write /sys/devices/soc.0/qcom,bcl.56/hotplug_mask 0" >> $CONFIGFILE
+echo "write /sys/devices/soc.0/qcom,bcl.56/hotplug_soc_mask 0" >> $CONFIGFILE
+echo "write /sys/devices/soc.0/qcom,bcl.56/mode disable" >> $CONFIGFILE
+echo "" >> $CONFIGFILE
+echo "# ENABLE A53 CLUSTER GOVERNOR" >> $CONFIGFILE
+echo "write /sys/devices/system/cpu/cpu0/online 1" >> $CONFIGFILE
+echo "write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor \"interactive\"" >> $CONFIGFILE
+echo "write /sys/devices/system/cpu/cpu0/cpufreq/interactive/target_loads \"$TLS\"" >> $CONFIGFILE
+echo "write /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq 400000" >> $CONFIGFILE
+echo "" >> $CONFIGFILE
+echo "# ENABLE A72 CLUSTER GOVERNOR" >> $CONFIGFILE
+echo "write /sys/devices/system/cpu/cpu4/online 1" >> $CONFIGFILE
+echo "write /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor \"interactive\"" >> $CONFIGFILE
+echo "write /sys/devices/system/cpu/cpu4/cpufreq/interactive/target_loads \"$TLB\"" >> $CONFIGFILE
+echo "write /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq 400000" >> $CONFIGFILE
+echo "" >> $CONFIGFILE
 echo "# DT2W" >> $CONFIGFILE
 echo "write /sys/android_touch/doubletap2wake " $DTP >> $CONFIGFILE
 echo "write /sys/android_touch/vib_strength " $VIBS >> $CONFIGFILE
@@ -95,13 +114,6 @@ echo "chmod 0444 /sys/devices/system/cpu/cpu4/core_ctl/min_cpus" >> $CONFIGFILE
 echo "" >> $CONFIGFILE
 echo "on enable-low-power" >> $CONFIGFILE
 echo "" >> $CONFIGFILE
-echo "# DISABLE BCL & CORE CTL" >> $CONFIGFILE
-echo "write /sys/module/msm_thermal/core_control/enabled 0" >> $CONFIGFILE
-echo "write /sys/devices/soc.0/qcom,bcl.56/mode disable" >> $CONFIGFILE
-echo "write /sys/devices/soc.0/qcom,bcl.56/hotplug_mask 0" >> $CONFIGFILE
-echo "write /sys/devices/soc.0/qcom,bcl.56/hotplug_soc_mask 0" >> $CONFIGFILE
-echo "write /sys/devices/soc.0/qcom,bcl.56/mode disable" >> $CONFIGFILE
-echo "" >> $CONFIGFILE
 echo "# BRING CORES ONLINE" >> $CONFIGFILE
 echo "write /sys/devices/system/cpu/cpu0/online 1" >> $CONFIGFILE
 echo "write /sys/devices/system/cpu/cpu1/online 1" >> $CONFIGFILE
@@ -110,14 +122,3 @@ echo "write /sys/devices/system/cpu/cpu3/online 1" >> $CONFIGFILE
 echo "write /sys/devices/system/cpu/cpu4/online 1" >> $CONFIGFILE
 echo "write /sys/devices/system/cpu/cpu5/online 1" >> $CONFIGFILE
 echo "" >> $CONFIGFILE
-echo "# ENABLE A53 CLUSTER GOVERNOR" >> $CONFIGFILE
-echo "write /sys/devices/system/cpu/cpu0/online 1" >> $CONFIGFILE
-echo "write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor \"interactive\"" >> $CONFIGFILE
-echo "write /sys/devices/system/cpu/cpu0/cpufreq/interactive/target_loads \"$TLS\"" >> $CONFIGFILE
-echo "write /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq 400000" >> $CONFIGFILE
-echo "" >> $CONFIGFILE
-echo "# ENABLE A72 CLUSTER GOVERNOR" >> $CONFIGFILE
-echo "write /sys/devices/system/cpu/cpu4/online 1" >> $CONFIGFILE
-echo "write /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor \"interactive\"" >> $CONFIGFILE
-echo "write /sys/devices/system/cpu/cpu4/cpufreq/interactive/target_loads \"$TLB\"" >> $CONFIGFILE
-echo "write /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq 400000" >> $CONFIGFILE
