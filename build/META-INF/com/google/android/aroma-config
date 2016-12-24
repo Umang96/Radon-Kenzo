@@ -64,6 +64,15 @@ selectbox(
 );
 
 selectbox(
+  "\n\n<@center>Select charging rate limit\nWarning ! </@>","<@center><b>\n\n\n\n\n\nThis will set your max charging rate limit.\nThe stock 2000 mA is recommended, go above that at your own risk.\n</b></@>","","crate.prop",
+  "1600 mA","",0,
+  "1800 mA","",0,
+  "2000 mA (stock)","",1,
+  "2200 mA","",0,
+  "2400 mA","",0
+);
+
+selectbox(
   "\n\nWant enhanced colors ?","<@center><b>\n\n\n\n\n\nIf you choose yes then display colors will be better than stock.\n</b></@>","","color.prop",
   "Yes, enhanced colors","",1,
   "No, stock colors","",0
