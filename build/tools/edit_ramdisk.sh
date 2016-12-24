@@ -42,31 +42,34 @@ echo "write /sys/devices/platform/kcal_ctrl.0/kcal_val 255" >> $CONFIGFILE
 echo "write /sys/devices/platform/kcal_ctrl.0/kcal_cont 255" >> $CONFIGFILE
 echo "write /sys/devices/platform/kcal_ctrl.0/kcal \"256 256 256"\" >> $CONFIGFILE
 fi
-#echo "" >> $CONFIGFILE
-#echo "# CHARGING RATE" >> $CONFIGFILE
-#CRATE=$(cat /tmp/aroma/crate.prop | cut -d '=' -f2)
-#if [ $CRATE == 5 ]; then
-#CHG=2400
-#elif [ $CRATE == 4 ]; then
-#CHG=2200
-#elif [ $CRATE == 3 ]; then
-#CHG=2000
-#elif [ $CRATE == 2 ]; then
-#CHG=1800
-#elif [ $CRATE == 1 ]; then
-#CHG=1600
-#fi 
-#echo "write /sys/module/qpnp_smbcharger/parameters/default_dcp_icl_ma $CHG" >> $CONFIGFILE
-#echo "write /sys/module/qpnp_smbcharger/parameters/default_hvdcp_icl_ma $CHG" >> $CONFIGFILE
+echo "" >> $CONFIGFILE
+echo "# CHARGING RATE" >> $CONFIGFILE
+CRATE=$(cat /tmp/aroma/crate.prop | cut -d '=' -f2)
+if [ $CRATE == 5 ]; then
+CHG=2400
+elif [ $CRATE == 4 ]; then
+CHG=2200
+elif [ $CRATE == 3 ]; then
+CHG=2000
+elif [ $CRATE == 2 ]; then
+CHG=1800
+elif [ $CRATE == 1 ]; then
+CHG=1600
+fi 
+echo "chmod 666 /sys/module/qpnp_smbcharger/parameters/default_dcp_icl_ma" >> $CONFIGFILE
+echo "chmod 666 /sys/module/qpnp_smbcharger/parameters/default_hvdcp_icl_ma" >> $CONFIGFILE
+echo "write /sys/module/qpnp_smbcharger/parameters/default_dcp_icl_ma $CHG" >> $CONFIGFILE
+echo "write /sys/module/qpnp_smbcharger/parameters/default_hvdcp_icl_ma $CHG" >> $CONFIGFILE
 HOTPLUG=$(cat /tmp/aroma/hotplug.prop | cut -d '=' -f2)
+echo "" >> $CONFIGFILE
 echo "# HOTPLUGGING" >> $CONFIGFILE
 if [ $HOTPLUG == 1 ]; then
 echo "write /sys/devices/system/cpu/cpu4/core_ctl/not_preferred \"1 0\"" >> $CONFIGFILE
 echo "write /sys/devices/system/cpu/cpu4/core_ctl/min_cpus 1" >> $CONFIGFILE
 echo "write /sys/devices/system/cpu/cpu4/core_ctl/max_cpus 2" >> $CONFIGFILE
-echo "write /sys/devices/system/cpu/cpu4/core_ctl/busy_up_thres 30" >> $CONFIGFILE
-echo "write /sys/devices/system/cpu/cpu4/core_ctl/busy_down_thres 25" >> $CONFIGFILE
-echo "write /sys/devices/system/cpu/cpu4/core_ctl/offline_delay_ms 1600" >> $CONFIGFILE
+echo "write /sys/devices/system/cpu/cpu4/core_ctl/busy_up_thres 35" >> $CONFIGFILE
+echo "write /sys/devices/system/cpu/cpu4/core_ctl/busy_down_thres 30" >> $CONFIGFILE
+echo "write /sys/devices/system/cpu/cpu4/core_ctl/offline_delay_ms 1000" >> $CONFIGFILE
 echo "write /sys/devices/system/cpu/cpu4/core_ctl/task_thres 4" >> $CONFIGFILE
 echo "write /sys/devices/system/cpu/cpu4/core_ctl/is_big_cluster 1" >> $CONFIGFILE
 echo "write /sys/devices/system/cpu/cpu0/core_ctl/not_preferred \"1 0 0 0\"" >> $CONFIGFILE
