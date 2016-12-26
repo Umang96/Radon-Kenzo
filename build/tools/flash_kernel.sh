@@ -36,20 +36,20 @@ cmd="console=ttyHSL0,115200,n8 androidboot.console=ttyHSL0 androidboot.hardware=
 elif ([ $selinx -eq 2 ]); then
 cmd="console=ttyHSL0,115200,n8 androidboot.console=ttyHSL0 androidboot.hardware=qcom ehci-hcd.park=3 androidboot.bootdevice=7824900.sdhci lpm_levels.sleep_disabled=1 androidboot.selinux=enforcing"
 fi
+cp -f /tmp/cpio /sbin/cpio
 cd /tmp/
-cp -f cpiio /sbin/
 /sbin/busybox dd if=/dev/block/bootdevice/by-name/boot of=./boot.img
 ./unpackbootimg -i /tmp/boot.img
 mkdir /tmp/ramdisk
 cp /tmp/boot.img-ramdisk.gz /tmp/ramdisk/
 cd /tmp/ramdisk/
-gunzip -c /tmp/ramdisk/boot.img-ramdisk.gz | cpio -i
+gunzip -c /tmp/ramdisk/boot.img-ramdisk.gz | /tmp/cpio -i
 rm /tmp/ramdisk/boot.img-ramdisk.gz
 rm /tmp/boot.img-ramdisk.gz
 cp /tmp/init.radon.rc /tmp/ramdisk/
 chmod 0750 /tmp/ramdisk/init.radon.rc
-if [ $(grep -c "import /init.radon.rc" /tmp/ramdisk/init.rc) == 0 ]; then
-   sed -i "/import \/init\.environ\.rc/aimport /init.radon.rc" /tmp/ramdisk/init.rc
+if [ $(grep -c "import /init.radon.rc" /tmp/ramdisk/init.qcom.rc) == 0 ]; then
+   sed -i "/import \init\.qcom\.power\.rc/aimport init.radon.rc" /tmp/ramdisk/init.qcom.rc
 fi
 find . | cpio -o -H newc | gzip > /tmp/boot.img-ramdisk.gz
 rm -r /tmp/ramdisk
