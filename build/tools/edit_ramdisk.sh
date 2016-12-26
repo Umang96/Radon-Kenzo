@@ -31,6 +31,9 @@ elif [ $DT2W == 3 ]; then
 DTP=0
 VIBS=75
 fi
+echo "# SWAPPINESS" >> $CONFIGFILE
+echo "write /proc/sys/vm/swappiness 20" >> $CONFIGFILE
+echo "" >> $CONFIGFILE
 echo "# DT2W" >> $CONFIGFILE
 echo "write /sys/android_touch/doubletap2wake " $DTP >> $CONFIGFILE
 echo "write /sys/android_touch/vib_strength " $VIBS >> $CONFIGFILE
