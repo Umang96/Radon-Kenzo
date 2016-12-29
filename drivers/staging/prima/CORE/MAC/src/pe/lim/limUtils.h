@@ -559,5 +559,6 @@ void limDecrementPendingMgmtCount (tpAniSirGlobal pMac);
 
 eHalStatus limTxBdComplete(tpAniSirGlobal pMac, void *pData);
 bool lim_is_robust_mgmt_action_frame(uint8 action_catagory);
+tANI_U8 lim_compute_ext_cap_ie_length (tDot11fIEExtCap *ext_cap);
 
 #endif /* __LIM_UTILS_H */

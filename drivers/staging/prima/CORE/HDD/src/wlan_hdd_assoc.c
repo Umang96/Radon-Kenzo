@@ -1085,12 +1085,12 @@ static eHalStatus hdd_DisConnectHandler( hdd_adapter_t *pAdapter, tCsrRoamInfo *
                /* To avoid wpa_supplicant sending "HANGED" CMD to ICS UI */
                if ( eCSR_ROAM_LOSTLINK == roamStatus )
                {
-                   wlan_hdd_cfg80211_indicate_disconnect(dev, true,
-                                                  WLAN_REASON_UNSPECIFIED);
+                    wlan_hdd_cfg80211_indicate_disconnect(dev, false,
+                                                   pRoamInfo->reasonCode);
                }
                else
                {
-                   wlan_hdd_cfg80211_indicate_disconnect(dev, true,
+                   wlan_hdd_cfg80211_indicate_disconnect(dev, false,
                                                   WLAN_REASON_UNSPECIFIED);
                }
             }
@@ -1137,6 +1137,14 @@ static eHalStatus hdd_DisConnectHandler( hdd_adapter_t *pAdapter, tCsrRoamInfo *
     }
 
      hdd_wmm_adapter_clear(pAdapter);
+     /* Clear PER based roam stats */
+#ifdef WLAN_FEATURE_ROAM_SCAN_OFFLOAD
+     if (sme_IsFeatureSupportedByFW(PER_BASED_ROAMING) &&
+         (WLAN_HDD_INFRA_STATION == pAdapter->device_mode) &&
+         pHddCtx->cfg_ini && pHddCtx->cfg_ini->isPERRoamEnabled &&
+         pHddCtx->cfg_ini->isPERRoamRxPathEnabled)
+         sme_unset_per_roam_rxconfig(pHddCtx->hHal);
+#endif
 #if defined(WLAN_FEATURE_VOWIFI_11R)
      sme_FTReset(WLAN_HDD_GET_HAL_CTX(pAdapter));
 #endif
@@ -1588,6 +1596,22 @@ static eHalStatus hdd_AssociationCompletionHandler( hdd_adapter_t *pAdapter, tCs
         pAdapter->maxRateFlags = pRoamInfo->maxRateFlags;
         // Save the connection info from CSR...
         hdd_connSaveConnectInfo( pAdapter, pRoamInfo, eCSR_BSS_TYPE_INFRASTRUCTURE );
+
+#ifdef WLAN_FEATURE_ROAM_SCAN_OFFLOAD
+        if (sme_IsFeatureSupportedByFW(PER_BASED_ROAMING) &&
+            (WLAN_HDD_INFRA_STATION == pAdapter->device_mode) &&
+            !hddDisconInProgress &&
+            pHddCtx->cfg_ini && pHddCtx->cfg_ini->isPERRoamEnabled &&
+            pHddCtx->cfg_ini->isPERRoamRxPathEnabled)
+            sme_set_per_roam_rxconfig(pHddCtx->hHal,
+                 pHddStaCtx->conn_info.staId[0],
+                 pHddCtx->cfg_ini->rateDownThreshold,
+                 pHddCtx->cfg_ini->rateUpThreshold,
+                 pHddCtx->cfg_ini->PERroamTriggerPercent,
+                 pHddCtx->cfg_ini->PERroamRxPktsThreshold,
+                 pHddCtx->cfg_ini->waitPeriodForNextPERScan);
+#endif
+
 #ifdef FEATURE_WLAN_WAPI
         if ( pRoamInfo->u.pConnectedProfile->AuthType == eCSR_AUTH_TYPE_WAPI_WAI_CERTIFICATE ||
                 pRoamInfo->u.pConnectedProfile->AuthType == eCSR_AUTH_TYPE_WAPI_WAI_PSK )
@@ -1733,7 +1757,8 @@ static eHalStatus hdd_AssociationCompletionHandler( hdd_adapter_t *pAdapter, tCs
                                          (int)pRoamInfo->pBssDesc->channelId);
                         hddLog(LOG1, "assocReqlen %d assocRsplen %d", assocReqlen,
                                          assocRsplen);
-                        if (pHddCtx->cfg_ini->gEnableRoamDelayStats)
+                        if (pHddCtx->cfg_ini &&
+                            pHddCtx->cfg_ini->gEnableRoamDelayStats)
                         {
                             vos_record_roam_event(e_HDD_SEND_REASSOC_RSP, NULL, 0);
                         }
@@ -1787,7 +1812,8 @@ static eHalStatus hdd_AssociationCompletionHandler( hdd_adapter_t *pAdapter, tCs
                     if(ft_carrier_on)
                     {
                         hdd_SendReAssocEvent(dev, pAdapter, pRoamInfo, reqRsnIe, reqRsnLength);
-                        if (pHddCtx->cfg_ini->gEnableRoamDelayStats)
+                        if (pHddCtx->cfg_ini &&
+                            pHddCtx->cfg_ini->gEnableRoamDelayStats)
                         {
                             vos_record_roam_event(e_HDD_SEND_REASSOC_RSP, NULL, 0);
                         }
@@ -1881,7 +1907,7 @@ static eHalStatus hdd_AssociationCompletionHandler( hdd_adapter_t *pAdapter, tCs
             hddLog(VOS_TRACE_LEVEL_INFO, FL("Enabling queues"));
             netif_tx_wake_all_queues(dev);
         }
-        if (pHddCtx->cfg_ini->gEnableRoamDelayStats)
+        if (pHddCtx->cfg_ini && pHddCtx->cfg_ini->gEnableRoamDelayStats)
         {
             vos_record_roam_event(e_HDD_ENABLE_TX_QUEUE, NULL, 0);
         }
@@ -3354,7 +3380,8 @@ eHalStatus hdd_smeRoamCallback( void *pContext, tCsrRoamInfo *pRoamInfo, tANI_U3
                 if((pHddCtx) &&
                    (VOS_TRUE == pHddStaCtx->hdd_ReassocScenario) &&
                    (TRUE == pHddCtx->hdd_wlan_suspended) &&
-                   (eCSR_ROAM_RESULT_NONE == roamResult))
+                   ((eCSR_ROAM_RESULT_NONE == roamResult)||
+                     (pRoamInfo && pRoamInfo->is11rAssoc)))
                 {
                     /* Send DTIM period to the FW; only if the wlan is already
                        in suspend. This is the case with roaming (reassoc),
@@ -3381,7 +3408,8 @@ eHalStatus hdd_smeRoamCallback( void *pContext, tCsrRoamInfo *pRoamInfo, tANI_U3
                 if ((pHddCtx) &&
                     (FULL_POWER == pmcGetPmcState(pHddCtx->hHal)) &&
                     (VOS_TRUE == pHddStaCtx->hdd_ReassocScenario) &&
-                    (eCSR_ROAM_RESULT_NONE == roamResult))
+                    ((eCSR_ROAM_RESULT_NONE == roamResult) ||
+                      (pRoamInfo && pRoamInfo->is11rAssoc)))
                 {
                     hddLog( LOG1, FL("Device in full power."
                            "Stop and start traffic timer for roaming"));
@@ -3394,7 +3422,8 @@ eHalStatus hdd_smeRoamCallback( void *pContext, tCsrRoamInfo *pRoamInfo, tANI_U3
                 }
 
                 halStatus = hdd_RoamSetKeyCompleteHandler( pAdapter, pRoamInfo, roamId, roamStatus, roamResult );
-                if (eCSR_ROAM_RESULT_NONE == roamResult)
+                if ((eCSR_ROAM_RESULT_NONE == roamResult) ||
+                     (pRoamInfo && pRoamInfo->is11rAssoc))
                     pHddStaCtx->hdd_ReassocScenario = FALSE;
             }
             break;

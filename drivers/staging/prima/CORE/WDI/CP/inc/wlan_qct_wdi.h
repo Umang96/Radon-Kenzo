@@ -5367,6 +5367,23 @@ typedef struct
    function pointer will be called */
    void*                      pUserData;
 } WDI_RoamScanOffloadReqParamsType;
+
+typedef struct
+{
+  wpt_uint32  requestId;
+  wpt_uint32  rateUpThreshold;
+  wpt_uint32  rateDownThreshold;
+  wpt_uint32  isPERRoamCCAEnabled;
+  wpt_uint32  waitPeriodForNextPERScan;
+  wpt_uint32  PERtimerThreshold;
+  wpt_uint32  PERroamTriggerPercent;
+  wpt_int16   PERRoamFullScanThreshold;
+} WDI_PERRoamOffloadScanInfo;
+
+typedef struct
+{
+  wpt_boolean roamScanReq; // Request info for all peers
+} WDI_PERRoamTriggerScanInfo;
 #endif //WLAN_FEATURE_ROAM_SCAN_OFFLOAD
 
 /*---------------------------------------------------------------------------
@@ -7739,6 +7756,8 @@ typedef void  (*WDI_UpdateChannelRspCb)(WDI_Status  wdiStatus,
 typedef void  (*WDI_RoamOffloadScanCb)(WDI_Status  wdiStatus,
                                        void*       pUserData);
 
+typedef void (*WDI_PERRoamOffloadScanCb)(WDI_Status wdiStatus, void *pUserData);
+typedef void (*WDI_PERRoamTriggerScanCb)(WDI_Status wdiStatus, void *pUserData);
 #endif
 /*---------------------------------------------------------------------------
    WDI_SetTxPerTrackingRspCb
@@ -10774,6 +10793,22 @@ WDI_RoamScanOffloadReq
   WDI_RoamScanOffloadReqParamsType     *pwdiRoamScanOffloadReqParams,
   WDI_RoamOffloadScanCb                 wdiRoamOffloadScancb,
   void*                                 pUserData
+);
+
+WDI_Status
+WDI_PERRoamScanOffloadReq
+(
+  WDI_PERRoamOffloadScanInfo              *pwdiRoamScanOffloadReqParams,
+  WDI_PERRoamOffloadScanCb                 wdiRoamOffloadScancb,
+  void*                                    pUserData
+);
+
+WDI_Status
+WDI_PERRoamScanTriggerReq
+(
+  WDI_PERRoamTriggerScanInfo              *pwdiRoamScanTriggerReqParams,
+  WDI_PERRoamTriggerScanCb                 wdiRoamTriggerScancb,
+  void*                                    pUserData
 );
 #endif
 
