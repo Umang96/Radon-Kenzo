@@ -616,15 +616,29 @@ typedef enum
 #define CFG_ACTIVE_MIN_CHANNEL_TIME_MAX        ( 10000 )
 #define CFG_ACTIVE_MIN_CHANNEL_TIME_DEFAULT    ( 20 )
 
+/* Max Dwell time during BTC eSCO call in msec*/
 #define CFG_ACTIVE_MAX_CHANNEL_TIME_BTC_NAME       "gActiveMaxChannelTimeBtc"
 #define CFG_ACTIVE_MAX_CHANNEL_TIME_BTC_MIN        ( 0 )
 #define CFG_ACTIVE_MAX_CHANNEL_TIME_BTC_MAX        ( 10000 )
 #define CFG_ACTIVE_MAX_CHANNEL_TIME_BTC_DEFAULT    ( 120 )
 
+/* Min Dwell time during BTC eSCO call in msec*/
 #define CFG_ACTIVE_MIN_CHANNEL_TIME_BTC_NAME       "gActiveMinChannelTimeBtc"
 #define CFG_ACTIVE_MIN_CHANNEL_TIME_BTC_MIN        ( 0 )
 #define CFG_ACTIVE_MIN_CHANNEL_TIME_BTC_MAX        ( 10000 )
 #define CFG_ACTIVE_MIN_CHANNEL_TIME_BTC_DEFAULT    ( 60 )
+
+/* Min Dwell time during BTC SCO call in msec*/
+#define CFG_ACTIVE_MIN_CHANNEL_TIME_BTC_SCO_NAME    "gActiveMinChannelTimeBtcSCO"
+#define CFG_ACTIVE_MIN_CHANNEL_TIME_BTC_SCO_MIN     (0)
+#define CFG_ACTIVE_MIN_CHANNEL_TIME_BTC_SCO_MAX     (10000)
+#define CFG_ACTIVE_MIN_CHANNEL_TIME_BTC_SCO_DEFAULT (20)
+
+/* Max Dwell time during BTC SCO call in msec*/
+#define CFG_ACTIVE_MAX_CHANNEL_TIME_BTC_SCO_NAME    "gActiveMaxChannelTimeBtcSCO"
+#define CFG_ACTIVE_MAX_CHANNEL_TIME_BTC_SCO_MIN     (0)
+#define CFG_ACTIVE_MAX_CHANNEL_TIME_BTC_SCO_MAX     (10000)
+#define CFG_ACTIVE_MAX_CHANNEL_TIME_BTC_SCO_DEFAULT (40)
 
 #define CFG_RETRY_LIMIT_ZERO_NAME       "gRetryLimitZero"
 #define CFG_RETRY_LIMIT_ZERO_MIN        ( 0 )
@@ -908,6 +922,91 @@ typedef enum
 #define CFG_ROAM_SCAN_OFFLOAD_ENABLED_MIN                   (0)
 #define CFG_ROAM_SCAN_OFFLOAD_ENABLED_MAX                   (1)
 #define CFG_ROAM_SCAN_OFFLOAD_ENABLED_DEFAULT               (1)
+
+/* Enable/disable PER based roaming */
+#define CFG_PER_ROAM_SCAN_OFFLOAD_ENABLED                  "gPERRoamEnable"
+#define CFG_PER_ROAM_SCAN_OFFLOAD_ENABLED_MIN              (0)
+#define CFG_PER_ROAM_SCAN_OFFLOAD_ENABLED_MAX              (1)
+#define CFG_PER_ROAM_SCAN_OFFLOAD_ENABLED_DEFAULT          (0)
+
+/*
+ * Rate at which to stop monitoring data rates for PER based Roam
+ * Value: MBPS * 10
+ * Min: Minimum rate of data transfer
+ * Max: Max rate for 1x1 transmission
+ */
+#define CFG_PER_ROAM_SCAN_RATE_UP_THRESHOLD           "gPERRoamUpThresholdRate"
+#define CFG_PER_ROAM_SCAN_RATE_UP_THRESHOLD_MIN       (10)
+#define CFG_PER_ROAM_SCAN_RATE_UP_THRESHOLD_MAX       (3330)
+#define CFG_PER_ROAM_SCAN_RATE_UP_THRESHOLD_DEFAULT   (400)
+
+/*
+ * rate at which to start monitoring data rates for PER based roam
+ * Value: MBPS * 10
+ */
+#define CFG_PER_ROAM_SCAN_RATE_DOWN_THRESHOLD         "gPERRoamDownThresholdRate"
+#define CFG_PER_ROAM_SCAN_RATE_DOWN_THRESHOLD_MIN     (10)
+#define CFG_PER_ROAM_SCAN_RATE_DOWN_THRESHOLD_MAX     (3330)
+#define CFG_PER_ROAM_SCAN_RATE_DOWN_THRESHOLD_DEFAULT (200)
+
+/*
+ * time to wait before start monitoring again once a roam scan has been
+ * triggered. (Minimum time difference between two scans)
+ * Value : seconds
+ */
+#define CFG_PER_ROAM_SCAN_WAIT_TIME                   "gPERRoamScanInterval"
+#define CFG_PER_ROAM_SCAN_WAIT_TIME_MIN               (0)
+#define CFG_PER_ROAM_SCAN_WAIT_TIME_MAX               (3600)
+#define CFG_PER_ROAM_SCAN_WAIT_TIME_DEFAULT           (300)
+
+/* Time to collect stats to trigger roam scan for Tx path */
+#define CFG_PER_ROAM_SCAN_PER_TIME_THRESHOLD          "gPERRoamStatsTime"
+#define CFG_PER_ROAM_SCAN_PER_TIME_THRESHOLD_MIN      (0)
+#define CFG_PER_ROAM_SCAN_PER_TIME_THRESHOLD_MAX      (25)
+#define CFG_PER_ROAM_SCAN_PER_TIME_THRESHOLD_DEFAULT  (10)
+
+/* Rx monitoring is enabled to trigger a PER based roam scan */
+#define CFG_PER_ROAM_SCAN_RX_MONITOR_ENABLED          "gPERRoamRxMonitorEnable"
+#define CFG_PER_ROAM_SCAN_RX_MONITOR_ENABLED_MIN      (0)
+#define CFG_PER_ROAM_SCAN_RX_MONITOR_ENABLED_MAX      (1)
+#define CFG_PER_ROAM_SCAN_RX_MONITOR_ENABLED_DEFAULT  (1)
+
+/*
+ * Minimum number of packets required to consider if PER based roam scan
+ * needs to be triggered in Rx
+ */
+#define CFG_PER_ROAM_SCAN_RX_MIN_PACKETS              "gPERRoamRxPktThreshold"
+#define CFG_PER_ROAM_SCAN_RX_MIN_PACKETS_MIN          (10)
+#define CFG_PER_ROAM_SCAN_RX_MIN_PACKETS_MAX          (10000)
+#define CFG_PER_ROAM_SCAN_RX_MIN_PACKETS_DEFAULT      (50)
+
+/*
+ * Minimum percentage of packets needs to be below gPERRoamScanRateDownThreshold
+ * to trigger a roam scan
+ */
+#define CFG_PER_ROAM_SCAN_MIN_PERCENTAGE              "gPERRoamTriggerPercent"
+#define CFG_PER_ROAM_SCAN_MIN_PERCENTAGE_MIN          (20)
+#define CFG_PER_ROAM_SCAN_MIN_PERCENTAGE_MAX          (100)
+#define CFG_PER_ROAM_SCAN_MIN_PERCENTAGE_DEFAULT      (60)
+
+/* Channel sensing is enabled/disabled for PER based roam scan */
+#define CFG_PER_ROAM_SCAN_CCA_ENABLED                 "gPERRoamCCAEnabled"
+#define CFG_PER_ROAM_SCAN_CCA_ENABLED_MIN             (0)
+#define CFG_PER_ROAM_SCAN_CCA_ENABLED_MAX             (1)
+#define CFG_PER_ROAM_SCAN_CCA_ENABLED_DEFAULT         (0)
+
+#define CFG_PER_ROAM_FULL_SCAN_RSSI_THRESHOLD         "gPERRoamFullScanRssiDiffThreshold"
+#define CFG_PER_ROAM_FULL_SCAN_RSSI_THRESHOLD_MIN     (5)
+#define CFG_PER_ROAM_FULL_SCAN_RSSI_THRESHOLD_MAX     (50)
+#define CFG_PER_ROAM_FULL_SCAN_RSSI_THRESHOLD_DEFAULT (10)
+
+/*
+ * Minimum RSSI value below which candidate will not be eligible for roam
+ */
+#define CFG_PER_ROAM_BAD_RSSI                     "gPERMinRssiThresholdForRoam"
+#define CFG_PER_ROAM_BAD_RSSI_MIN                 (-100)
+#define CFG_PER_ROAM_BAD_RSSI_MAX                 (-40)
+#define CFG_PER_ROAM_BAD_RSSI_DEFAULT             (-80)
 #endif
 
 #define CFG_QOS_WMM_PKT_CLASSIFY_BASIS_NAME                "PktClassificationBasis" // DSCP or 802.1Q
@@ -1956,6 +2055,17 @@ static __inline tANI_U32 defHddRateToDefCfgRate( tANI_U32 defRateIndex )
 #define CFG_TDLS_SCAN_COEX_SUPPORT_ENABLE_MAX        (1)
 #define CFG_TDLS_SCAN_COEX_SUPPORT_ENABLE_DEFAULT    (0)
 
+/* Enable/Disable Consecutive Beacon miss */
+#define CFG_ENABLE_CONSECUTIVE_BMISS_NAME        "gEnableconcBmiss"
+#define CFG_ENABLE_CONSECUTIVE_BMISS_MIN         ( 2 )
+#define CFG_ENABLE_CONSECUTIVE_BMISS_MAX         ( 10 )
+#define CFG_ENABLE_CONSECUTIVE_BMISS_DEFAULT     ( 5 )
+
+/* Enable/Disable units of beacon wait time */
+#define CFG_ENABLE_UNITS_BEACON_WAIT_NAME        "gEnableunitBwait"
+#define CFG_ENABLE_UNITS_BEACON_WAIT_MIN         ( 2 )
+#define CFG_ENABLE_UNITS_BEACON_WAIT_MAX         ( 10 )
+#define CFG_ENABLE_UNITS_BEACON_WAIT_DEFAULT     ( 2 )
 
 /* if gEnableTDLSScan
  * 0: Same as gEnableTDLSScanCoexistence ; driver will do disconnect if
@@ -2605,6 +2715,90 @@ This feature requires the dependent cfg.ini "gRoamPrefer5GHz" set to 1 */
 #define CFG_SAR_BOFFSET_SET_CORRECTION_MAX       (1)
 #define CFG_SAR_BOFFSET_SET_CORRECTION_DEFAULT   (0)
 
+/*
+ * If gEnableEdcaParams is set to 1, params gEdcaVoCwmin,
+ * gEdcaViCwmin, gEdcaBkCwmin, gEdcaBeCwmin, gEdcaVoCwmax,
+ * gEdcaViCwmax, gEdcaBkCwmax, gEdcaBeCwmax, gEdcaVoAifs,
+ * gEdcaViAifs, gEdcaBkAifs and gEdcaBeAifs values are used
+ * to overwrite the values received from AP
+ */
+#define CFG_ENABLE_EDCA_INI_NAME       "gEnableEdcaParams"
+#define CFG_ENABLE_EDCA_INI_MIN        (0)
+#define CFG_ENABLE_EDCA_INI_MAX        (1)
+#define CFG_ENABLE_EDCA_INI_DEFAULT    (0)
+
+/* Cwmin value for EDCA_AC_VO. CWVomin = 2^gEdcaVoCwmin -1 */
+#define CFG_EDCA_VO_CWMIN_VALUE_NAME      "gEdcaVoCwmin"
+#define CFG_EDCA_VO_CWMIN_VALUE_MIN       (0x0)
+#define CFG_EDCA_VO_CWMIN_VALUE_MAX       (15)
+#define CFG_EDCA_VO_CWMIN_VALUE_DEFAULT   (2)
+
+/* Cwmin value for EDCA_AC_VI. CWVimin = 2^gEdcaViCwmin -1 */
+#define CFG_EDCA_VI_CWMIN_VALUE_NAME      "gEdcaViCwmin"
+#define CFG_EDCA_VI_CWMIN_VALUE_MIN       (0x0)
+#define CFG_EDCA_VI_CWMIN_VALUE_MAX       (15)
+#define CFG_EDCA_VI_CWMIN_VALUE_DEFAULT   (3)
+
+/* Cwmin value for EDCA_AC_BK. CWBkmin = 2^gEdcaBkCwmin -1 */
+#define CFG_EDCA_BK_CWMIN_VALUE_NAME      "gEdcaBkCwmin"
+#define CFG_EDCA_BK_CWMIN_VALUE_MIN       (0x0)
+#define CFG_EDCA_BK_CWMIN_VALUE_MAX       (15)
+#define CFG_EDCA_BK_CWMIN_VALUE_DEFAULT   (4)
+
+/* Cwmin value for EDCA_AC_BE. CWBemin = 2^gEdcaBeCwmin -1 */
+#define CFG_EDCA_BE_CWMIN_VALUE_NAME      "gEdcaBeCwmin"
+#define CFG_EDCA_BE_CWMIN_VALUE_MIN       (0x0)
+#define CFG_EDCA_BE_CWMIN_VALUE_MAX       (15)
+#define CFG_EDCA_BE_CWMIN_VALUE_DEFAULT   (4)
+
+/* Cwmax value for EDCA_AC_VO. CWVomax = 2^gEdcaVoCwmax -1 */
+#define CFG_EDCA_VO_CWMAX_VALUE_NAME      "gEdcaVoCwmax"
+#define CFG_EDCA_VO_CWMAX_VALUE_MIN       (0)
+#define CFG_EDCA_VO_CWMAX_VALUE_MAX       (15)
+#define CFG_EDCA_VO_CWMAX_VALUE_DEFAULT   (3)
+
+/* Cwmax value for EDCA_AC_VI. CWVimax = 2^gEdcaViCwmax -1 */
+#define CFG_EDCA_VI_CWMAX_VALUE_NAME      "gEdcaViCwmax"
+#define CFG_EDCA_VI_CWMAX_VALUE_MIN       (0)
+#define CFG_EDCA_VI_CWMAX_VALUE_MAX       (15)
+#define CFG_EDCA_VI_CWMAX_VALUE_DEFAULT   (4)
+
+/* Cwmax value for EDCA_AC_BK. CWBkmax = 2^gEdcaBkCwmax -1 */
+#define CFG_EDCA_BK_CWMAX_VALUE_NAME      "gEdcaBkCwmax"
+#define CFG_EDCA_BK_CWMAX_VALUE_MIN       (0)
+#define CFG_EDCA_BK_CWMAX_VALUE_MAX       (15)
+#define CFG_EDCA_BK_CWMAX_VALUE_DEFAULT   (10)
+
+/* Cwmax value for EDCA_AC_BE. CWBemax = 2^gEdcaBeCwmax -1 */
+#define CFG_EDCA_BE_CWMAX_VALUE_NAME      "gEdcaBeCwmax"
+#define CFG_EDCA_BE_CWMAX_VALUE_MIN       (0)
+#define CFG_EDCA_BE_CWMAX_VALUE_MAX       (15)
+#define CFG_EDCA_BE_CWMAX_VALUE_DEFAULT   (10)
+
+/* Aifs value for EDCA_AC_VO.*/
+#define CFG_EDCA_VO_AIFS_VALUE_NAME       "gEdcaVoAifs"
+#define CFG_EDCA_VO_AIFS_VALUE_MIN        (0)
+#define CFG_EDCA_VO_AIFS_VALUE_MAX        (15)
+#define CFG_EDCA_VO_AIFS_VALUE_DEFAULT    (2)
+
+/* Aifs value for EDCA_AC_VI.*/
+#define CFG_EDCA_VI_AIFS_VALUE_NAME       "gEdcaViAifs"
+#define CFG_EDCA_VI_AIFS_VALUE_MIN        (0)
+#define CFG_EDCA_VI_AIFS_VALUE_MAX        (15)
+#define CFG_EDCA_VI_AIFS_VALUE_DEFAULT    (2)
+
+/* Aifs value for EDCA_AC_BK.*/
+#define CFG_EDCA_BK_AIFS_VALUE_NAME       "gEdcaBkAifs"
+#define CFG_EDCA_BK_AIFS_VALUE_MIN        (0)
+#define CFG_EDCA_BK_AIFS_VALUE_MAX        (15)
+#define CFG_EDCA_BK_AIFS_VALUE_DEFAULT    (7)
+
+/* Aifs value for EDCA_AC_BE.*/
+#define CFG_EDCA_BE_AIFS_VALUE_NAME       "gEdcaBeAifs"
+#define CFG_EDCA_BE_AIFS_VALUE_MIN        (0)
+#define CFG_EDCA_BE_AIFS_VALUE_MAX        (15)
+#define CFG_EDCA_BE_AIFS_VALUE_DEFAULT    (3)
+
 /*--------------------------------------------------------------------------- 
   Type declarations
   -------------------------------------------------------------------------*/ 
@@ -2763,8 +2957,10 @@ typedef struct
 
    v_U32_t        nInitialDwellTime;     //in units of milliseconds
 
-   v_U32_t        nActiveMinChnTimeBtc;     //in units of milliseconds
-   v_U32_t        nActiveMaxChnTimeBtc;     //in units of milliseconds
+   uint32_t       min_chntime_btc_esco;     //in units of milliseconds
+   uint32_t       max_chntime_btc_esco;     //in units of milliseconds
+   uint32_t       min_chntime_btc_sco;
+   uint32_t       max_chntime_btc_sco;
 #ifdef WLAN_AP_STA_CONCURRENCY
    v_U32_t        nPassiveMinChnTimeConc;    //in units of milliseconds
    v_U32_t        nPassiveMaxChnTimeConc;    //in units of milliseconds
@@ -2821,6 +3017,17 @@ typedef struct
 #endif
 #ifdef WLAN_FEATURE_ROAM_SCAN_OFFLOAD
    v_BOOL_t                     isRoamOffloadScanEnabled;
+   v_BOOL_t                     isPERRoamEnabled;
+   v_BOOL_t                     isPERRoamRxPathEnabled;
+   v_BOOL_t                     isPERRoamCCAEnabled;
+   v_S15_t                      PERRoamFullScanThreshold;
+   v_S15_t                      PERMinRssiThresholdForRoam;
+   v_U16_t                      rateUpThreshold;
+   v_U16_t                      rateDownThreshold;
+   v_U16_t                      PERroamTriggerPercent;
+   v_U32_t                      waitPeriodForNextPERScan;
+   v_U32_t                      PERtimerThreshold;
+   v_U32_t                      PERroamRxPktsThreshold;
 #endif
    hdd_wmm_classification_t     PktClassificationBasis; // DSCP or 802.1Q
    v_BOOL_t                     bImplicitQosEnabled;
@@ -2992,6 +3199,8 @@ typedef struct
    v_BOOL_t                    fEnableActiveModeOffload;
 #endif
    v_U32_t                     enableLpwrImgTransition;
+   v_U32_t                     enable_conc_bmiss;
+   v_U32_t                     enable_units_bwait;
    v_U8_t                      scanAgingTimeout;
    v_BOOL_t                    enableTxLdpc;
    v_U8_t                      disableLDPCWithTxbfAP;
@@ -3126,6 +3335,19 @@ typedef struct
    v_BOOL_t                    disableBarWakeUp;
    v_U16_t                      rps_mask;
    v_U32_t                     enable_delack;
+   uint32_t                    enable_edca_params;
+   uint32_t                    edca_vo_cwmin;
+   uint32_t                    edca_vi_cwmin;
+   uint32_t                    edca_bk_cwmin;
+   uint32_t                    edca_be_cwmin;
+   uint32_t                    edca_vo_cwmax;
+   uint32_t                    edca_vi_cwmax;
+   uint32_t                    edca_bk_cwmax;
+   uint32_t                    edca_be_cwmax;
+   uint32_t                    edca_vo_aifs;
+   uint32_t                    edca_vi_aifs;
+   uint32_t                    edca_bk_aifs;
+   uint32_t                    edca_be_aifs;
 } hdd_config_t;
 
 /*--------------------------------------------------------------------------- 

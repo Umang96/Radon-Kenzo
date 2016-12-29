@@ -480,6 +480,11 @@ typedef enum
   WDI_MON_STOP_REQ                               = 108,
   WDI_FATAL_EVENT_LOGGING_REQ                    = 109,
 
+#ifdef WLAN_FEATURE_ROAM_SCAN_OFFLOAD
+  WDI_PER_ROAM_SCAN_OFFLOAD_REQ                  = 110,
+  WDI_PER_ROAM_SCAN_TRIGGER_REQ                  = 111,
+#endif
+
   WDI_MAX_REQ,
 
   /*Send a suspend Indication down to HAL*/
@@ -826,7 +831,10 @@ typedef enum
   WDI_MON_START_RSP                              = 107,
   WDI_MON_STOP_RSP                               = 108,
   WDI_FATAL_EVENT_LOGGING_RSP                    = 109,
-
+#ifdef WLAN_FEATURE_ROAM_SCAN_OFFLOAD
+  WDI_PER_ROAM_SCAN_OFFLOAD_RSP                  = 110,
+  WDI_PER_ROAM_SCAN_TRIGGER_RSP                  = 111,
+#endif
   /*-------------------------------------------------------------------------
     Indications
      !! Keep these last in the enum if possible
@@ -5494,6 +5502,14 @@ WDI_ProcessRoamScanOffloadReq
   WDI_ControlBlockType*  pWDICtx,
   WDI_EventInfoType*     pEventData
 );
+
+WDI_Status
+WDI_ProcessPERRoamScanOffloadReq(WDI_ControlBlockType *pWDICtx,
+                                 WDI_EventInfoType *pEventData);
+
+WDI_Status
+WDI_ProcessPERRoamScanTriggerReq(WDI_ControlBlockType *pWDICtx,
+                                 WDI_EventInfoType *pEventData);
 /**
  @brief Process Start Roam Candidate Lookup Response function (called when a
         response is being received over the bus from HAL)
@@ -5506,6 +5522,20 @@ WDI_ProcessRoamScanOffloadReq
 */
 WDI_Status
 WDI_ProcessRoamScanOffloadRsp
+(
+  WDI_ControlBlockType*  pWDICtx,
+  WDI_EventInfoType*     pEventData
+);
+
+WDI_Status
+WDI_ProcessPERRoamScanOffloadRsp
+(
+  WDI_ControlBlockType*  pWDICtx,
+  WDI_EventInfoType*     pEventData
+);
+
+WDI_Status
+WDI_ProcessPERRoamScanTriggerRsp
 (
   WDI_ControlBlockType*  pWDICtx,
   WDI_EventInfoType*     pEventData

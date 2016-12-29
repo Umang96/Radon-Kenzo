@@ -3958,14 +3958,14 @@ static int hdd_driver_command(hdd_adapter_t *pAdapter,
        }
        else if (strncmp(command, "SCAN-ACTIVE", 11) == 0)
        {
-           VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_ERROR,
-                              FL("making default scan to ACTIVE"));
+           hddLog(LOG1,
+                FL("making default scan to ACTIVE"));
            pHddCtx->scan_info.scan_mode = eSIR_ACTIVE_SCAN;
        }
        else if (strncmp(command, "SCAN-PASSIVE", 12) == 0)
        {
-           VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_ERROR,
-                              FL("making default scan to PASSIVE"));
+           hddLog(LOG1,
+                FL("making default scan to PASSIVE"));
            pHddCtx->scan_info.scan_mode = eSIR_PASSIVE_SCAN;
        }
        else if (strncmp(command, "GETDWELLTIME", 12) == 0)
@@ -7742,7 +7742,7 @@ VOS_STATUS hdd_start_all_adapters( hdd_context_t *pHddCtx )
                pAdapter->sessionCtx.station.hdd_ReassocScenario = VOS_FALSE;
 
                /* indicate disconnected event to nl80211 */
-               wlan_hdd_cfg80211_indicate_disconnect(pAdapter->dev, true,
+               wlan_hdd_cfg80211_indicate_disconnect(pAdapter->dev, false,
                                                      WLAN_REASON_UNSPECIFIED);
             }
             else if (eConnectionState_Connecting == connState)

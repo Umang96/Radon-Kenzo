@@ -9860,7 +9860,13 @@ wlan_hdd_cfg80211_inform_bss_frame( hdd_adapter_t *pAdapter,
     qie_age->oui_2      = QCOM_OUI2;
     qie_age->oui_3      = QCOM_OUI3;
     qie_age->type       = QCOM_VENDOR_IE_AGE_TYPE;
-    qie_age->age        = vos_timer_get_system_ticks() - bss_desc->nReceivedTime;
+    /* Lowi expects the timestamp of bss in units of 1/10 ms. In driver all
+     * bss related timestamp is in units of ms. Due to this when scan results
+     * are sent to lowi the scan age is high.To address this, send age in units
+     * of 1/10 ms.
+     */
+    qie_age->age        = (vos_timer_get_system_time() -
+                                   bss_desc->nReceivedTime)/10;
 #endif
 
     memcpy(mgmt->u.probe_resp.variable, ie, ie_length);
@@ -12369,6 +12375,7 @@ int wlan_hdd_disconnect( hdd_adapter_t *pAdapter, u16 reason )
     {
         hddLog(LOGE,
               "%s: Failed to disconnect, timed out", __func__);
+        VOS_BUG(0);
         result = -ETIMEDOUT;
     }
 disconnected:
@@ -12381,7 +12388,7 @@ disconnected:
      */
     hddLog(LOG1, FL("Send disconnected event to userspace"));
 
-    wlan_hdd_cfg80211_indicate_disconnect(pAdapter->dev, false,
+    wlan_hdd_cfg80211_indicate_disconnect(pAdapter->dev, true,
                                           WLAN_REASON_UNSPECIFIED);
 #endif
 
@@ -14803,6 +14810,11 @@ static int __wlan_hdd_cfg80211_sched_scan_stop(struct wiphy *wiphy,
     MTRACE(vos_trace(VOS_MODULE_ID_HDD,
                      TRACE_CODE_HDD_CFG80211_SCHED_SCAN_STOP,
                      pAdapter->sessionId, pAdapter->device_mode));
+
+    INIT_COMPLETION(pAdapter->pno_comp_var);
+    pnoRequest.statusCallback = hdd_cfg80211_sched_scan_start_status_cb;
+    pnoRequest.callbackContext = pAdapter;
+    pAdapter->pno_req_status = 0;
     status = sme_SetPreferredNetworkList(hHal, &pnoRequest,
                                 pAdapter->sessionId,
                                 NULL, pAdapter);
@@ -14813,7 +14825,22 @@ static int __wlan_hdd_cfg80211_sched_scan_stop(struct wiphy *wiphy,
         ret = -EINVAL;
         goto error;
     }
-    pHddCtx->isPnoEnable = FALSE;
+    ret = wait_for_completion_timeout(
+                 &pAdapter->pno_comp_var,
+                  msecs_to_jiffies(WLAN_WAIT_TIME_PNO));
+    if (0 >= ret)
+    {
+        // Did not receive the response for PNO disable in time.
+        // Assuming the PNO disable was success.
+        // Returning error from here, because we timeout, results
+        // in side effect of Wifi (Wifi Setting) not to work.
+        VOS_TRACE(VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_ERROR,
+                  FL("Timed out waiting for PNO to be disabled"));
+        ret = 0;
+    }
+
+    ret = pAdapter->pno_req_status;
+    pHddCtx->isPnoEnable = (ret == 0) ? FALSE : TRUE;
 
 error:
     VOS_TRACE( VOS_MODULE_ID_HDD, VOS_TRACE_LEVEL_INFO,

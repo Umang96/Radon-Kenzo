@@ -129,6 +129,9 @@
 /** Maximum time(ms) to wait for tdls initiator to start direct communication **/
 #define WAIT_TIME_TDLS_INITIATOR    600
 
+/**Maximum time(ms) to wait for clear packet req to complete **/
+#define PKT_FILTER_TIMEOUT 300
+
 /* Maximum time to get linux regulatory entry settings */
 #ifdef CONFIG_ENABLE_LINUX_REG
 #define LINUX_REG_WAIT_TIME 300
@@ -291,6 +294,7 @@ extern spinlock_t hdd_context_lock;
 #define GET_FRAME_LOG_MAGIC   0x464c4f47   //FLOG
 #define MON_MODE_MSG_MAGIC 0x51436B3A //MON_MODE
 #define ANTENNA_CONTEXT_MAGIC 0x414E544E //ANTN
+#define CLEAR_FILTER_MAGIC 0x52349732 //CLEAR FILTER
 #define MON_MODE_MSG_TIMEOUT 5000
 #define MON_MODE_START 1
 #define MON_MODE_STOP  0
@@ -1323,6 +1327,7 @@ struct hdd_context_s
 
    
    v_BOOL_t hdd_wlan_suspended;
+   bool rx_wow_dump;
    
    spinlock_t filter_lock;
    

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2014 The Linux Foundation. All rights reserved.
+ * Copyright (c) 2011-2016 The Linux Foundation. All rights reserved.
  *
  * Previously licensed under the ISC license by Qualcomm Atheros, Inc.
  *
@@ -291,8 +291,8 @@ typedef struct tagCsrScanRequest
     tCsrChannelInfo ChannelInfo;
     tANI_U32 minChnTime;    //in units of milliseconds
     tANI_U32 maxChnTime;    //in units of milliseconds
-    tANI_U32 minChnTimeBtc;    //in units of milliseconds
-    tANI_U32 maxChnTimeBtc;    //in units of milliseconds
+    tANI_U32 min_chntime_btc_esco;    //in units of milliseconds
+    tANI_U32 max_chntime_btc_esco;    //in units of milliseconds
     tANI_U32 restTime;      //in units of milliseconds  //ignored when not connected
     tANI_U32 uIEFieldLen;
     tANI_U8 *pIEField;
@@ -309,8 +309,8 @@ typedef struct tagCsrBGScanRequest
     tANI_U32 scanInterval;  //in units of milliseconds
     tANI_U32 minChnTime;    //in units of milliseconds
     tANI_U32 maxChnTime;    //in units of milliseconds
-    tANI_U32 minChnTimeBtc;    //in units of milliseconds
-    tANI_U32 maxChnTimeBtc;    //in units of milliseconds
+    tANI_U32 min_chntime_btc_esco;    //in units of milliseconds
+    tANI_U32 max_chntime_btc_esco;    //in units of milliseconds
     tANI_U32 restTime;      //in units of milliseconds  //ignored when not connected
     tANI_U32 throughputImpact;      //specify whether BG scan cares about impacting throughput  //ignored when not connected
     tCsrBssid bssid;    //how to use it?? Apple
@@ -401,6 +401,9 @@ typedef struct tagCsrScanResultFilter
     tANI_BOOLEAN MFPEnabled;
     tANI_U8 MFPRequired;
     tANI_U8 MFPCapable;
+#endif
+#ifdef WLAN_FEATURE_ROAM_SCAN_OFFLOAD
+    tANI_BOOLEAN isPERRoamScan;
 #endif
 }tCsrScanResultFilter;
 
@@ -1080,8 +1083,10 @@ typedef struct tagCsrConfigParam
 
     tANI_U32  nInitialDwellTime;      //in units of milliseconds
 
-    tANI_U32  nActiveMinChnTimeBtc;     //in units of milliseconds
-    tANI_U32  nActiveMaxChnTimeBtc;     //in units of milliseconds
+    uint32_t  min_chntime_btc_esco;     //in units of milliseconds
+    uint32_t  max_chntime_btc_esco;     //in units of milliseconds
+    uint32_t  min_chntime_btc_sco;
+    uint32_t  max_chntime_btc_sco;
     tANI_U32  disableAggWithBtc;
 #ifdef WLAN_AP_STA_CONCURRENCY
     tANI_U32  nPassiveMinChnTimeConc;    //in units of milliseconds
@@ -1169,6 +1174,15 @@ typedef struct tagCsrConfigParam
 #ifdef WLAN_FEATURE_ROAM_SCAN_OFFLOAD
     tANI_BOOLEAN isRoamOffloadScanEnabled;
     tANI_BOOLEAN bFastRoamInConIniFeatureEnabled;
+    v_BOOL_t isPERRoamEnabled;
+    v_BOOL_t isPERRoamCCAEnabled;
+    v_S15_t PERRoamFullScanThreshold;
+    v_S15_t PERMinRssiThresholdForRoam;
+    v_U32_t rateUpThreshold;
+    v_U32_t rateDownThreshold;
+    v_U32_t waitPeriodForNextPERScan;
+    v_U32_t PERtimerThreshold;
+    v_U32_t PERroamTriggerPercent;
 #endif
 #endif
 
@@ -1194,6 +1208,19 @@ typedef struct tagCsrConfigParam
     tANI_U8 roamDelayStatsEnabled;
     tANI_BOOLEAN ignorePeerHTopMode;
     tANI_BOOLEAN disableP2PMacSpoofing;
+    uint32_t enable_edca_params;
+    uint32_t edca_vo_cwmin;
+    uint32_t edca_vi_cwmin;
+    uint32_t edca_bk_cwmin;
+    uint32_t edca_be_cwmin;
+    uint32_t edca_vo_cwmax;
+    uint32_t edca_vi_cwmax;
+    uint32_t edca_bk_cwmax;
+    uint32_t edca_be_cwmax;
+    uint32_t edca_vo_aifs;
+    uint32_t edca_vi_aifs;
+    uint32_t edca_bk_aifs;
+    uint32_t edca_be_aifs;
 }tCsrConfigParam;
 
 //Tush
