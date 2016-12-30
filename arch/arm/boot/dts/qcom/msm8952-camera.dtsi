@@ -161,7 +161,10 @@
 			<&clock_gcc clk_gcc_camss_csi_vfe0_clk>,
 			<&clock_gcc clk_vfe1_clk_src>,
 			<&clock_gcc clk_gcc_camss_vfe1_clk>,
-			<&clock_gcc clk_gcc_camss_csi_vfe1_clk>;
+			<&clock_gcc clk_gcc_camss_csi_vfe1_clk>,
+			<&clock_gcc clk_gcc_camss_ahb_clk>,
+			<&clock_gcc clk_gcc_camss_top_ahb_clk>,
+			<&clock_gcc clk_camss_top_ahb_clk_src>;
 		clock-names = "ispif_ahb_clk",
 			"csi0_src_clk", "csi0_clk",
 			"csi0_rdi_clk", "csi0_pix_clk",
@@ -170,11 +173,14 @@
 			"csi2_src_clk", "csi2_clk",
 			"csi2_rdi_clk", "csi2_pix_clk",
 			"vfe0_clk_src", "camss_vfe_vfe0_clk", "camss_csi_vfe0_clk",
-			"vfe1_clk_src", "camss_vfe_vfe1_clk", "camss_csi_vfe1_clk";
+			"vfe1_clk_src", "camss_vfe_vfe1_clk", "camss_csi_vfe1_clk",
+			"camss_ahb_clk", "camss_top_ahb_clk",
+			"camss_ahb_src";
 		qcom,clock-rates = "61540000",
 			"160000000", "0", "0", "0",
 			"160000000", "0", "0", "0",
 			"160000000", "0", "0", "0",
+			"0", "0", "0",
 			"0", "0", "0",
 			"0", "0", "0";
 	};
