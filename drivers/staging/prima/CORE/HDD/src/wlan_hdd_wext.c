@@ -4025,6 +4025,9 @@ static void parse_Bufferforpkt(tSirpkt80211 *pkt, u8 *pBuffer, u16 len)
     length += getByte(&temp) << 8;
     hddLog(VOS_TRACE_LEVEL_INFO,"Payload length : %d", length);
 
+    if (length >= WLAN_DISA_MAX_PAYLOAD_SIZE)
+        length = WLAN_DISA_MAX_PAYLOAD_SIZE;
+
     pkt->data.length = length;
 
     for (i = 0; i< length; i++) {
@@ -8660,6 +8663,8 @@ static int __iw_set_dynamic_mcbc_filter(struct net_device *dev,
                 pHddCtx->sus_res_mcastbcast_filter =
                          pRequest->mcastBcastFilterSetting;
             }
+            /* mc add list cfg item configuration in fwr */
+            hdd_mc_addr_list_cfg_config(pHddCtx, true);
         }
     }
 
@@ -8750,6 +8755,9 @@ static int __iw_clear_dynamic_mcbc_filter(struct net_device *dev,
             pHddCtx->sus_res_mcastbcast_filter =
                      pHddCtx->cfg_ini->mcastBcastFilterSetting;
         }
+
+        /* mc add list cfg item configuration in fwr */
+        hdd_mc_addr_list_cfg_config(pHddCtx, true);
 
     }
     EXIT();
