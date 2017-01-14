@@ -45,12 +45,6 @@ selectbox(
 );
 
 selectbox(
-  "\n\nDo you need overclock ?","<@center><b>\n\n\n\n\n\nIf you don't understand then select stock frequencies only, overclock is for advanced users.\n</b></@>","","overclock.prop",
-  "1440 Mhz, 1804 Mhz (stock)","",1,
-  "1478 Mhz, 1843 Mhz (overclock)","",0
-);
-
-selectbox(
   "\n\nSelect default interactive tuning","<@center><b>\n\n\n\n\n\nThis will tune your interactive target loads according to your requirement. Only use interactive governor to enjoy this feature.\n</b></@>","","interactive.prop",
   "Balanced config","",1,
   "Battery config","",0,
