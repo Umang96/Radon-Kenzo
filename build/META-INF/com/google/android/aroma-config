@@ -12,7 +12,6 @@ fontresload( "1", "ttf/Roboto-Regular.ttf", "18" );
 
 theme("default");
 
-
 viewbox(
     "\nRadon Kernel",
 
@@ -42,12 +41,6 @@ selectbox(
   "Yes, enable it (with vibration)","",0,
   "Yes, enable it (without vibration)","",0,
   "No, disable it (saves battery)","",1
-);
-
-selectbox(
-  "\n\nDo you need overclock ?","<@center><b>\n\n\n\n\n\nIf you don't understand then select stock frequencies only, overclock is for advanced users.\n</b></@>","","overclock.prop",
-  "1440 Mhz, 1804 Mhz (stock)","",1,
-  "1478 Mhz, 1843 Mhz (overclock)","",0
 );
 
 selectbox(

@@ -16,19 +16,12 @@
  # Please maintain this if you use this script or any part of it
  #
 goodix=$(cat /tmp/aroma/goodix.prop | cut -d '=' -f2)
-overclock=$(cat /tmp/aroma/overclock.prop | cut -d '=' -f2)
 selinx=$(cat /tmp/aroma/sel.prop | cut -d '=' -f2)
-if ([ $overclock -eq 1 ]&&[ $goodix -eq 1 ]); then
-dim=/tmp/dt11.img
+if [ $goodix -eq 1 ]; then
+dim=/tmp/dt1.img
 zim=/tmp/Image1
-elif ([ $overclock -eq 1 ]&&[ $goodix -eq 2 ]); then
-dim=/tmp/dt12.img
-zim=/tmp/Image2
-elif ([ $overclock -eq 2 ]&&[ $goodix -eq 1 ]); then
-dim=/tmp/dt21.img
-zim=/tmp/Image1
-elif ([ $overclock -eq 2 ]&&[ $goodix -eq 2 ]); then
-dim=/tmp/dt22.img
+elif [ $goodix -eq 2 ]; then
+dim=/tmp/dt2.img
 zim=/tmp/Image2
 fi
 if ([ $selinx -eq 1 ]); then
