@@ -8,8 +8,8 @@ TLB="75 1190400:85 1382400:90 1747200:95"
 FMS=691200
 FMB=883200
 TR=20000
-UTS=30
-DTS=25
+UTS=35
+DTS=30
 UTB=35
 DTB=30
 elif [ $INTERACTIVE == 2 ]; then
@@ -18,8 +18,8 @@ TLB="75 1190400:85 1382400:90 1747200:99"
 FMS=400000
 FMB=400000
 TR=30000
-UTS=35
-DTS=30
+UTS=40
+DTS=35
 UTB=45
 DTB=40
 elif [ $INTERACTIVE == 3 ]; then
@@ -56,7 +56,7 @@ echo "" >> $CONFIGFILE
 COLOR=$(cat /tmp/aroma/color.prop | cut -d '=' -f2)
 echo "# KCAL" >> $CONFIGFILE
 if [ $COLOR == 1 ]; then
-echo "write /sys/devices/platform/kcal_ctrl.0/kcal_sat 275" >> $CONFIGFILE
+echo "write /sys/devices/platform/kcal_ctrl.0/kcal_sat 271" >> $CONFIGFILE
 echo "write /sys/devices/platform/kcal_ctrl.0/kcal_val 249" >> $CONFIGFILE
 echo "write /sys/devices/platform/kcal_ctrl.0/kcal_cont 264" >> $CONFIGFILE
 echo "write /sys/devices/platform/kcal_ctrl.0/kcal \"256 250 240"\" >> $CONFIGFILE
@@ -118,21 +118,19 @@ echo "write /sys/devices/system/cpu/cpu0/core_ctl/min_cpus 2" >> $CONFIGFILE
 echo "write /sys/devices/system/cpu/cpu0/core_ctl/max_cpus 4" >> $CONFIGFILE
 echo "write /sys/devices/system/cpu/cpu0/core_ctl/busy_up_thres $UTS" >> $CONFIGFILE
 echo "write /sys/devices/system/cpu/cpu0/core_ctl/busy_down_thres $DTS" >> $CONFIGFILE
-echo "write /sys/devices/system/cpu/cpu0/core_ctl/offline_delay_ms 1800" >> $CONFIGFILE
+echo "write /sys/devices/system/cpu/cpu0/core_ctl/offline_delay_ms 1000" >> $CONFIGFILE
 echo "write /sys/devices/system/cpu/cpu0/core_ctl/is_big_cluster 0" >> $CONFIGFILE
 elif [ $HOTPLUG == 2 ]; then
-echo "write /sys/devices/system/cpu/cpu4/core_ctl/min_cpus 1" >> $CONFIGFILE
+echo "write /sys/devices/system/cpu/cpu4/core_ctl/min_cpus 0" >> $CONFIGFILE
 echo "write /sys/devices/system/cpu/cpu4/core_ctl/max_cpus 2" >> $CONFIGFILE
 echo "write /sys/devices/system/cpu/cpu4/core_ctl/busy_up_thres 0" >> $CONFIGFILE
 echo "write /sys/devices/system/cpu/cpu4/core_ctl/busy_down_thres 0" >> $CONFIGFILE
-echo "write /sys/devices/system/cpu/cpu4/core_ctl/offline_delay_ms 1800" >> $CONFIGFILE
 echo "write /sys/devices/system/cpu/cpu4/core_ctl/task_thres 4" >> $CONFIGFILE
 echo "write /sys/devices/system/cpu/cpu4/core_ctl/is_big_cluster 1" >> $CONFIGFILE
-echo "write /sys/devices/system/cpu/cpu0/core_ctl/min_cpus 1" >> $CONFIGFILE
+echo "write /sys/devices/system/cpu/cpu0/core_ctl/min_cpus 0" >> $CONFIGFILE
 echo "write /sys/devices/system/cpu/cpu0/core_ctl/max_cpus 4" >> $CONFIGFILE
 echo "write /sys/devices/system/cpu/cpu0/core_ctl/busy_up_thres 0" >> $CONFIGFILE
 echo "write /sys/devices/system/cpu/cpu0/core_ctl/busy_down_thres 0" >> $CONFIGFILE
-echo "write /sys/devices/system/cpu/cpu0/core_ctl/offline_delay_ms 5000" >> $CONFIGFILE
 echo "write /sys/devices/system/cpu/cpu0/core_ctl/is_big_cluster 0" >> $CONFIGFILE
 fi
 echo "chmod 0444 /sys/devices/system/cpu/cpu4/core_ctl/min_cpus" >> $CONFIGFILE
