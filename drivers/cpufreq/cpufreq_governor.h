@@ -209,14 +209,19 @@ struct od_dbs_tuners {
 	unsigned int io_is_busy;
 };
 
-struct cs_dbs_tuners {
-	unsigned int ignore_nice_load;
-	unsigned int sampling_rate;
-	unsigned int sampling_down_factor;
-	unsigned int up_threshold;
-	unsigned int down_threshold;
-	unsigned int freq_step;
-};
+ struct cs_dbs_tuners {
+ 	unsigned int ignore_nice_load;
+ 	unsigned int sampling_rate;
+ 	unsigned int sampling_down_factor;
+ 	unsigned int up_threshold;
+ 	unsigned int down_threshold;
+ 	unsigned int down_threshold_suspended;
+ 	unsigned int freq_step;
+  	unsigned int sleep_depth;
+  	unsigned int boost_enabled;
+  	unsigned int boost_count;
+	unsigned int boost_ceiling;
+  };
 
 struct ex_dbs_tuners {
 	unsigned int ignore_nice_load;
