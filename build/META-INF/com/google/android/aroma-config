@@ -24,6 +24,13 @@ viewbox(
     "@welcome"
 );
 
+alert(
+  "NOTICE:",
+  "<b>For best experience don't flash over any other kernels.</b> Ensure that you either have a previous version of Radon or the kernel that came with your ROM installed.\n\nAlso, do not use any scripts to modify governors, this kernel already has well tuned governors for your cpu.\n\n",
+  "@warning",
+  "OK"
+);
+
 selectbox(
   "\n\nWhich fingerprint sensor you have ?","<@center><b>\n\n\n\n\n\nRemember !\n\nIf you don't know then try fpc1020 first, if fingerprint doesn't work, then re-flash kernel and choose goodix.\n</b></@>","","goodix.prop",
   "I have fpc1020","",1,
@@ -32,8 +39,8 @@ selectbox(
 
 selectbox(
   "\n\nWhich selinux mode you want ?","<@center><b>\n\n\n\n\n\n\nPermissive gives more permissions to applications.\nEnforcing restricts some permissions. Also, if you have goodix fingerprint sensor then it will not work with enforcing.\n</b></@>","","sel.prop",
-  "Permissive Selinux","",1,
-  "Enforcing Selinux","",0
+  "Permissive Selinux","",0,
+  "Enforcing Selinux","",1
 );
 
 selectbox(
@@ -44,7 +51,7 @@ selectbox(
 );
 
 selectbox(
-  "\n\nSelect default interactive tuning","<@center><b>\n\n\n\n\n\nThis will tune your interactive target loads according to your requirement. Only use interactive governor to enjoy this feature.\n</b></@>","","interactive.prop",
+  "\n\nTune your default interactive governor","<@center><b>\n\n\n\n\n\nThis will tune your interactive target loads according to your requirement. Only use interactive governor to enjoy this feature.\n</b></@>","","interactive.prop",
   "Balanced config","",1,
   "Battery config","",0,
   "Gaming config","",0
