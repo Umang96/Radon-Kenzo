@@ -59,7 +59,7 @@ if [ $COLOR == 1 ]; then
 echo "write /sys/devices/platform/kcal_ctrl.0/kcal_sat 271" >> $CONFIGFILE
 echo "write /sys/devices/platform/kcal_ctrl.0/kcal_val 249" >> $CONFIGFILE
 echo "write /sys/devices/platform/kcal_ctrl.0/kcal_cont 264" >> $CONFIGFILE
-echo "write /sys/devices/platform/kcal_ctrl.0/kcal \"256 250 240"\" >> $CONFIGFILE
+echo "write /sys/devices/platform/kcal_ctrl.0/kcal \"256 244 228"\" >> $CONFIGFILE
 elif [ $COLOR == 2 ]; then
 echo "write /sys/devices/platform/kcal_ctrl.0/kcal_sat 255" >> $CONFIGFILE
 echo "write /sys/devices/platform/kcal_ctrl.0/kcal_val 255" >> $CONFIGFILE
@@ -69,16 +69,10 @@ fi
 echo "" >> $CONFIGFILE
 echo "# CHARGING RATE" >> $CONFIGFILE
 CRATE=$(cat /tmp/aroma/crate.prop | cut -d '=' -f2)
-if [ $CRATE == 5 ]; then
-CHG=2400
-elif [ $CRATE == 4 ]; then
-CHG=2200
-elif [ $CRATE == 3 ]; then
+if [ $CRATE == 1 ]; then
 CHG=2000
 elif [ $CRATE == 2 ]; then
-CHG=1800
-elif [ $CRATE == 1 ]; then
-CHG=1600
+CHG=2400
 fi 
 echo "chmod 666 /sys/module/qpnp_smbcharger/parameters/default_dcp_icl_ma" >> $CONFIGFILE
 echo "chmod 666 /sys/module/qpnp_smbcharger/parameters/default_hvdcp_icl_ma" >> $CONFIGFILE
