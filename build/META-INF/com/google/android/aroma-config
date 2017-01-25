@@ -27,7 +27,7 @@ viewbox(
 
 alert(
   "NOTICE:",
-  "<b>For best experience don't flash over any other kernels.</b> Ensure that you either have a previous version of Radon or the kernel that came with your ROM installed.\n\nAlso, do not use any scripts to modify governors, this kernel already has well tuned governors for your cpu.\n\n",
+  "For best experience don't flash over other kernels. Ensure that you either have a previous version of Radon or the kernel that came with your ROM installed.\n\nAlso, do not use any scripts to modify governors, this kernel already has well tuned governors for your cpu.\n\n",
   "@warning",
   "OK"
 );
@@ -65,12 +65,9 @@ selectbox(
 );
 
 selectbox(
-  "\n\n<@center>Select charging rate limit\nWarning ! </@>","<@center><b>\n\n\n\n\n\nThis will set your max charging rate limit.\nThe stock 2000 mA is recommended, go above that at your own risk.\n</b></@>","","crate.prop",
-  "1600 mA","",0,
-  "1800 mA","",0,
-  "2000 mA (stock)","",1,
-  "2200 mA","",0,
-  "2400 mA","",0
+  "\n\n<@center>Select quick charging support\nWarning ! </@>","<@center><b>\n\n\n\n\n\nThis will set your max charging rate limit.\nThis does not work with stock charger.\n</b></@>","","crate.prop",
+  "2000 mA (default)","",1,
+  "2400 mA (quick)","",0
 );
 
 selectbox(
