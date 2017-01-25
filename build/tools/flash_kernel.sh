@@ -17,11 +17,18 @@
  #
 goodix=$(cat /tmp/aroma/goodix.prop | cut -d '=' -f2)
 selinx=$(cat /tmp/aroma/sel.prop | cut -d '=' -f2)
-if [ $goodix -eq 1 ]; then
-dim=/tmp/dt1.img
+qc=$(cat /tmp/aroma/crate.prop | cut -d '=' -f2)
+if ([ $goodix -eq 1 ]&&[ $qc -eq 1 ]); then
+dim=/tmp/dt11.img
 zim=/tmp/Image1
-elif [ $goodix -eq 2 ]; then
-dim=/tmp/dt2.img
+elif ([ $goodix -eq 1 ]&&[ $qc -eq 2 ]); then
+dim=/tmp/dt12.img
+zim=/tmp/Image1
+elif ([ $goodix -eq 2 ]&&[ $qc -eq 1 ]); then
+dim=/tmp/dt21.img
+zim=/tmp/Image2
+elif ([ $goodix -eq 2 ]&&[ $qc -eq 2 ]); then
+dim=/tmp/dt22.img
 zim=/tmp/Image2
 fi
 if ([ $selinx -eq 1 ]); then
