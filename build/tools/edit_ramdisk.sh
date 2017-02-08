@@ -151,3 +151,20 @@ echo "" >> $CONFIGFILE
 echo "on property:dev.bootcomplete=1" >> $CONFIGFILE
 echo "# SET IO SCHEDULER" >> $CONFIGFILE
 echo "setprop sys.io.scheduler \"fiops\"" >> $CONFIGFILE
+goodix=$(cat /tmp/aroma/goodix.prop | cut -d '=' -f2)
+if ([ $goodix -eq 1 ]); then
+cat >> $CONFIGFILE <<EOF
+echo "# Goodix FP Sensor" >> $CONFIGFILE
+chown system system  /dev/goodix_fp
+chmod 0644 /dev/goodix_fp
+
+service gx_fpd /system/bin/gx_fpd
+    class late_start
+    user system
+    group system
+    disabled
+
+on property:persist.sys.fp.sensor=goodix
+    start gx_fpd
+EOF
+fi
