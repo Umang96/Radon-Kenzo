@@ -152,7 +152,7 @@ echo "on property:dev.bootcomplete=1" >> $CONFIGFILE
 echo "# SET IO SCHEDULER" >> $CONFIGFILE
 echo "setprop sys.io.scheduler \"fiops\"" >> $CONFIGFILE
 goodix=$(cat /tmp/aroma/goodix.prop | cut -d '=' -f2)
-if ([ $goodix -eq 1 ]); then
+if ([ $goodix -eq 2 ]); then
 cat >> $CONFIGFILE <<EOF
 echo "# Goodix FP Sensor" >> $CONFIGFILE
 chown system system  /dev/goodix_fp
