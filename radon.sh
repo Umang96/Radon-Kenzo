@@ -49,7 +49,7 @@ git apply qc.patch
 elif [ $qc == 1 ]; then
 git apply -R qc.patch
 fi
-make cyanogenmod_kenzo_defconfig
+make lineageos_kenzo_defconfig
 export KBUILD_BUILD_HOST="lenovo"
 export KBUILD_BUILD_USER="umang"
 make -j4
