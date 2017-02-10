@@ -1811,7 +1811,20 @@ static inline int start_streaming(struct msm_vidc_inst *inst)
 	 * - v4l2 client issues CONTINUE to firmware to resume decoding of
 	 *   submitted ETBs.
 	 */
-	if (inst->in_reconfig) {
+
+	/*
+	 * Add instance state check during below sequence
+	 * - Flush was issued to firmware.
+	 * - Firmware detects SPS/PPS change in the queued buffers.
+	 * - Firmware sends all EBDs/FBDs followed by port reconfig event.
+	 * - V4L2 client streams on the capture port as part of flush done handling.
+	 * - Driver issues session_continue when the instance was in release
+	 *   resource done state (i.e firmware in loaded state). The HFI is valid
+	 *   only when firmware is in executing state i.e when instance is inbetween
+	 *   start done to stop done state.
+	 */
+
+	if (inst->in_reconfig && ((inst->state >= MSM_VIDC_START_DONE) && (inst->state <= MSM_VIDC_STOP_DONE))) {
 		dprintk(VIDC_DBG, "send session_continue after reconfig\n");
 		rc = call_hfi_op(hdev, session_continue,
 			(void *) inst->session);
