@@ -20,16 +20,16 @@ index 876feb1..b5ca497 100644
  	goodix_fingerprint {
  		compatible = "goodix,fingerprint";
  		vcc_spi-supply  = <&pm8950_l10>;
-diff --git a/arch/arm64/configs/cyanogenmod_kenzo_defconfig b/arch/arm64/configs/cyanogenmod_kenzo_defconfig
+diff --git a/arch/arm64/configs/lineageos_kenzo_defconfig b/arch/arm64/configs/lineageos_kenzo_defconfig
 index f2ec980..e38b8ea 100644
---- a/arch/arm64/configs/cyanogenmod_kenzo_defconfig
-+++ b/arch/arm64/configs/cyanogenmod_kenzo_defconfig
+--- a/arch/arm64/configs/lineageos_kenzo_defconfig
++++ b/arch/arm64/configs/lineageos_kenzo_defconfig
 @@ -1604,7 +1604,7 @@ CONFIG_WAKE_GESTURES=y
  CONFIG_INPUT_MISC=y
  # CONFIG_INPUT_AD714X is not set
  # CONFIG_INPUT_BMA150 is not set
 -CONFIG_INPUT_FPC1020=y
 +CONFIG_INPUT_FPC1020=n
- CONFIG_INPUT_HBTP_INPUT=y
+ CONFIG_INPUT_HBTP_INPUT=n
  # CONFIG_INPUT_MMA8450 is not set
  # CONFIG_INPUT_MPU3050 is not set
