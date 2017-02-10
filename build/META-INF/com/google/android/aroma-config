@@ -51,7 +51,7 @@ selectbox(
 );
 
 selectbox(
-  "\n\nTune your default interactive governor","<@center><b>\n\n\n\n\n\nThis will tune your interactive target loads according to your requirement. Only use interactive governor to enjoy this feature.\n</b></@>","","interactive.prop",
+  "\n\nSet your default tuning","<@center><b>\n\n\n\n\n\nThis will tune your default kernel settings according to your requirement. Only use interactive governor for maximum results.\n</b></@>","","interactive.prop",
   "Balanced config","",1,
   "Battery config","",0,
   "Gaming config","",0
@@ -64,7 +64,7 @@ selectbox(
 );
 
 selectbox(
-  "\n\n<@center>Select quick charging support\nWarning ! </@>","<@center><b>\n\n\n\n\n\nThis will set your max charging rate limit.\nThis does not work with stock charger.\n</b></@>","","crate.prop",
+  "\n\n<@center>Select quick charging support\nWarning ! </@>","<@center><b>\n\n\n\n\n\nThis will set your max charging rate limit.\nThis does not affect users with stock charger.\n</b></@>","","crate.prop",
   "2000 mA (default)","",1,
   "2400 mA (quick)","",0
 );
