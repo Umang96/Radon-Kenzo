@@ -8,10 +8,12 @@ TLB="75 1190400:85 1382400:90 1747200:95"
 FMS=691200
 FMB=883200
 TR=20000
-UTS=35
-DTS=30
+UTS=30
+DTS=25
 UTB=35
 DTB=30
+AID=N
+DFS=1
 elif [ $INTERACTIVE == 2 ]; then
 TLS="75 1190400:85 1382400:95 1401600:99"
 TLB="75 1190400:85 1382400:90 1747200:99"
@@ -22,6 +24,8 @@ UTS=40
 DTS=35
 UTB=45
 DTB=40
+AID=Y
+DFS=0
 elif [ $INTERACTIVE == 3 ]; then
 TLS="40 1190400:60 1382400:80 1401600:85"
 TLB="65 1190400:75 1382400:80 1747200:95"
@@ -32,6 +36,8 @@ UTS=25
 DTS=20
 UTB=35
 DTB=30
+AID=N
+DFS=1
 fi
 echo "on boot" >> $CONFIGFILE
 echo "" >> $CONFIGFILE
@@ -59,7 +65,7 @@ if [ $COLOR == 1 ]; then
 echo "write /sys/devices/platform/kcal_ctrl.0/kcal_sat 271" >> $CONFIGFILE
 echo "write /sys/devices/platform/kcal_ctrl.0/kcal_val 249" >> $CONFIGFILE
 echo "write /sys/devices/platform/kcal_ctrl.0/kcal_cont 264" >> $CONFIGFILE
-echo "write /sys/devices/platform/kcal_ctrl.0/kcal \"256 244 228"\" >> $CONFIGFILE
+echo "write /sys/devices/platform/kcal_ctrl.0/kcal \"256 246 228"\" >> $CONFIGFILE
 elif [ $COLOR == 2 ]; then
 echo "write /sys/devices/platform/kcal_ctrl.0/kcal_sat 255" >> $CONFIGFILE
 echo "write /sys/devices/platform/kcal_ctrl.0/kcal_val 255" >> $CONFIGFILE
@@ -125,7 +131,6 @@ echo "write /sys/devices/system/cpu/cpu0/core_ctl/busy_up_thres 0" >> $CONFIGFIL
 echo "write /sys/devices/system/cpu/cpu0/core_ctl/busy_down_thres 0" >> $CONFIGFILE
 echo "write /sys/devices/system/cpu/cpu0/core_ctl/is_big_cluster 0" >> $CONFIGFILE
 fi
-echo "chmod 0444 /sys/devices/system/cpu/cpu4/core_ctl/min_cpus" >> $CONFIGFILE
 echo "" >> $CONFIGFILE
 echo "# DISABLE BCL & CORE CTL" >> $CONFIGFILE
 echo "write /sys/module/msm_thermal/core_control/enabled 1" >> $CONFIGFILE
@@ -149,5 +154,12 @@ echo "write /sys/devices/system/cpu/cpu4/cpufreq/interactive/target_loads \"$TLB
 echo "write /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq $FMB" >> $CONFIGFILE
 echo "" >> $CONFIGFILE
 echo "on property:dev.bootcomplete=1" >> $CONFIGFILE
+echo "" >> $CONFIGFILE
 echo "# SET IO SCHEDULER" >> $CONFIGFILE
 echo "setprop sys.io.scheduler \"fiops\"" >> $CONFIGFILE
+echo "" >> $CONFIGFILE
+echo "# ADRENO IDLER" >> $CONFIGFILE
+echo "write /sys/module/adreno_idler/parameters/adreno_idler_active $AID" >> $CONFIGFILE
+echo "" >> $CONFIGFILE
+echo "# DYNAMIC FSYNC" >> $CONFIGFILE
+echo "write /sys/kernel/dyn_fsync/Dyn_fsync_active $DFS" >> $CONFIGFILE
