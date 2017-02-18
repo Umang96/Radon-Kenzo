@@ -38,11 +38,13 @@ selectbox(
   "I have goodix","",0
 );
 
+if prop("goodix.prop","selected.0")=="1" then
 selectbox(
   "\n\nWhich selinux mode you want ?","<@center><b>\n\n\n\n\n\n\nPermissive gives more permissions to applications.\nEnforcing restricts some permissions. Also, if you have goodix fingerprint sensor then it will not work with enforcing.\n</b></@>","","sel.prop",
   "Permissive Selinux","",0,
   "Enforcing Selinux","",1
 );
+endif;
 
 selectbox(
   "\n\nDo you need dt2w ?","<@center><b>\n\n\n\n\n\nRemember !\n\nKeeping dt2w enabled will consume little more battery.\n</b></@>","","dt2w.prop",

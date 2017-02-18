@@ -63,9 +63,9 @@ COLOR=$(cat /tmp/aroma/color.prop | cut -d '=' -f2)
 echo "# KCAL" >> $CONFIGFILE
 if [ $COLOR == 1 ]; then
 echo "write /sys/devices/platform/kcal_ctrl.0/kcal_sat 271" >> $CONFIGFILE
-echo "write /sys/devices/platform/kcal_ctrl.0/kcal_val 249" >> $CONFIGFILE
-echo "write /sys/devices/platform/kcal_ctrl.0/kcal_cont 264" >> $CONFIGFILE
-echo "write /sys/devices/platform/kcal_ctrl.0/kcal \"256 246 228"\" >> $CONFIGFILE
+echo "write /sys/devices/platform/kcal_ctrl.0/kcal_val 255" >> $CONFIGFILE
+echo "write /sys/devices/platform/kcal_ctrl.0/kcal_cont 256" >> $CONFIGFILE
+echo "write /sys/devices/platform/kcal_ctrl.0/kcal \"254 252 230"\" >> $CONFIGFILE
 elif [ $COLOR == 2 ]; then
 echo "write /sys/devices/platform/kcal_ctrl.0/kcal_sat 255" >> $CONFIGFILE
 echo "write /sys/devices/platform/kcal_ctrl.0/kcal_val 255" >> $CONFIGFILE
@@ -163,3 +163,6 @@ echo "write /sys/module/adreno_idler/parameters/adreno_idler_active $AID" >> $CO
 echo "" >> $CONFIGFILE
 echo "# DYNAMIC FSYNC" >> $CONFIGFILE
 echo "write /sys/kernel/dyn_fsync/Dyn_fsync_active $DFS" >> $CONFIGFILE
+echo "" >> $CONFIGFILE
+echo "# VIBRATOR STRENGTH" >> $CONFIGFILE
+echo "write /sys/class/timed_output/vibrator/vtg_level 2313" >> $CONFIGFILE

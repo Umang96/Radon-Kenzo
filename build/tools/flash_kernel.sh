@@ -1,6 +1,6 @@
 #!/sbin/sh
  #
- # Copyright © 2014, Varun Chitre "varun.chitre15" <varun.chitre15@gmail.com> 
+ # Copyright © 2017, Umang Leekha "umang96" <umangleekha3@gmail.com> 
  #
  # Live ramdisk patching script
  #
@@ -31,9 +31,12 @@ elif ([ $goodix -eq 2 ]&&[ $qc -eq 2 ]); then
 dim=/tmp/dt22.img
 zim=/tmp/Image2
 fi
-if ([ $selinx -eq 1 ]); then
+if ([ $goodix -eq 2 ]); then
 cmd="console=ttyHSL0,115200,n8 androidboot.console=ttyHSL0 androidboot.hardware=qcom ehci-hcd.park=3 androidboot.bootdevice=7824900.sdhci lpm_levels.sleep_disabled=1 androidboot.selinux=permissive"
-elif ([ $selinx -eq 2 ]); then
+fi
+if ([ $goodix -eq 1 ]&&[ $selinx -eq 1 ]); then
+cmd="console=ttyHSL0,115200,n8 androidboot.console=ttyHSL0 androidboot.hardware=qcom ehci-hcd.park=3 androidboot.bootdevice=7824900.sdhci lpm_levels.sleep_disabled=1 androidboot.selinux=permissive"
+elif ([ $goodix -eq 1 ]&&[ $selinx -eq 2 ]); then
 cmd="console=ttyHSL0,115200,n8 androidboot.console=ttyHSL0 androidboot.hardware=qcom ehci-hcd.park=3 androidboot.bootdevice=7824900.sdhci lpm_levels.sleep_disabled=1 androidboot.selinux=enforcing"
 fi
 cp -f /tmp/cpio /sbin/cpio
