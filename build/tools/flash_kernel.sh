@@ -1,6 +1,6 @@
 #!/sbin/sh
  #
- # Copyright © 2014, Umang Leekha "umang96" <umangleekha3@gmail.com> 
+ # Copyright © 2017, Umang Leekha "umang96" <umangleekha3@gmail.com> 
  #
  # Live ramdisk patching script
  #
@@ -31,9 +31,12 @@ elif ([ $goodix -eq 2 ]&&[ $qc -eq 2 ]); then
 dim=/tmp/dt22.img
 zim=/tmp/Image2
 fi
-if ([ $selinx -eq 1 ]); then
+if ([ $goodix -eq 2 ]); then
 cmd="console=ttyHSL0,115200,n8 androidboot.console=ttyHSL0 androidboot.hardware=qcom ehci-hcd.park=3 androidboot.bootdevice=7824900.sdhci lpm_levels.sleep_disabled=1 ramoops_memreserve=4M androidboot.selinux=permissive"
-elif ([ $selinx -eq 2 ]); then
+fi
+if ([ $goodix -eq 1 ]&&[ $selinx -eq 1 ]); then
+cmd="console=ttyHSL0,115200,n8 androidboot.console=ttyHSL0 androidboot.hardware=qcom ehci-hcd.park=3 androidboot.bootdevice=7824900.sdhci lpm_levels.sleep_disabled=1 ramoops_memreserve=4M androidboot.selinux=permissive"
+elif ([ $goodix -eq 1 ]&&[ $selinx -eq 2 ]); then
 cmd="console=ttyHSL0,115200,n8 androidboot.console=ttyHSL0 androidboot.hardware=qcom ehci-hcd.park=3 androidboot.bootdevice=7824900.sdhci lpm_levels.sleep_disabled=1 ramoops_memreserve=4M androidboot.selinux=enforcing"
 fi
 cp -f /tmp/cpio /sbin/cpio
@@ -49,7 +52,7 @@ rm /tmp/boot.img-ramdisk.gz
 cp /tmp/init.radon.rc /tmp/ramdisk/
 chmod 0750 /tmp/ramdisk/init.radon.rc
 if [ $(grep -c "import init.radon.rc" /tmp/ramdisk/init.qcom.rc) == 0 ]; then
-   sed -i "/import \init\.qcom\.power\.rc/aimport init.radon.rc" /tmp/ramdisk/init.qcom.rc
+   sed -i "/import \init\.qcom\.usb\.rc/aimport init.radon.rc" /tmp/ramdisk/init.qcom.rc
 fi
 find . | cpio -o -H newc | gzip > /tmp/boot.img-ramdisk.gz
 rm -r /tmp/ramdisk
