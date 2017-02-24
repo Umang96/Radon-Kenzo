@@ -29,7 +29,7 @@ read qc
 echo -e "$white"
 KERNEL_DIR=$PWD
 cd arch/arm/boot/dts/
-rm *.dtb
+rm *.dtb > /dev/null 2>&1
 cd $KERNEL_DIR
 Start=$(date +"%s")
 DTBTOOL=$KERNEL_DIR/dtbTool
@@ -40,18 +40,21 @@ export LD_LIBRARY_PATH=home/$USER/toolchain/aarch64-linux-googlemm-android-4.9/l
 STRIP="/home/$USER/toolchain/aarch64-linux-googlemm-android-4.9/bin/aarch64-linux-android-strip"
 cp $KERNEL_DIR/build/modules/wlan1.ko ~/wlan1.ko
 cp $KERNEL_DIR/build/modules/wlan2.ko ~/wlan2.ko
-make clean
-mv ~/wlan1.ko $KERNEL_DIR/build/modules/wlan1.ko
-mv ~/wlan2.ko $KERNEL_DIR/build/modules/wlan2.ko
+echo -e "$yellow Running make clean before compiling \n$white"
+make clean > /dev/null
+mv ~/wlan1.ko $KERNEL_DIR/build/modules/wlan1.ko > /dev/null 2>&1
+mv ~/wlan2.ko $KERNEL_DIR/build/modules/wlan2.ko > /dev/null 2>&1
 if [ $goodix == 2 ]; then
+echo -e "$yellow Applying goodix fingerprint patch \n$white"
 git apply goodix.patch
 elif [ $goodix == 1 ]; then
-git apply -R goodix.patch
+git apply -R goodix.patch > /dev/null 2>&1
 fi
 if [ $qc == 2 ]; then
+echo -e "$yellow Applying quick charging patch \n $white"
 git apply qc.patch
 elif [ $qc == 1 ]; then
-git apply -R qc.patch
+git apply -R qc.patch > /dev/null 2>&1
 fi
 make cyanogenmod_kenzo_defconfig
 export KBUILD_BUILD_HOST="lenovo"
@@ -83,11 +86,13 @@ then
 echo -e "$red << Failed to compile zImage, fix the errors first >>$white"
 else
 cd $KERNEL_DIR/build
-rm *.zip
-zip -r Radon-Kenzo-Cm-Mm.zip *
+rm *.zip > /dev/null 2>&1
+echo -e "$yellow\n Build succesful, generating flashable zip now \n $white"
+zip -r Radon-Kenzo-Cm-Mm.zip * > /dev/null
 End=$(date +"%s")
 Diff=$(($End - $Start))
-echo -e "$gre << Build completed in $(($Diff / 60)) minutes and $(($Diff % 60)) seconds, variant($goodix$qc) >>$white"
+echo -e "$yellow $KERNEL_DIR/build/Radon-Kenzo-Cm-Mm.zip \n$white"
+echo -e "$gre << Build completed in $(($Diff / 60)) minutes and $(($Diff % 60)) seconds, variant($goodix$qc) >> \n $white"
 fi
 cd $KERNEL_DIR
 if [ $goodix == 2 ]; then

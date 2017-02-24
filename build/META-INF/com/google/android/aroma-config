@@ -40,9 +40,9 @@ selectbox(
 
 if prop("goodix.prop","selected.0")=="1" then
 selectbox(
-  "\n\nWhich selinux mode you want ?","<@center><b>\n\n\n\n\n\n\nPermissive gives more permissions to applications.\nEnforcing restricts some permissions. Also, if you have goodix fingerprint sensor then it will not work with enforcing.\n</b></@>","","sel.prop",
-  "Permissive Selinux","",0,
-  "Enforcing Selinux","",1
+  "\n\nWhich selinux mode you want ?","<@center><b>\n\n\n\n\n\n\nPermissive gives more permissions to applications.\nEnforcing restricts some permissions. Choose enforcing if you are not sure.\n</b></@>","","sel.prop",
+  "Enforcing Selinux","",1,
+  "Permissive Selinux","",0
 );
 endif;
 
@@ -58,12 +58,6 @@ selectbox(
   "Balanced config","",1,
   "Battery config","",0,
   "Gaming config","",0
-);
-
-selectbox(
-  "\n\nSmart hotplugging ?","<@center><b>\n\n\n\n\n\nIf you choose yes then some cores will go offline when cpu load is low and come back online when cpu load is high, this might save battery for light users.\n</b></@>","","hotplug.prop",
-  "Yes, enable hotplug","",1,
-  "No, disable hotplug","",0
 );
 
 selectbox(
