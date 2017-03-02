@@ -1,8 +1,8 @@
 ini_set("rom_name",             "Radon");
-ini_set("rom_version",          "V3.9");
+ini_set("rom_version",          "V4.0");
 ini_set("rom_author",           "Umang96");
 ini_set("rom_device",           "Kenzo");
-ini_set("rom_date",             "Feb 18, 2017");
+ini_set("rom_date",             "Mar 02, 2017");
 
 ini_set("force_colorspace","rgba");
 #ini_set("dp","6");
@@ -40,7 +40,7 @@ selectbox(
 
 if prop("goodix.prop","selected.0")=="1" then
 selectbox(
-  "\n\nWhich selinux mode you want ?","<@center><b>\n\n\n\n\n\n\nPermissive gives more permissions to applications.\nEnforcing restricts some permissions. Choose enforcing if you are not sure.\n</b></@>","","sel.prop",
+  "\n\nWhich selinux mode you want ?","<@center><b>\n\n\n\n\n\nPermissive gives more permissions to applications.\nEnforcing restricts some permissions. Choose enforcing if you are not sure.\n</b></@>","","sel.prop",
   "Enforcing Selinux","",1,
   "Permissive Selinux","",0
 );
