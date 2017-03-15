@@ -51,8 +51,8 @@ rm /tmp/ramdisk/boot.img-ramdisk.gz
 rm /tmp/boot.img-ramdisk.gz
 cp /tmp/init.radon.rc /tmp/ramdisk/
 chmod 0750 /tmp/ramdisk/init.radon.rc
-if [ $(grep -c "import init.radon.rc" /tmp/ramdisk/init.qcom.rc) == 0 ]; then
-   sed -i "/import \init\.qcom\.usb\.rc/aimport init.radon.rc" /tmp/ramdisk/init.qcom.rc
+if [ $(grep -c "import /init.radon.rc" /tmp/ramdisk/init.rc) == 0 ]; then
+   sed -i "/import \/init\.\${ro.hardware}\.rc/aimport /init.radon.rc" /tmp/ramdisk/init.rc
 fi
 find . | cpio -o -H newc | gzip > /tmp/boot.img-ramdisk.gz
 rm -r /tmp/ramdisk

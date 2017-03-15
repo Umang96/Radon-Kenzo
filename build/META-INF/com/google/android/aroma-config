@@ -67,9 +67,10 @@ selectbox(
 );
 
 selectbox(
-  "\n\nWant enhanced colors ?","<@center><b>\n\n\n\n\n\nIf you choose yes then display colors will be better than stock.\n</b></@>","","color.prop",
-  "Yes, enhanced colors","",1,
-  "No, stock colors","",0
+  "\n\nWant enhanced colors ?","<@center><b>\n\n\n\n\n\nIf you choose yes then display colors will be better than stock. Keep livedisplay off to see real colors.\n</b></@>","","color.prop",
+  "Yes, enhanced colors (~6400k)","",1,
+  "Yes, enhanced colors (~6700k)","",0,
+  "No, stock unmodified colors","",0
 );
 
 setvar("retstatus",
