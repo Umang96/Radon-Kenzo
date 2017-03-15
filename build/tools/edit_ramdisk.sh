@@ -12,7 +12,6 @@ FMS=691200
 FMB=883200
 TR=20000
 AID=N
-DFS=1
 ABST=0
 TBST=1
 elif [ $INTERACTIVE == 2 ]; then
@@ -25,7 +24,6 @@ FMS=400000
 FMB=400000
 TR=30000
 AID=Y
-DFS=0
 ABST=0
 TBST=0
 elif [ $INTERACTIVE == 3 ]; then
@@ -38,7 +36,6 @@ FMS=691200
 FMB=883200
 TR=20000
 AID=N
-DFS=1
 ABST=1
 TBST=1
 fi
@@ -52,6 +49,12 @@ VIBS=0
 elif [ $DT2W == 3 ]; then
 DTP=0
 VIBS=75
+fi
+DFSC=$(cat /tmp/aroma/dfs.prop | cut -d '=' -f2)
+if [ $DFSC == 1 ]; then
+DFS=1
+elif [ $DFSC == 2 ]; then
+DFS=0
 fi
 echo "on property:dev.bootcomplete=1" >> $CONFIGFILE
 echo "" >> $CONFIGFILE
