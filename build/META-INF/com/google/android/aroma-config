@@ -1,8 +1,8 @@
 ini_set("rom_name",             "Radon");
-ini_set("rom_version",          "V4.0");
+ini_set("rom_version",          "V4.1");
 ini_set("rom_author",           "Umang96");
 ini_set("rom_device",           "Kenzo");
-ini_set("rom_date",             "Mar 02, 2017");
+ini_set("rom_date",             "Mar 17, 2017");
 
 ini_set("force_colorspace","rgba");
 #ini_set("dp","6");
