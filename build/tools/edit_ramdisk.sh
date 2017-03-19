@@ -96,8 +96,6 @@ echo "chmod 666 /sys/module/qpnp_smbcharger/parameters/default_hvdcp_icl_ma" >> 
 echo "write /sys/module/qpnp_smbcharger/parameters/default_dcp_icl_ma $CHG" >> $CONFIGFILE
 echo "write /sys/module/qpnp_smbcharger/parameters/default_hvdcp_icl_ma $CHG" >> $CONFIGFILE
 echo "" >> $CONFIGFILE
-echo "on enable-low-power" >> $CONFIGFILE
-echo "" >> $CONFIGFILE
 echo "# DISABLE BCL & CORE CTL" >> $CONFIGFILE
 echo "write /sys/module/msm_thermal/core_control/enabled 0" >> $CONFIGFILE
 echo "write /sys/devices/soc.0/qcom,bcl.56/mode disable" >> $CONFIGFILE
