@@ -3,7 +3,7 @@
 CONFIGFILE="/tmp/init.radon.rc"
 INTERACTIVE=$(cat /tmp/aroma/interactive.prop | cut -d '=' -f2)
 if [ $INTERACTIVE == 1 ]; then
-TLS="50 1017600:60 1382400:90 1401600:95"
+TLS="60 1017600:70 1382400:90 1401600:95"
 TLB="75 1190400:85 1382400:90 1747200:95"
 BOOST="0:1305600"
 HSFS=1305600
@@ -15,8 +15,8 @@ AID=N
 ABST=0
 TBST=1
 elif [ $INTERACTIVE == 2 ]; then
-TLS="75 1017600:85 1382400:95 1401600:99"
-TLB="75 1190400:85 1382400:90 1747200:99"
+TLS="80 1190400:90 1382400:95 1401600:99"
+TLB="80 1190400:85 1382400:90 1747200:99"
 BOOST="0:691200"
 HSFS=1017600
 HSFB=1190400
@@ -27,7 +27,7 @@ AID=Y
 ABST=0
 TBST=0
 elif [ $INTERACTIVE == 3 ]; then
-TLS="40 1190400:60 1382400:80 1401600:85"
+TLS="50 1190400:60 1382400:80 1401600:85"
 TLB="65 1190400:75 1382400:80 1747200:95"
 BOOST="0:1305600"
 HSFS=1305600
@@ -56,6 +56,13 @@ DFS=1
 elif [ $DFSC == 2 ]; then
 DFS=0
 fi
+echo "# USER TWEAKS" >> $CONFIGFILE
+echo "service usertweaks /system/bin/sh /system/etc/radon.sh" >> $CONFIGFILE
+echo "class main" >> $CONFIGFILE
+echo "group root" >> $CONFIGFILE
+echo "user root" >> $CONFIGFILE
+echo "oneshot" >> $CONFIGFILE
+echo "" >> $CONFIGFILE
 echo "on property:dev.bootcomplete=1" >> $CONFIGFILE
 echo "" >> $CONFIGFILE
 echo "# SWAPPINESS" >> $CONFIGFILE
@@ -158,3 +165,5 @@ echo "write /sys/kernel/dyn_fsync/Dyn_fsync_active $DFS" >> $CONFIGFILE
 echo "" >> $CONFIGFILE
 echo "# VIBRATOR STRENGTH" >> $CONFIGFILE
 echo "write /sys/class/timed_output/vibrator/vtg_level 2320" >> $CONFIGFILE
+echo "" >> $CONFIGFILE
+echo "start usertweaks" >> $CONFIGFILE
