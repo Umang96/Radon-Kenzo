@@ -3,8 +3,8 @@
 CONFIGFILE="/tmp/init.radon.rc"
 INTERACTIVE=$(cat /tmp/aroma/interactive.prop | cut -d '=' -f2)
 if [ $INTERACTIVE == 1 ]; then
-TLS="60 1017600:70 1382400:90 1401600:95"
-TLB="75 1190400:85 1382400:90 1747200:95"
+TLS="1 691200:75"
+TLB="85 1382400:90 1747200:80"
 BOOST="0:1305600"
 HSFS=1305600
 HSFB=1382400
@@ -15,8 +15,8 @@ AID=N
 ABST=0
 TBST=1
 elif [ $INTERACTIVE == 2 ]; then
-TLS="80 1190400:90 1382400:95 1401600:99"
-TLB="80 1190400:85 1382400:90 1747200:99"
+TLS="1 691200:90"
+TLB="85 1382400:90 1747200:80"
 BOOST="0:691200"
 HSFS=1017600
 HSFB=1190400
@@ -27,8 +27,8 @@ AID=Y
 ABST=0
 TBST=0
 elif [ $INTERACTIVE == 3 ]; then
-TLS="50 1190400:60 1382400:80 1401600:85"
-TLB="65 1190400:75 1382400:80 1747200:95"
+TLS="1 691200:70"
+TLB="85 1382400:90 1747200:80"
 BOOST="0:1305600"
 HSFS=1305600
 HSFB=1382400
@@ -48,7 +48,7 @@ DTP=1
 VIBS=0
 elif [ $DT2W == 3 ]; then
 DTP=0
-VIBS=75
+VIBS=50
 fi
 DFSC=$(cat /tmp/aroma/dfs.prop | cut -d '=' -f2)
 if [ $DFSC == 1 ]; then
@@ -62,6 +62,42 @@ echo "class main" >> $CONFIGFILE
 echo "group root" >> $CONFIGFILE
 echo "user root" >> $CONFIGFILE
 echo "oneshot" >> $CONFIGFILE
+echo "" >> $CONFIGFILE
+echo "on boot" >> $CONFIGFILE
+echo "" >> $CONFIGFILE
+echo "# CPUSETS" >> $CONFIGFILE
+echo "mkdir /dev/cpuset/camera-daemon" >> $CONFIGFILE
+echo "write /dev/cpuset/camera-daemon/cpus 0" >> $CONFIGFILE
+echo "write /dev/cpuset/camera-daemon/mems 0" >> $CONFIGFILE
+echo "chown system system /dev/cpuset/camera-daemon" >> $CONFIGFILE
+echo "chown system system /dev/cpuset/camera-daemon/tasks" >> $CONFIGFILE
+echo "chmod 0664 /dev/cpuset/camera-daemon/tasks" >> $CONFIGFILE
+echo "write /dev/cpuset/foreground/cpus 0-2,4-5" >> $CONFIGFILE
+echo "write /dev/cpuset/foreground/boost/cpus 4-5" >> $CONFIGFILE
+echo "write /dev/cpuset/background/cpus 0" >> $CONFIGFILE
+echo "write /dev/cpuset/system-background/cpus 0-2" >> $CONFIGFILE
+echo "write /dev/cpuset/top-app/cpus 0-5" >> $CONFIGFILE
+echo "write /dev/cpuset/camera-daemon/cpus 0-3" >> $CONFIGFILE
+echo "" >> $CONFIGFILE
+echo "on enable-low-power" >> $CONFIGFILE
+echo "" >> $CONFIGFILE
+echo "# HMP SCHEDULER" >> $CONFIGFILE
+echo "write /proc/sys/kernel/sched_boost 0" >> $CONFIGFILE
+echo "write /proc/sys/kernel/sched_upmigrate 95" >> $CONFIGFILE
+echo "write /proc/sys/kernel/sched_downmigrate 85" >> $CONFIGFILE
+echo "write /proc/sys/kernel/sched_window_stats_policy 2" >> $CONFIGFILE
+echo "write /proc/sys/kernel/sched_ravg_hist_size 5" >> $CONFIGFILE
+echo "write /sys/devices/system/cpu/cpu0/sched_mostly_idle_nr_run 3" >> $CONFIGFILE
+echo "write /sys/devices/system/cpu/cpu1/sched_mostly_idle_nr_run 3" >> $CONFIGFILE
+echo "write /sys/devices/system/cpu/cpu2/sched_mostly_idle_nr_run 3" >> $CONFIGFILE
+echo "write /sys/devices/system/cpu/cpu3/sched_mostly_idle_nr_run 3" >> $CONFIGFILE
+echo "write /sys/devices/system/cpu/cpu4/sched_mostly_idle_nr_run 3" >> $CONFIGFILE
+echo "write /sys/devices/system/cpu/cpu5/sched_mostly_idle_nr_run 3" >> $CONFIGFILE
+echo "write /sys/class/devfreq/mincpubw/governor "cpufreq"" >> $CONFIGFILE
+echo "write /sys/class/devfreq/cpubw/governor "bw_hwmon"" >> $CONFIGFILE
+echo "write /sys/class/devfreq/cpubw/bw_hwmon/io_percent 20" >> $CONFIGFILE
+echo "write /sys/class/devfreq/cpubw/bw_hwmon/guard_band_mbps 30" >> $CONFIGFILE
+echo "write /sys/class/devfreq/gpubw/bw_hwmon/io_percent 40" >> $CONFIGFILE
 echo "" >> $CONFIGFILE
 echo "on property:dev.bootcomplete=1" >> $CONFIGFILE
 echo "" >> $CONFIGFILE
@@ -166,4 +202,5 @@ echo "" >> $CONFIGFILE
 echo "# VIBRATOR STRENGTH" >> $CONFIGFILE
 echo "write /sys/class/timed_output/vibrator/vtg_level 2320" >> $CONFIGFILE
 echo "" >> $CONFIGFILE
+echo "# RUN USERTWEAKS SERVICE" >> $CONFIGFILE
 echo "start usertweaks" >> $CONFIGFILE
