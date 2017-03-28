@@ -3,9 +3,8 @@
 CONFIGFILE="/tmp/init.radon.rc"
 INTERACTIVE=$(cat /tmp/aroma/interactive.prop | cut -d '=' -f2)
 if [ $INTERACTIVE == 1 ]; then
-TLS="1 691200:75"
-TLB="85 1382400:90 1747200:80"
-BOOST="0:1305600"
+TLS="55 806400:60 1017600:70 1190400:75 1382400:90 1401600:95"
+TLB="85 1382400:90 1747200:95"
 HSFS=1305600
 HSFB=1382400
 FMS=691200
@@ -14,9 +13,11 @@ TR=20000
 AID=N
 ABST=0
 TBST=1
+GHLS=80
+GHLB=85
 elif [ $INTERACTIVE == 2 ]; then
-TLS="1 691200:90"
-TLB="85 1382400:90 1747200:80"
+TLS="75 806400:80 1190400:85 1305600:90 1382400:95 1401600:99"
+TLB="90 1382400:95 1747200:99"
 BOOST="0:691200"
 HSFS=1017600
 HSFB=1190400
@@ -26,9 +27,11 @@ TR=30000
 AID=Y
 ABST=0
 TBST=0
+GHLS=85
+GHLB=95
 elif [ $INTERACTIVE == 3 ]; then
-TLS="1 691200:70"
-TLB="85 1382400:90 1747200:80"
+TLS="45 806400:50 1017600:60 1190400:65 1382400:80 1401600:85"
+TLB="75 1382400:80 1747200:85"
 BOOST="0:1305600"
 HSFS=1305600
 HSFB=1382400
@@ -38,6 +41,8 @@ TR=20000
 AID=N
 ABST=1
 TBST=1
+GHLS=80
+GHLB=80
 fi
 DT2W=$(cat /tmp/aroma/dt2w.prop | cut -d '=' -f2)
 if [ $DT2W == 1 ]; then
@@ -62,42 +67,6 @@ echo "class main" >> $CONFIGFILE
 echo "group root" >> $CONFIGFILE
 echo "user root" >> $CONFIGFILE
 echo "oneshot" >> $CONFIGFILE
-echo "" >> $CONFIGFILE
-echo "on boot" >> $CONFIGFILE
-echo "" >> $CONFIGFILE
-echo "# CPUSETS" >> $CONFIGFILE
-echo "mkdir /dev/cpuset/camera-daemon" >> $CONFIGFILE
-echo "write /dev/cpuset/camera-daemon/cpus 0" >> $CONFIGFILE
-echo "write /dev/cpuset/camera-daemon/mems 0" >> $CONFIGFILE
-echo "chown system system /dev/cpuset/camera-daemon" >> $CONFIGFILE
-echo "chown system system /dev/cpuset/camera-daemon/tasks" >> $CONFIGFILE
-echo "chmod 0664 /dev/cpuset/camera-daemon/tasks" >> $CONFIGFILE
-echo "write /dev/cpuset/foreground/cpus 0-2,4-5" >> $CONFIGFILE
-echo "write /dev/cpuset/foreground/boost/cpus 4-5" >> $CONFIGFILE
-echo "write /dev/cpuset/background/cpus 0" >> $CONFIGFILE
-echo "write /dev/cpuset/system-background/cpus 0-2" >> $CONFIGFILE
-echo "write /dev/cpuset/top-app/cpus 0-5" >> $CONFIGFILE
-echo "write /dev/cpuset/camera-daemon/cpus 0-3" >> $CONFIGFILE
-echo "" >> $CONFIGFILE
-echo "on enable-low-power" >> $CONFIGFILE
-echo "" >> $CONFIGFILE
-echo "# HMP SCHEDULER" >> $CONFIGFILE
-echo "write /proc/sys/kernel/sched_boost 0" >> $CONFIGFILE
-echo "write /proc/sys/kernel/sched_upmigrate 95" >> $CONFIGFILE
-echo "write /proc/sys/kernel/sched_downmigrate 85" >> $CONFIGFILE
-echo "write /proc/sys/kernel/sched_window_stats_policy 2" >> $CONFIGFILE
-echo "write /proc/sys/kernel/sched_ravg_hist_size 5" >> $CONFIGFILE
-echo "write /sys/devices/system/cpu/cpu0/sched_mostly_idle_nr_run 3" >> $CONFIGFILE
-echo "write /sys/devices/system/cpu/cpu1/sched_mostly_idle_nr_run 3" >> $CONFIGFILE
-echo "write /sys/devices/system/cpu/cpu2/sched_mostly_idle_nr_run 3" >> $CONFIGFILE
-echo "write /sys/devices/system/cpu/cpu3/sched_mostly_idle_nr_run 3" >> $CONFIGFILE
-echo "write /sys/devices/system/cpu/cpu4/sched_mostly_idle_nr_run 3" >> $CONFIGFILE
-echo "write /sys/devices/system/cpu/cpu5/sched_mostly_idle_nr_run 3" >> $CONFIGFILE
-echo "write /sys/class/devfreq/mincpubw/governor "cpufreq"" >> $CONFIGFILE
-echo "write /sys/class/devfreq/cpubw/governor "bw_hwmon"" >> $CONFIGFILE
-echo "write /sys/class/devfreq/cpubw/bw_hwmon/io_percent 20" >> $CONFIGFILE
-echo "write /sys/class/devfreq/cpubw/bw_hwmon/guard_band_mbps 30" >> $CONFIGFILE
-echo "write /sys/class/devfreq/gpubw/bw_hwmon/io_percent 40" >> $CONFIGFILE
 echo "" >> $CONFIGFILE
 echo "on property:dev.bootcomplete=1" >> $CONFIGFILE
 echo "" >> $CONFIGFILE
@@ -158,7 +127,7 @@ echo "# TWEAK A53 CLUSTER GOVERNOR" >> $CONFIGFILE
 echo "write /sys/devices/system/cpu/cpu0/online 1" >> $CONFIGFILE
 echo "write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor \"interactive\"" >> $CONFIGFILE
 echo "write /sys/devices/system/cpu/cpu0/cpufreq/interactive/above_hispeed_delay 59000" >> $CONFIGFILE
-echo "write /sys/devices/system/cpu/cpu0/cpufreq/interactive/go_hispeed_load 80" >> $CONFIGFILE
+echo "write /sys/devices/system/cpu/cpu0/cpufreq/interactive/go_hispeed_load $GHLS" >> $CONFIGFILE
 echo "write /sys/devices/system/cpu/cpu0/cpufreq/interactive/timer_rate $TR" >> $CONFIGFILE
 echo "write /sys/devices/system/cpu/cpu0/cpufreq/interactive/hispeed_freq $HSFS" >> $CONFIGFILE
 echo "write /sys/devices/system/cpu/cpu0/cpufreq/interactive/io_is_busy 0" >> $CONFIGFILE
@@ -170,7 +139,7 @@ echo "# TWEAK A72 CLUSTER GOVERNOR" >> $CONFIGFILE
 echo "write /sys/devices/system/cpu/cpu4/online 1" >> $CONFIGFILE
 echo "write /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor \"interactive\"" >> $CONFIGFILE
 echo "write /sys/devices/system/cpu/cpu4/cpufreq/interactive/above_hispeed_delay \"19000 1382400:39000\"" >> $CONFIGFILE
-echo "write /sys/devices/system/cpu/cpu4/cpufreq/interactive/go_hispeed_load 85" >> $CONFIGFILE
+echo "write /sys/devices/system/cpu/cpu4/cpufreq/interactive/go_hispeed_load $GHLB" >> $CONFIGFILE
 echo "write /sys/devices/system/cpu/cpu4/cpufreq/interactive/timer_rate $TR" >> $CONFIGFILE
 echo "write /sys/devices/system/cpu/cpu4/cpufreq/interactive/hispeed_freq $HSFB" >> $CONFIGFILE
 echo "write /sys/devices/system/cpu/cpu4/cpufreq/interactive/io_is_busy 0" >> $CONFIGFILE
