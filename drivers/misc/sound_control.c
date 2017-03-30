@@ -24,11 +24,11 @@ int headphones_boost_limit = 20;
 //Speakers
 
 int speaker_boost = 0;
-int speaker_boost_limit = 10;
+int speaker_boost_limit = 20;
 
 //Micrphone/Earpiece
 int mic_boost = 0;
-int mic_boost_limit = 10;
+int mic_boost_limit = 20;
 
 static ssize_t headphones_boost_show(struct device *dev,
 		struct device_attribute *attr, char *buf)
