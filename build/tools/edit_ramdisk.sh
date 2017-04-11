@@ -3,9 +3,9 @@
 CONFIGFILE="/tmp/init.radon.rc"
 INTERACTIVE=$(cat /tmp/aroma/interactive.prop | cut -d '=' -f2)
 if [ $INTERACTIVE == 1 ]; then
-TLS="55 806400:60 1017600:70 1190400:75 1382400:90 1401600:95"
+TLS="50 806400:55 1017600:65 1190400:70 1382400:90 1401600:95"
 TLB="85 1382400:90 1747200:95"
-BOOST="0:1305600"
+BOOST="0:1305600 4:998400"
 HSFS=1305600
 HSFB=1382400
 FMS=691200
@@ -17,7 +17,7 @@ TBST=1
 GHLS=80
 GHLB=85
 elif [ $INTERACTIVE == 2 ]; then
-TLS="75 806400:80 1190400:85 1305600:90 1382400:95 1401600:99"
+TLS="70 806400:75 1190400:85 1305600:90 1382400:95 1401600:99"
 TLB="90 1382400:95 1747200:99"
 BOOST="0:691200"
 HSFS=1017600
@@ -33,7 +33,7 @@ GHLB=95
 elif [ $INTERACTIVE == 3 ]; then
 TLS="45 806400:50 1017600:60 1190400:65 1382400:80 1401600:85"
 TLB="75 1382400:80 1747200:85"
-BOOST="0:1305600"
+BOOST="0:1305600 4:998400"
 HSFS=1305600
 HSFB=1382400
 FMS=691200
@@ -171,6 +171,16 @@ echo "write /sys/kernel/dyn_fsync/Dyn_fsync_active $DFS" >> $CONFIGFILE
 echo "" >> $CONFIGFILE
 echo "# VIBRATOR STRENGTH" >> $CONFIGFILE
 echo "write /sys/class/timed_output/vibrator/vtg_level 2320" >> $CONFIGFILE
+echo "" >> $CONFIGFILE
+echo "# DISABLE WAKELOCKS" >> $CONFIGFILE
+echo "write /sys/module/wakeup/parameters/enable_qcom_rx_wakelock_ws 0" >> $CONFIGFILE
+echo "write /sys/module/wakeup/parameters/enable_wlan_extscan_wl_ws 0" >> $CONFIGFILE
+echo "write /sys/module/wakeup/parameters/enable_ipa_ws 0" >> $CONFIGFILE
+echo "write /sys/module/wakeup/parameters/enable_wlan_wow_wl_ws 0" >> $CONFIGFILE
+echo "write /sys/module/wakeup/parameters/enable_wlan_ws 0" >> $CONFIGFILE
+echo "write /sys/module/wakeup/parameters/enable_timerfd_ws 0" >> $CONFIGFILE
+echo "write /sys/module/wakeup/parameters/enable_netlink_ws 0" >> $CONFIGFILE
+echo "write /sys/module/wakeup/parameters/enable_netmgr_wl_ws 0" >> $CONFIGFILE
 echo "" >> $CONFIGFILE
 echo "# RUN USERTWEAKS SERVICE" >> $CONFIGFILE
 echo "start usertweaks" >> $CONFIGFILE
