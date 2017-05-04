@@ -11,31 +11,17 @@ index ab2f094..cfeaaf2 100644
  	qcom,checksum = <0xA7BE>;
  	qcom,gui-version = "PMI8950GUI - 2.0.0.14";
  	qcom,fg-profile-data = [
-diff --git a/arch/arm/boot/dts/qcom/kenzo/batterydata-coslight-4000mah-4400mv.dtsi b/arch/arm/boot/dts/qcom/kenzo/batterydata-coslight-4000mah-4400mv.dtsi
-index ed52f67..b908bdf 100644
---- a/arch/arm/boot/dts/qcom/kenzo/batterydata-coslight-4000mah-4400mv.dtsi
-+++ b/arch/arm/boot/dts/qcom/kenzo/batterydata-coslight-4000mah-4400mv.dtsi
-@@ -9,7 +9,7 @@ qcom,ct865_coslight_4000mah_averaged_masterslave_oct2nd2015 {
- 	qcom,chg-rslow-comp-c2 = <3185429>;
- 	qcom,chg-rs-to-rslow = <896437>;
- 	qcom,chg-rslow-comp-thr = <0x99>;
--	qcom,fastchg-current-ma = <2000>;
-+	qcom,fastchg-current-ma = <2400>;
- 	qcom,checksum = <0xA7BE>;
- 	qcom,gui-version = "PMI8950GUI - 2.0.0.14";
- 	qcom,fg-profile-data = [
 diff --git a/arch/arm/boot/dts/qcom/kenzo/batterydata-scud-4000mah-4400mv.dtsi b/arch/arm/boot/dts/qcom/kenzo/batterydata-scud-4000mah-4400mv.dtsi
-index 26b0e9e..77631ce 100644
+index 77c12c0..497aedd 100644
 --- a/arch/arm/boot/dts/qcom/kenzo/batterydata-scud-4000mah-4400mv.dtsi
 +++ b/arch/arm/boot/dts/qcom/kenzo/batterydata-scud-4000mah-4400mv.dtsi
-@@ -9,7 +9,7 @@ qcom,2162464_longcheer_ct865scud_4000mah {
- 	qcom,chg-rslow-comp-c2 = <3467482>;
- 	qcom,chg-rs-to-rslow = <911611>;
+@@ -9,6 +9,7 @@ qcom,longcheer_ct865scud_4000mah_battery {
+ 	qcom,chg-rslow-comp-c2 = <2592188>;
+ 	qcom,chg-rs-to-rslow = <1432403>;
  	qcom,chg-rslow-comp-thr = <0x99>;
--	qcom,fastchg-current-ma = <2000>;
 +	qcom,fastchg-current-ma = <2400>;
- 	qcom,checksum = <0x43DE>;
- 	qcom,gui-version = "PMI8950GUI - 2.0.0.14";
+ 	qcom,checksum = <0x6EE9>;
+ 	qcom,gui-version = "PMI8950GUI - 2.0.0.15";
  	qcom,fg-profile-data = [
 diff --git a/arch/arm/boot/dts/qcom/kenzo/batterydata-sunwoda-4000mah-4400mv.dtsi b/arch/arm/boot/dts/qcom/kenzo/batterydata-sunwoda-4000mah-4400mv.dtsi
 index 5ee820f..53e920a 100644
@@ -51,16 +37,14 @@ index 5ee820f..53e920a 100644
  	qcom,gui-version = "PMI8950GUI - 2.0.0.14";
  	qcom,fg-profile-data = [
 diff --git a/arch/arm/boot/dts/qcom/msm-pmi8950.dtsi b/arch/arm/boot/dts/qcom/msm-pmi8950.dtsi
-index a6b7832..090635f 100644
+index 6992bdd..e2b8677 100644
 --- a/arch/arm/boot/dts/qcom/msm-pmi8950.dtsi
 +++ b/arch/arm/boot/dts/qcom/msm-pmi8950.dtsi
-@@ -199,19 +199,20 @@
- 			#size-cells = <1>;
- 
+@@ -201,17 +201,18 @@
  			qcom,iterm-ma = <200>;
-+			qcom,fastchg-current-ma = <2400>;
  			qcom,float-voltage-mv = <4400>;
  			qcom,resume-delta-mv = <200>;
++			qcom,fastchg-current-ma = <2400>;
  			qcom,chg-inhibit-fg;
  			qcom,rparasitic-uohm = <100000>;
  			qcom,bms-psy-name = "bms";

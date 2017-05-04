@@ -10,6 +10,8 @@ HSFS=1305600
 HSFB=1382400
 FMS=691200
 FMB=883200
+FMAS=1440000
+FMAB=1804800
 TR=20000
 AID=N
 ABST=0
@@ -18,12 +20,14 @@ GHLS=80
 GHLB=85
 elif [ $INTERACTIVE == 2 ]; then
 TLS="70 806400:75 1190400:85 1305600:90 1382400:95 1401600:99"
-TLB="90 1382400:95 1747200:99"
+TLB="90 1382400:95"
 BOOST="0:691200"
 HSFS=1017600
 HSFB=1190400
 FMS=400000
 FMB=400000
+FMAS=1305600
+FMAB=1612600
 TR=30000
 AID=Y
 ABST=0
@@ -38,6 +42,8 @@ HSFS=1305600
 HSFB=1382400
 FMS=691200
 FMB=883200
+FMAS=1440000
+FMAB=1804800
 TR=20000
 AID=N
 ABST=1
@@ -135,6 +141,7 @@ echo "write /sys/devices/system/cpu/cpu0/cpufreq/interactive/io_is_busy 0" >> $C
 echo "write /sys/devices/system/cpu/cpu0/cpufreq/interactive/target_loads \"$TLS\"" >> $CONFIGFILE
 echo "write /sys/devices/system/cpu/cpu0/cpufreq/interactive/min_sample_time 40000" >> $CONFIGFILE
 echo "write /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq $FMS" >> $CONFIGFILE
+echo "write /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq $FMAS" >> $CONFIGFILE
 echo "" >> $CONFIGFILE
 echo "# TWEAK A72 CLUSTER GOVERNOR" >> $CONFIGFILE
 echo "write /sys/devices/system/cpu/cpu4/online 1" >> $CONFIGFILE
@@ -147,13 +154,15 @@ echo "write /sys/devices/system/cpu/cpu4/cpufreq/interactive/io_is_busy 0" >> $C
 echo "write /sys/devices/system/cpu/cpu4/cpufreq/interactive/target_loads \"$TLB\"" >> $CONFIGFILE
 echo "write /sys/devices/system/cpu/cpu4/cpufreq/interactive/min_sample_time 40000" >> $CONFIGFILE
 echo "write /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq $FMB" >> $CONFIGFILE
+echo "write /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq $FMAB" >> $CONFIGFILE
 echo "" >> $CONFIGFILE
 echo "# ENABLE THERMAL CORE CTL" >> $CONFIGFILE
 echo "write /sys/module/msm_thermal/core_control/enabled 1" >> $CONFIGFILE
 echo "" >> $CONFIGFILE
 echo "# CPU BOOST PARAMETERS" >> $CONFIGFILE
+echo "write /sys/module/cpu_boost/parameters/input_boost_enabled 1" >> $CONFIGFILE
 echo "write /sys/module/cpu_boost/parameters/input_boost_freq \"$BOOST\"" >> $CONFIGFILE
-echo "write /sys/module/cpu_boost/parameters/input_boost_ms 60" >> $CONFIGFILE
+echo "write /sys/module/cpu_boost/parameters/input_boost_ms 50" >> $CONFIGFILE
 echo "" >> $CONFIGFILE
 echo "# SET IO SCHEDULER" >> $CONFIGFILE
 echo "setprop sys.io.scheduler \"fiops\"" >> $CONFIGFILE
