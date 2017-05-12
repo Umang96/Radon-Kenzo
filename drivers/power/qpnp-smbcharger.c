@@ -1081,7 +1081,7 @@ static int get_prop_batt_voltage_max_design(struct smbchg_chip *chip)
 	return uv;
 }
 
-#define DEFAULT_BATT_CHARGE_FULL 4000000
+#define DEFAULT_BATT_CHARGE_FULL 4050000
 static int get_prop_batt_charge_full(struct smbchg_chip *chip)
 {
 	int uah, rc;
