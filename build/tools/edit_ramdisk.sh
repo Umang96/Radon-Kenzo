@@ -5,7 +5,7 @@ INTERACTIVE=$(cat /tmp/aroma/interactive.prop | cut -d '=' -f2)
 if [ $INTERACTIVE == 1 ]; then
 TLS="50 806400:55 1017600:65 1190400:70 1382400:90 1401600:95"
 TLB="85 1382400:90 1747200:95"
-BOOST="0:1305600 4:998400"
+BOOST="0:1190400 4:998400"
 HSFS=1305600
 HSFB=1382400
 FMS=691200
@@ -16,7 +16,7 @@ TR=20000
 AID=N
 ABST=0
 TBST=1
-GHLS=80
+GHLS=85
 GHLB=85
 elif [ $INTERACTIVE == 2 ]; then
 TLS="70 806400:75 1190400:85 1305600:90 1382400:95 1401600:99"
@@ -35,7 +35,7 @@ TBST=0
 GHLS=85
 GHLB=95
 elif [ $INTERACTIVE == 3 ]; then
-TLS="45 806400:50 1017600:60 1190400:65 1382400:80 1401600:85"
+TLS="45 806400:50 1017600:60 1190400:65 1382400:85 1401600:90"
 TLB="75 1382400:80 1747200:85"
 BOOST="0:1305600 4:998400"
 HSFS=1305600
@@ -48,8 +48,8 @@ TR=20000
 AID=N
 ABST=1
 TBST=1
-GHLS=80
-GHLB=80
+GHLS=85
+GHLB=85
 fi
 DT2W=$(cat /tmp/aroma/dt2w.prop | cut -d '=' -f2)
 if [ $DT2W == 1 ]; then
@@ -178,9 +178,6 @@ echo "write /sys/class/kgsl/kgsl-3d0/devfreq/adrenoboost $ABST" >> $CONFIGFILE
 echo "" >> $CONFIGFILE
 echo "# DYNAMIC FSYNC" >> $CONFIGFILE
 echo "write /sys/kernel/dyn_fsync/Dyn_fsync_active $DFS" >> $CONFIGFILE
-echo "" >> $CONFIGFILE
-echo "# VIBRATOR STRENGTH" >> $CONFIGFILE
-echo "write /sys/class/timed_output/vibrator/vtg_level 2320" >> $CONFIGFILE
 echo "" >> $CONFIGFILE
 echo "# DISABLE WAKELOCKS" >> $CONFIGFILE
 echo "write /sys/module/wakeup/parameters/enable_qcom_rx_wakelock_ws 0" >> $CONFIGFILE
