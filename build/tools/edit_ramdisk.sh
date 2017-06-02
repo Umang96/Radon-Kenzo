@@ -3,10 +3,10 @@
 CONFIGFILE="/tmp/init.radon.rc"
 INTERACTIVE=$(cat /tmp/aroma/interactive.prop | cut -d '=' -f2)
 if [ $INTERACTIVE == 1 ]; then
-TLS="50 806400:55 1017600:65 1190400:70 1382400:90 1401600:95"
+TLS="50 1017600:60 1190400:70 1305600:80 1382400:90 1401600:95"
 TLB="85 1382400:90 1747200:95"
 BOOST="0:1190400 4:998400"
-HSFS=1305600
+HSFS=1440000
 HSFB=1382400
 FMS=691200
 FMB=883200
@@ -16,13 +16,13 @@ TR=20000
 AID=N
 ABST=0
 TBST=1
-GHLS=85
+GHLS=100
 GHLB=85
 elif [ $INTERACTIVE == 2 ]; then
-TLS="70 806400:75 1190400:85 1305600:90 1382400:95 1401600:99"
+TLS="65 1017600:75 1190400:85"
 TLB="90 1382400:95"
 BOOST="0:691200"
-HSFS=1017600
+HSFS=1305600
 HSFB=1190400
 FMS=400000
 FMB=400000
@@ -32,13 +32,13 @@ TR=30000
 AID=Y
 ABST=0
 TBST=0
-GHLS=85
+GHLS=100
 GHLB=95
 elif [ $INTERACTIVE == 3 ]; then
-TLS="45 806400:50 1017600:60 1190400:65 1382400:85 1401600:90"
+TLS="40 1017600:50 1190400:60 1305600:70 1382400:80 1401600:90"
 TLB="75 1382400:80 1747200:85"
 BOOST="0:1305600 4:998400"
-HSFS=1305600
+HSFS=1440000
 HSFB=1382400
 FMS=691200
 FMB=883200
@@ -48,7 +48,7 @@ TR=20000
 AID=N
 ABST=1
 TBST=1
-GHLS=85
+GHLS=95
 GHLB=85
 fi
 DT2W=$(cat /tmp/aroma/dt2w.prop | cut -d '=' -f2)
@@ -78,7 +78,7 @@ echo "" >> $CONFIGFILE
 echo "on property:dev.bootcomplete=1" >> $CONFIGFILE
 echo "" >> $CONFIGFILE
 echo "# SWAPPINESS" >> $CONFIGFILE
-echo "write /proc/sys/vm/swappiness 25" >> $CONFIGFILE
+echo "write /proc/sys/vm/swappiness 30" >> $CONFIGFILE
 echo "" >> $CONFIGFILE
 echo "# DT2W" >> $CONFIGFILE
 echo "write /sys/android_touch/doubletap2wake " $DTP >> $CONFIGFILE
@@ -133,7 +133,7 @@ echo "" >> $CONFIGFILE
 echo "# TWEAK A53 CLUSTER GOVERNOR" >> $CONFIGFILE
 echo "write /sys/devices/system/cpu/cpu0/online 1" >> $CONFIGFILE
 echo "write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor \"interactive\"" >> $CONFIGFILE
-echo "write /sys/devices/system/cpu/cpu0/cpufreq/interactive/above_hispeed_delay 59000" >> $CONFIGFILE
+echo "write /sys/devices/system/cpu/cpu0/cpufreq/interactive/above_hispeed_delay 0" >> $CONFIGFILE
 echo "write /sys/devices/system/cpu/cpu0/cpufreq/interactive/go_hispeed_load $GHLS" >> $CONFIGFILE
 echo "write /sys/devices/system/cpu/cpu0/cpufreq/interactive/timer_rate $TR" >> $CONFIGFILE
 echo "write /sys/devices/system/cpu/cpu0/cpufreq/interactive/hispeed_freq $HSFS" >> $CONFIGFILE
@@ -156,8 +156,12 @@ echo "write /sys/devices/system/cpu/cpu4/cpufreq/interactive/min_sample_time 400
 echo "write /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq $FMB" >> $CONFIGFILE
 echo "write /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq $FMAB" >> $CONFIGFILE
 echo "" >> $CONFIGFILE
-echo "# ENABLE THERMAL CORE CTL" >> $CONFIGFILE
-echo "write /sys/module/msm_thermal/core_control/enabled 1" >> $CONFIGFILE
+echo "# ENABLE BCL & CORE CTL" >> $CONFIGFILE
+echo "write /sys/module/msm_thermal/core_control/enabled 1">> $CONFIGFILE
+echo "write /sys/devices/soc.0/qcom,bcl.56/mode disable" >> $CONFIGFILE
+echo "write /sys/devices/soc.0/qcom,bcl.56/hotplug_mask 48" >> $CONFIGFILE
+echo "write /sys/devices/soc.0/qcom,bcl.56/hotplug_soc_mask 32" >> $CONFIGFILE
+echo "write /sys/devices/soc.0/qcom,bcl.56/mode enable" >> $CONFIGFILE
 echo "" >> $CONFIGFILE
 echo "# CPU BOOST PARAMETERS" >> $CONFIGFILE
 echo "write /sys/module/cpu_boost/parameters/input_boost_enabled 1" >> $CONFIGFILE
