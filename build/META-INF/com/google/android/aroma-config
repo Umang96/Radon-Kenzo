@@ -70,9 +70,9 @@ selectbox(
 );
 
 selectbox(
-  "\n\n<@center>Select dynamic fsync</@>","<@center><b>\n\n\n\n\n\nKeeping dynamic fsync on will boost performance, keep this disabled if you have problems in copying files or have delay in screen wakeup.\n</b></@>","","dfs.prop",
-  "Enable","",1,
-  "Disable","",0
+  "\n\n<@center>Select dynamic fsync</@>","<@center><b>\n\n\n\n\n\nKeeping dynamic fsync on might boost performance, keep this disabled if you have problems like copying files or have delay in screen wakeup or have some lags.\n</b></@>","","dfs.prop",
+  "Enable","",0,
+  "Disable","",1
 );
 
 selectbox(

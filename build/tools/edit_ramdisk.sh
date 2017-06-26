@@ -77,12 +77,16 @@ echo "oneshot" >> $CONFIGFILE
 echo "" >> $CONFIGFILE
 echo "on property:dev.bootcomplete=1" >> $CONFIGFILE
 echo "" >> $CONFIGFILE
-echo "# SWAPPINESS" >> $CONFIGFILE
-echo "write /proc/sys/vm/swappiness 30" >> $CONFIGFILE
+echo "# SWAPPINESS AND VFS CACHE PRESSURE" >> $CONFIGFILE
+echo "write /proc/sys/vm/swappiness 20" >> $CONFIGFILE
+echo "write /proc/sys/vm/vfs_cache_pressure 80" >> $CONFIGFILE
 echo "" >> $CONFIGFILE
 echo "# DT2W" >> $CONFIGFILE
 echo "write /sys/android_touch/doubletap2wake " $DTP >> $CONFIGFILE
 echo "write /sys/android_touch/vib_strength " $VIBS >> $CONFIGFILE
+echo "" >> $CONFIGFILE
+echo "# ZRAM SIZE" >> $CONFIGFILE
+echo "write /sys/block/zram0/disksize 536870912" >> $CONFIGFILE
 echo "" >> $CONFIGFILE
 COLOR=$(cat /tmp/aroma/color.prop | cut -d '=' -f2)
 echo "# KCAL" >> $CONFIGFILE
@@ -195,3 +199,5 @@ echo "write /sys/module/wakeup/parameters/enable_netmgr_wl_ws 0" >> $CONFIGFILE
 echo "" >> $CONFIGFILE
 echo "# RUN USERTWEAKS SERVICE" >> $CONFIGFILE
 echo "start usertweaks" >> $CONFIGFILE
+echo "exec - root root system -- /system/bin/mkswap /dev/block/zram0" >> $CONFIGFILE
+echo "exec - root root system -- /system/bin/swapon /dev/block/zram0" >> $CONFIGFILE
