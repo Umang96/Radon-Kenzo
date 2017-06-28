@@ -39,11 +39,8 @@ cmd="console=ttyHSL0,115200,n8 androidboot.console=ttyHSL0 androidboot.hardware=
 elif ([ $goodix -eq 1 ]&&[ $selinx -eq 2 ]); then
 cmd="console=ttyHSL0,115200,n8 androidboot.console=ttyHSL0 androidboot.hardware=qcom ehci-hcd.park=3 androidboot.bootdevice=7824900.sdhci lpm_levels.sleep_disabled=1 androidboot.selinux=permissive"
 fi
-if ! [ -a /system/etc/radon.sh ];
-then
 cp /tmp/radon.sh /system/etc/radon.sh
 chmod 644 /system/etc/radon.sh
-fi
 cp -f /tmp/cpio /sbin/cpio
 cd /tmp/
 /sbin/busybox dd if=/dev/block/bootdevice/by-name/boot of=./boot.img

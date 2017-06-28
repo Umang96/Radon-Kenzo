@@ -30,3 +30,12 @@
         echo "14746,18432,22118,25805,40000,55000" > /sys/module/lowmemorykiller/parameters/minfree
         echo 81250 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
     fi
+
+	Mode=`cat /init.radon.rc | grep zrammode`
+	Mo=${Mode:11:1}
+	if [ $Mo -eq 1 ] || [ $Mo -eq 3 ]; then
+	echo 536870912 > /sys/block/zram0/disksize
+	mkswap /dev/block/zram0
+	swapon /dev/block/zram0
+	fi
+	

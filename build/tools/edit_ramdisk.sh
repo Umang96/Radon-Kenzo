@@ -68,6 +68,9 @@ DFS=1
 elif [ $DFSC == 2 ]; then
 DFS=0
 fi
+echo "# VARIABLES FOR SH" >> $CONFIGFILE
+echo "# zrammode=$INTERACTIVE" >> $CONFIGFILE
+echo "" >> $CONFIGFILE
 echo "# USER TWEAKS" >> $CONFIGFILE
 echo "service usertweaks /system/bin/sh /system/etc/radon.sh" >> $CONFIGFILE
 echo "class main" >> $CONFIGFILE
@@ -84,9 +87,6 @@ echo "" >> $CONFIGFILE
 echo "# DT2W" >> $CONFIGFILE
 echo "write /sys/android_touch/doubletap2wake " $DTP >> $CONFIGFILE
 echo "write /sys/android_touch/vib_strength " $VIBS >> $CONFIGFILE
-echo "" >> $CONFIGFILE
-echo "# ZRAM SIZE" >> $CONFIGFILE
-echo "write /sys/block/zram0/disksize 536870912" >> $CONFIGFILE
 echo "" >> $CONFIGFILE
 COLOR=$(cat /tmp/aroma/color.prop | cut -d '=' -f2)
 echo "# KCAL" >> $CONFIGFILE
@@ -199,5 +199,3 @@ echo "write /sys/module/wakeup/parameters/enable_netmgr_wl_ws 0" >> $CONFIGFILE
 echo "" >> $CONFIGFILE
 echo "# RUN USERTWEAKS SERVICE" >> $CONFIGFILE
 echo "start usertweaks" >> $CONFIGFILE
-echo "exec - root root system -- /system/bin/mkswap /dev/block/zram0" >> $CONFIGFILE
-echo "exec - root root system -- /system/bin/swapon /dev/block/zram0" >> $CONFIGFILE
