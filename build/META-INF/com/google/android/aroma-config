@@ -1,0 +1,86 @@
+ini_set("rom_name",             "Radon");
+ini_set("rom_version",          "V5.2");
+ini_set("rom_author",           "Umang96");
+ini_set("rom_device",           "Kenzo");
+ini_set("rom_date",             "July 28, 2017");
+
+ini_set("force_colorspace","rgba");
+#ini_set("dp","6");
+
+fontresload( "0", "ttf/Roboto-Regular.ttf", "12" );
+fontresload( "1", "ttf/Roboto-Regular.ttf", "18" ); 
+
+theme("default");
+
+viewbox(
+    "\nRadon Kernel",
+
+    "<@center><b>\n" + ini_get("rom_device") + "</b>\n\n</@>" +
+    "\n\n\n\n  VERSION\t: <b><#selectbg_g>"+ini_get("rom_version")+"</#></b>\n" +
+    "  AUTHOR \t: <b><#selectbg_g>"+ini_get("rom_author")+"</#></b>\n" +
+    "  RELEASED\t: <b><#selectbg_g>"+ini_get("rom_date")+"</#></b>\n\n\n" +
+    "Press Next to Continue...",
+
+    "@welcome"
+);
+
+alert(
+  "NOTICE:",
+  "For best experience don't flash over other kernels. Ensure that you either have a previous version of Radon or the kernel that came with your ROM installed.\n\nAlso, do not use any scripts to modify governors, this kernel already has well tuned governors for your cpu.\n\n",
+  "@warning",
+  "OK"
+);
+
+selectbox(
+  "\n\nWhich selinux mode you want ?","<@center><b>\n\n\n\n\n\nPermissive gives more permissions to applications.\nEnforcing restricts some permissions. Choose enforcing if you are not sure.\n</b></@>","","sel.prop",
+  "Enforcing Selinux","",1,
+  "Permissive Selinux","",0
+);
+
+selectbox(
+  "\n\nDo you need dt2w ?","<@center><b>\n\n\n\n\n\nRemember !\n\nKeeping dt2w enabled will consume little more battery.\n</b></@>","","dt2w.prop",
+  "Yes, enable it (with vibration)","",0,
+  "Yes, enable it (without vibration)","",0,
+  "No, disable it (saves battery)","",1
+);
+
+selectbox(
+  "\n\nSet your default tuning","<@center><b>\n\n\n\n\n\nThis will tune your default kernel settings according to your requirement. Only use interactive governor for maximum results.\n</b></@>","","interactive.prop",
+  "Balanced config","",1,
+  "Battery config","",0,
+  "Gaming config","",0
+);
+
+selectbox(
+  "\n\n<@center>Select dynamic fsync</@>","<@center><b>\n\n\n\n\n\nKeeping dynamic fsync on might boost performance, keep this disabled if you have problems like copying files or have delay in screen wakeup or have some lags.\n</b></@>","","dfs.prop",
+  "Enable","",0,
+  "Disable","",1
+);
+
+selectbox(
+  "\n\n<@center>Select quick charging support\nWarning ! </@>","<@center><b>\n\n\n\n\n\nThis will set your max charging rate limit.\nThis does not affect users with stock charger.\n</b></@>","","crate.prop",
+  "2000 mA (default)","",1,
+  "2400 mA (quick)","",0
+);
+
+selectbox(
+  "\n\nWant enhanced colors ?","<@center><b>\n\n\n\n\n\nIf you choose yes then display colors will be better than stock. Keep livedisplay off to see real colors.\n</b></@>","","color.prop",
+  "Yes, enhanced colors (~6400k)","",1,
+  "Yes, enhanced colors (~6700k)","",0,
+  "No, stock unmodified colors","",0
+);
+
+selectbox(
+  "\n\nDisable audio codec power gating ?","<@center><b>\n\n\n\n\n\nThis needs to be disabled for some audio mods, keep it enabled if you don't know what it is.\n</b></@>","","pgt.prop",
+  "Enabled (stock)","",1,
+  "Yes, disable it","",0
+);
+
+setvar("retstatus",
+install(
+  "\nInstalling",
+  "<@center>\nInstalling Radon Kernel\nPlease wait</@>",
+  "")
+);
+
+ini_set("text_next", "Finish");
