@@ -325,6 +325,7 @@ struct ft5x06_ts_data *ft5x06_ts = NULL;
 extern int is_tp_driver_loaded;
 
 #ifdef CONFIG_WAKE_GESTURES
+int i=0;
 bool scr_suspended_ft(void) {
 	return ft5x06_ts->suspended;
 }
