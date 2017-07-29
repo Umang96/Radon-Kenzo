@@ -79,7 +79,7 @@
 };
 
 &i2c_6 {
-	aw2013@45 { /* Breath Light-Driven */
+	awinic@45 { /* Breath Light-Driven */
 		compatible = "awinic,aw2013";
 		reg = <0x45>;
 		vdd-supply = <&pm8950_l10>;
@@ -89,7 +89,7 @@
 			aw2013,name = "red";
 			aw2013,id = <0>;
 			aw2013,max-brightness = <255>;
-			aw2013,max-current = <3>;
+			aw2013,max-current = <1>;
 			aw2013,rise-time-ms = <2>;
 			aw2013,hold-time-ms = <1>;
 			aw2013,fall-time-ms = <2>;
@@ -99,7 +99,7 @@
 			aw2013,name = "green";
 			aw2013,id = <1>;
 			aw2013,max-brightness = <255>;
-			aw2013,max-current = <3>;
+			aw2013,max-current = <1>;
 			aw2013,rise-time-ms = <2>;
 			aw2013,hold-time-ms = <1>;
 			aw2013,fall-time-ms = <2>;
@@ -109,7 +109,7 @@
 			aw2013,name = "blue";
 			aw2013,id = <2>;
 			aw2013,max-brightness = <255>;
-			aw2013,max-current = <3>;
+			aw2013,max-current = <1>;
 			aw2013,rise-time-ms = <2>;
 			aw2013,hold-time-ms = <1>;
 			aw2013,fall-time-ms = <2>;
@@ -130,14 +130,18 @@
 		qcom,ntc-min-uv = <1800000>;
 		qcom,ntc-max-uv = <1800000>;
 	};
-	hall_switch {
-		compatible = "hall-switch,och175";
+	hall {
+		compatible = "hall-switch";
 		pinctrl-names = "hall_active","hall_suspend";
 		pinctrl-0 = <&hall_int_active>;
 		pinctrl-1 = <&hall_int_suspend>;
-		vdd-io-supply= <&pm8950_l5>;
-		interrupt-names = "hall_irq";
-		hall,irq-gpio = <&msm_gpio 107 0x00>;
+		vddio-supply= <&pm8950_l5>;
+		interrupt-names = "hall_sensor_irq";
+		hall,irq-gpio = <&msm_gpio 107 0x2001>;
+		linux,gpio-int = <&msm_gpio 107 1>;
+		linux,wakeup;
+		linux,min-uv = <0x192d50>;
+		linux,max-uv = <0x325aa0>;
 	};
 	gen-vkeys {
 		compatible = "qcom,gen-vkeys";
@@ -199,7 +203,7 @@
 		fpc,enable-wakeup;
 	};
 
-	goodix_gf318m {
+	goodix_fingerprint {
 		compatible = "goodix,fingerprint";
 		vcc_spi-supply  = <&pm8950_l10>;
 		vdd_ana-supply  = <&pm8950_l10>;
@@ -341,8 +345,7 @@
 
 /{
 	mtp_batterydata: qcom,battery-data {
-		qcom,batt-id-range-pct = <15>;
-		#include "batterydata-coslight-4000mah-4400mv.dtsi"
+		qcom,batt-id-range-pct = <20>;
 		#include "batterydata-coslight-4000mah-4400mv-10k.dtsi"
 		#include "batterydata-sunwoda-4000mah-4400mv.dtsi"
 		#include "batterydata-scud-4000mah-4400mv.dtsi"
