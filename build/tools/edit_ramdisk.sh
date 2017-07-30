@@ -169,8 +169,12 @@ echo "write /sys/devices/soc.0/qcom,bcl.56/hotplug_mask 48" >> $CONFIGFILE
 echo "write /sys/devices/soc.0/qcom,bcl.56/hotplug_soc_mask 32" >> $CONFIGFILE
 echo "write /sys/devices/soc.0/qcom,bcl.56/mode enable" >> $CONFIGFILE
 echo "" >> $CONFIGFILE
+echo "# GPU SETTINGS" >> $CONFIGFILE
+echo "write /sys/devices/soc.0/1c00000.qcom,kgsl-3d0/kgsl/kgsl-3d0/default_pwrlevel 6" >> $CONFIGFILE
+echo "write /sys/devices/soc.0/1c00000.qcom,kgsl-3d0/kgsl/kgsl-3d0/min_pwrlevel 6" >> $CONFIGFILE
+echo "write /sys/devices/soc.0/1c00000.qcom,kgsl-3d0/kgsl/kgsl-3d0/devfreq/min_freq 266666667" >> $CONFIGFILE
+echo "" >> $CONFIGFILE
 echo "# CPU BOOST PARAMETERS" >> $CONFIGFILE
-echo "write /sys/module/cpu_boost/parameters/input_boost_enabled 1" >> $CONFIGFILE
 echo "write /sys/module/cpu_boost/parameters/input_boost_freq \"$BOOST\"" >> $CONFIGFILE
 echo "write /sys/module/cpu_boost/parameters/input_boost_ms 50" >> $CONFIGFILE
 echo "" >> $CONFIGFILE
