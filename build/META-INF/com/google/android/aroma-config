@@ -1,8 +1,8 @@
 ini_set("rom_name",             "Radon");
-ini_set("rom_version",          "V5.2");
+ini_set("rom_version",          "V5.X");
 ini_set("rom_author",           "Umang96");
 ini_set("rom_device",           "Kenzo");
-ini_set("rom_date",             "July 28, 2017");
+ini_set("rom_date",             "July 30, 2017");
 
 ini_set("force_colorspace","rgba");
 #ini_set("dp","6");
@@ -26,7 +26,7 @@ viewbox(
 
 alert(
   "NOTICE:",
-  "For best experience don't flash over other kernels. Ensure that you either have a previous version of Radon or the kernel that came with your ROM installed.\n\nAlso, do not use any scripts to modify governors, this kernel already has well tuned governors for your cpu.\n\n",
+  "For best experience -\n\n1.Don't flash over other kernels. Ensure that you either have a previous version of Radon or the kernel that came with your rom.\n\n2.Do not use any scripts to tune cpu governors, this kernel already does that for your cpu.\n\n",
   "@warning",
   "OK"
 );
@@ -52,9 +52,9 @@ selectbox(
 );
 
 selectbox(
-  "\n\n<@center>Select dynamic fsync</@>","<@center><b>\n\n\n\n\n\nKeeping dynamic fsync on might boost performance, keep this disabled if you have problems like copying files or have delay in screen wakeup or have some lags.\n</b></@>","","dfs.prop",
-  "Enable","",0,
-  "Disable","",1
+  "\n\n<@center>Select fsync</@>","<@center><b>\n\n\n\n\n\nKeeping fsync enabled will give more stability, keep this disabled if you prefer more performance over stability.\n</b></@>","","dfs.prop",
+  "Enable","",1,
+  "Disable","",0
 );
 
 selectbox(
@@ -64,10 +64,10 @@ selectbox(
 );
 
 selectbox(
-  "\n\nWant enhanced colors ?","<@center><b>\n\n\n\n\n\nIf you choose yes then display colors will be better than stock. Keep livedisplay off to see real colors.\n</b></@>","","color.prop",
-  "Yes, enhanced colors (~6400k)","",1,
-  "Yes, enhanced colors (~6700k)","",0,
-  "No, stock unmodified colors","",0
+  "\n\nWant enhanced colors ?","<@center><b>\n\n\n\n\n\nIf you choose yes then display colors will be tuned. Keep livedisplay off to see real colors.\n</b></@>","","color.prop",
+  "Yes, enhanced colors (warm)","",1,
+  "Yes, enhanced colors (cool)","",0,
+  "No, standard colors","",0
 );
 
 selectbox(

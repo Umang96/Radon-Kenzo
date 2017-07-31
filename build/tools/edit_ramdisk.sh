@@ -190,8 +190,8 @@ echo "" >> $CONFIGFILE
 echo "# ADRENO BOOST" >> $CONFIGFILE
 echo "write /sys/class/kgsl/kgsl-3d0/devfreq/adrenoboost $ABST" >> $CONFIGFILE
 echo "" >> $CONFIGFILE
-echo "# DYNAMIC FSYNC" >> $CONFIGFILE
-echo "write /sys/kernel/dyn_fsync/Dyn_fsync_active $DFS" >> $CONFIGFILE
+echo "# FSYNC" >> $CONFIGFILE
+echo "write /sys/module/sync/parameters/fsync_enabled $DFS" >> $CONFIGFILE
 echo "" >> $CONFIGFILE
 echo "# DISABLE WAKELOCKS" >> $CONFIGFILE
 echo "write /sys/module/wakeup/parameters/enable_qcom_rx_wakelock_ws 0" >> $CONFIGFILE
