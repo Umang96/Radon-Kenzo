@@ -123,6 +123,7 @@ static unsigned char firmware_data_ofilm[] = {
 #endif
 
 #ifdef CONFIG_WAKE_GESTURES
+int i=0;
 #include <linux/wake_gestures.h>
 #endif
 
@@ -647,9 +648,6 @@ static irqreturn_t ft5x06_ts_interrupt(int irq, void *dev_id)
 		if (data->suspended)
 			x += 5000;
 #endif
-
-		if (y == 2100 && data->keypad_mode)
-			break;
 
 		input_mt_slot(ip_dev, id);
 		if (status == FT_TOUCH_DOWN || status == FT_TOUCH_CONTACT) {
