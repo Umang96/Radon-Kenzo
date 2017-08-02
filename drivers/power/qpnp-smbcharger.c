@@ -40,12 +40,14 @@
 #include <linux/ktime.h>
 #include <linux/thermal.h>
 #include "pmic-voter.h"
-
-int FG_charger_status = 0;
+#include <linux/thermal.h>
+#include <linux/device.h>
 
 #ifdef CONFIG_FORCE_FAST_CHARGE
 #include <linux/fastcharge.h>
 #endif
+
+int FG_charger_status = 0;
 
 /* Mask/Bit helpers */
 #define _SMB_MASK(BITS, POS) \
@@ -260,6 +262,7 @@ struct smbchg_chip {
 	struct work_struct		usb_set_online_work;
 	struct delayed_work		vfloat_adjust_work;
 	struct delayed_work		hvdcp_det_work;
+	struct delayed_work		redetect_work;
 	spinlock_t			sec_access_lock;
 	struct mutex			therm_lvl_lock;
 	struct mutex			usb_set_online_lock;
@@ -415,13 +418,13 @@ module_param_named(
 	int, S_IRUSR | S_IWUSR
 );
 
-static int smbchg_default_hvdcp_icl_ma = 3000;
+static int smbchg_default_hvdcp_icl_ma = 2000;
 module_param_named(
 	default_hvdcp_icl_ma, smbchg_default_hvdcp_icl_ma,
 	int, S_IRUSR | S_IWUSR
 );
 
-static int smbchg_default_dcp_icl_ma = 1800;
+static int smbchg_default_dcp_icl_ma = 2000;
 module_param_named(
 	default_dcp_icl_ma, smbchg_default_dcp_icl_ma,
 	int, S_IRUSR | S_IWUSR
@@ -1806,7 +1809,7 @@ static int smbchg_set_fastchg_current_raw(struct smbchg_chip *chip,
 #define USBIN_ACTIVE_PWR_SRC_BIT	BIT(1)
 #define DCIN_ACTIVE_PWR_SRC_BIT		BIT(0)
 #define PARALLEL_REENABLE_TIMER_MS	1000
-#define PARALLEL_CHG_THRESHOLD_CURRENT	1800
+#define PARALLEL_CHG_THRESHOLD_CURRENT	2400
 static bool smbchg_is_usbin_active_pwr_src(struct smbchg_chip *chip)
 {
 	int rc;
@@ -3395,7 +3398,7 @@ static int smbchg_config_chg_battery_type(struct smbchg_chip *chip)
 		ret = rc;
 	} else {
 		if (chip->vfloat_mv != (max_voltage_uv / 1000)) {
-			pr_info("Vfloat changed from %dmV to %dmV for battery-type %s\n",
+			pr_debug("Vfloat changed from %dmV to %dmV for battery-type %s\n",
 				chip->vfloat_mv, (max_voltage_uv / 1000),
 				chip->battery_type);
 			rc = smbchg_float_voltage_set(chip,
@@ -3417,7 +3420,7 @@ static int smbchg_config_chg_battery_type(struct smbchg_chip *chip)
 	} else if (!rc) {
 		if (chip->iterm_ma != (iterm_ua / 1000)
 				&& !chip->iterm_disabled) {
-			pr_info("Term current changed from %dmA to %dmA for battery-type %s\n",
+			pr_debug("Term current changed from %dmA to %dmA for battery-type %s\n",
 				chip->iterm_ma, (iterm_ua / 1000),
 				chip->battery_type);
 			rc = smbchg_iterm_set(chip,
@@ -3526,7 +3529,6 @@ static void smbchg_external_power_changed(struct power_supply *psy)
 	if (force_fast_charge)
 		current_limit = 900;
 #endif
-
 	pr_smb(PR_MISC, "usb type = %s current_limit = %d\n",
 			usb_type_name, current_limit);
 
@@ -4139,16 +4141,16 @@ static void smbchg_vfloat_adjust_work(struct work_struct *work)
 		goto reschedule;
 	}
 
-	pr_smb(PR_STATUS, "sample number = %d vbat_mv = %d ibat_ua = %d\n",
+/*	pr_smb(PR_STATUS, "sample number = %d vbat_mv = %d ibat_ua = %d\n",
 		chip->n_vbat_samples,
 		vbat_mv,
-		ibat_ua);
+		ibat_ua); */
 
 	chip->max_vbat_sample = max(chip->max_vbat_sample, vbat_mv);
 	chip->n_vbat_samples += 1;
 	if (chip->n_vbat_samples < vf_adjust_n_samples) {
-		pr_smb(PR_STATUS, "Skip %d samples; max = %d\n",
-			chip->n_vbat_samples, chip->max_vbat_sample);
+/*		pr_smb(PR_STATUS, "Skip %d samples; max = %d\n",
+			chip->n_vbat_samples, chip->max_vbat_sample); */
 		goto reschedule;
 	}
 	/* if max vbat > target vfloat, delta_vfloat_mv could be negative */
@@ -4365,27 +4367,6 @@ static int force_9v_hvdcp(struct smbchg_chip *chip)
 	return rc;
 }
 
-<<<<<<< HEAD
-=======
-static void dump_regs(struct smbchg_chip *chip);
-#define CHARGING_PERIOD_MS 500
-#define NOT_CHARGING_PERIOD_MS 1800
-static void smbchg_reg_work(struct work_struct *work)
-{
-	struct smbchg_chip *chip = container_of(work,
-				struct smbchg_chip,
-				reg_work.work);
-
-	dump_regs(chip);
-	if (chip->usb_present)
-		schedule_delayed_work(&chip->reg_work,
-			CHARGING_PERIOD_MS * HZ);
-	else
-		schedule_delayed_work(&chip->reg_work,
-			NOT_CHARGING_PERIOD_MS * HZ);
-}
-
->>>>>>> 3b15d5bbd9bc... USB fastcharge
 static void smbchg_hvdcp_det_work(struct work_struct *work)
 {
 	struct smbchg_chip *chip = container_of(work,
@@ -5707,13 +5688,13 @@ static int lct_get_prop_batt_temp(struct smbchg_chip *chip)
 			}
 		}
 	}
-	pr_info("chip->ntc_vadc=%p \n", chip->ntc_vadc);
+	pr_debug("chip->ntc_vadc=%p \n", chip->ntc_vadc);
 	rc = qpnp_vadc_read(chip->ntc_vadc, P_MUX4_1_1, &results);
 	if (rc) {
-		pr_info("Unable to read batt temperature rc=%d\n", rc);
+		pr_debug("Unable to read batt temperature rc=%d\n", rc);
 		return DEFAULT_TEMP;
 	}
-	pr_info("get_bat_temp %d, %lld , %lld\n", results.adc_code,
+	pr_debug("get_bat_temp %d, %lld , %lld\n", results.adc_code,
 					results.physical, results.measurement);
 	return (int)results.physical;
 }
@@ -5873,7 +5854,7 @@ void runin_work(struct smbchg_chip *chip, int batt_capacity)
 		return;
 	}
 	is_oldtest = true;
-	pr_info("%s:BatteryTestStatus_enable = %d chip->usb_present = %d \n", __func__, BatteryTestStatus_enable, chip->usb_present);
+	pr_debug("%s:BatteryTestStatus_enable = %d chip->usb_present = %d \n", __func__, BatteryTestStatus_enable, chip->usb_present);
 	if (batt_capacity > 80) {
 		pr_debug("smbcharge_get_prop_batt_capacity > 80\n");
 		rc = vote(chip->usb_suspend_votable,  BATTCHG_USER_EN_VOTER, false, 0);
@@ -8050,6 +8031,7 @@ static int smbchg_probe(struct spmi_device *spmi)
 			smbchg_parallel_usb_en_work);
 	INIT_DELAYED_WORK(&chip->vfloat_adjust_work, smbchg_vfloat_adjust_work);
 	INIT_DELAYED_WORK(&chip->hvdcp_det_work, smbchg_hvdcp_det_work);
+	INIT_DELAYED_WORK(&chip->redetect_work, smbchg_redetect_work);
 	init_completion(&chip->src_det_lowered);
 	init_completion(&chip->src_det_raised);
 	init_completion(&chip->usbin_uv_lowered);
