@@ -20,11 +20,9 @@
     if [ $MemTotal -gt 2000000 ]; then
         echo 1 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
         echo "18432,23040,27648,32256,55296,80640" > /sys/module/lowmemorykiller/parameters/minfree
-        echo 81250 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
     else
         echo 1 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
         echo "14746,18432,22118,25805,40000,55000" > /sys/module/lowmemorykiller/parameters/minfree
-        echo 81250 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
     fi
 
 	Mode=`cat /init.radon.rc | grep zrammode`
