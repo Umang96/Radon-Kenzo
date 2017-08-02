@@ -55,7 +55,6 @@ scm_version()
 				# If only the short version is requested,
 				# don't bother running further git commands
 				if $short; then
-					echo "+"
 					return
 				fi
 				printf '%s%s' -g "`git show-ref -s --abbrev --tags $atag 2>/dev/null`"
@@ -65,7 +64,6 @@ scm_version()
 			# If only the short version is requested, don't bother
 			# running further git commands
 			if $short; then
-				echo "+"
 				return
 			fi
 			# If we are past a tagged commit (like
@@ -173,19 +171,7 @@ fi
 # CONFIG_LOCALVERSION and LOCALVERSION (if set)
 res="${res}${CONFIG_LOCALVERSION}${LOCALVERSION}"
 
-# scm version string if not at a tagged commit
-if test "$CONFIG_LOCALVERSION_AUTO" = "y"; then
-	# full scm version string
-	res="$res$(scm_version)"
-else
-	# append a plus sign if the repository is not in a clean
-	# annotated or signed tagged state (as git describe only
-	# looks at signed or annotated tags - git tag -a/-s) and
-	# LOCALVERSION= is not specified
-	if test "${LOCALVERSION+set}" != "set"; then
 		scm=$(scm_version --short)
 		res="$res$scm"
-	fi
-fi
 
 echo "$res"
