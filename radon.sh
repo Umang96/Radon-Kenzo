@@ -20,7 +20,7 @@ white='\033[0m'
 red='\033[0;31m'
 gre='\e[0;32m'
 echo -e ""
-echo -e "$gre ====================================\n\n Welcome to Radon building program !\n\n ====================================\n\n 1.Build radon miui mm fpc\n\n 2.Build radon miui mm gdx\n"
+echo -e "$gre ====================================\n\n Welcome to Radon building program !\n\n ====================================\n\n 1.Build radon cm mm fpc\n\n 2.Build radon cm mm gdx\n"
 echo -n " Enter your choice:"
 read goodix
 echo -e "$gre \n 1.Build radon without qc\n\n 2.Build radon with qc\n"
@@ -90,7 +90,7 @@ echo -e "$yellow\n Build succesful, generating flashable zip now \n $white"
 zip -r Radon-Kenzo-Mi-Mm.zip * > /dev/null
 End=$(date +"%s")
 Diff=$(($End - $Start))
-echo -e "$yellow $KERNEL_DIR/build/Radon-Kenzo-Mi-Mm.zip \n$white"
+echo -e "$yellow $KERNEL_DIR/build/Radon-Kenzo-Cm-Mm.zip \n$white"
 echo -e "$gre << Build completed in $(($Diff / 60)) minutes and $(($Diff % 60)) seconds, variant($goodix$qc) >> \n $white"
 fi
 cd $KERNEL_DIR

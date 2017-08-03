@@ -43,6 +43,7 @@ fi
 pgtsuffix=" snd-soc-msm8x16-wcd.dig_core_collapse_enable=0"
 if [ $pgt -eq 2 ]; then
 cmd=$cmd$pgtsuffix
+fi
 cp /tmp/radon.sh /system/etc/radon.sh
 chmod 644 /system/etc/radon.sh
 cp -f /tmp/cpio /sbin/cpio
