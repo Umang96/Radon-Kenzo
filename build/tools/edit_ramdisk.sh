@@ -18,6 +18,8 @@ ABST=0
 TBST=1
 GHLS=100
 GHLB=90
+SWAP=40
+VFS=100
 elif [ $INTERACTIVE == 2 ]; then
 TLS="65 1017600:75 1190400:85"
 TLB="90 1382400:95"
@@ -34,6 +36,8 @@ ABST=0
 TBST=0
 GHLS=100
 GHLB=85
+SWAP=20
+VFS=40
 elif [ $INTERACTIVE == 3 ]; then
 TLS="40 1017600:50 1190400:60 1305600:70 1382400:80 1401600:90"
 TLB="75 1382400:80 1747200:85"
@@ -50,6 +54,8 @@ ABST=1
 TBST=1
 GHLS=95
 GHLB=80
+SWAP=60
+VFS=100
 fi
 DT2W=$(cat /tmp/aroma/dt2w.prop | cut -d '=' -f2)
 if [ $DT2W == 1 ]; then
@@ -81,8 +87,8 @@ echo "" >> $CONFIGFILE
 echo "on property:dev.bootcomplete=1" >> $CONFIGFILE
 echo "" >> $CONFIGFILE
 echo "# SWAPPINESS AND VFS CACHE PRESSURE" >> $CONFIGFILE
-echo "write /proc/sys/vm/swappiness 20" >> $CONFIGFILE
-echo "write /proc/sys/vm/vfs_cache_pressure 80" >> $CONFIGFILE
+echo "write /proc/sys/vm/swappiness $SWAP" >> $CONFIGFILE
+echo "write /proc/sys/vm/vfs_cache_pressure $VFS" >> $CONFIGFILE
 echo "" >> $CONFIGFILE
 echo "# DT2W" >> $CONFIGFILE
 echo "write /sys/android_touch/doubletap2wake " $DTP >> $CONFIGFILE
