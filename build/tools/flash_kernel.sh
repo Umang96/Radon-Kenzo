@@ -43,6 +43,7 @@ fi
 pgtsuffix=" snd-soc-msm8x16-wcd.dig_core_collapse_enable=0"
 if [ $pgt -eq 2 ]; then
 cmd=$cmd$pgtsuffix
+fi
 cp /tmp/radon.sh /system/etc/radon.sh
 chmod 644 /system/etc/radon.sh
 cp -f /tmp/cpio /sbin/cpio
@@ -58,7 +59,11 @@ rm /tmp/boot.img-ramdisk.gz
 cp /tmp/init.radon.rc /tmp/ramdisk/
 chmod 0750 /tmp/ramdisk/init.radon.rc
 if [ $(grep -c "import /init.radon.rc" /tmp/ramdisk/init.rc) == 0 ]; then
-   sed -i "/import \/init\.\${ro.hardware}\.rc/aimport /init.radon.rc" /tmp/ramdisk/init.rc
+	if [ $(grep -c "import /init.miui.rc" /tmp/ramdisk/init.rc) == 0 ]; then
+   		sed -i "/import \/init\.\${ro.hardware}\.rc/aimport /init.radon.rc" /tmp/ramdisk/init.rc
+	else
+		sed -i "/import \/init\.miui\.rc/aimport /init.radon.rc" /tmp/ramdisk/init.rc
+	fi
 fi
 find . | cpio -o -H newc | gzip > /tmp/boot.img-ramdisk.gz
 rm -r /tmp/ramdisk
