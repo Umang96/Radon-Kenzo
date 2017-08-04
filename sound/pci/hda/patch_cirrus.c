@@ -787,7 +787,9 @@ static void cs4210_spdif_automute(struct hda_codec *codec,
 
 	spec->spdif_present = spdif_present;
 	/* SPDIF TX on/off */
-	snd_hda_set_pin_ctl(codec, spdif_pin, spdif_present ? PIN_OUT : 0);
+	if (spdif_present)
+		snd_hda_set_pin_ctl(codec, spdif_pin,
+				    spdif_present ? PIN_OUT : 0);
 
 	cs_automute(codec);
 }
