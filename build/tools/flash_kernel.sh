@@ -24,19 +24,17 @@ dim=/tmp/dt1.img
 elif [ $qc -eq 2 ]; then
 dim=/tmp/dt2.img
 fi
-cmd="androidboot.hardware=qcom ehci-hcd.park=3 androidboot.bootdevice=7824900.sdhci lpm_levels.sleep_disabled=1 ramoops_memreserve=4M androidboot.selinux=enforcing"
+cmd="androidboot.hardware=qcom ehci-hcd.park=3 androidboot.bootdevice=7824900.sdhci lpm_levels.sleep_disabled=1 ramoops_memreserve=4M"
 if [ $selinx -eq 2 ]; then
-cmd="androidboot.hardware=qcom ehci-hcd.park=3 androidboot.bootdevice=7824900.sdhci lpm_levels.sleep_disabled=1 ramoops_memreserve=4M androidboot.selinux=permissive"
+cmd=$cmd" androidboot.selinux=enforcing"
+elif [ $selinx -eq 3 ]; then
+cmd=$cmd" androidboot.selinux=permissive"
 fi
-pgtsuffix=" snd-soc-msm8x16-wcd.dig_core_collapse_enable=0"
 if [ $pgt -eq 2 ]; then
-cmd=$cmd$pgtsuffix
+cmd=$cmd" snd-soc-msm8x16-wcd.dig_core_collapse_enable=0"
 fi
 cp /tmp/radon.sh /system/etc/radon.sh
 chmod 644 /system/etc/radon.sh
-cp /tmp/init.qcom.post_boot.sh /system/etc/init.qcom.post_boot.sh
-cp /tmp/gxfingerprint.default.so /system/lib64/hw/gxfingerprint.default.so
-chmod 644 /system/etc/init.qcom.post_boot.sh
 cp -f /tmp/cpio /sbin/cpio
 cd /tmp/
 /sbin/busybox dd if=/dev/block/bootdevice/by-name/boot of=./boot.img
@@ -48,6 +46,18 @@ gunzip -c /tmp/ramdisk/boot.img-ramdisk.gz | /tmp/cpio -i
 rm /tmp/ramdisk/boot.img-ramdisk.gz
 rm /tmp/boot.img-ramdisk.gz
 cp /tmp/init.radon.rc /tmp/ramdisk/
+# COMPATIBILITY FIXES START
+cp /tmp/init.qcom.post_boot.sh /system/etc/init.qcom.post_boot.sh
+cp /tmp/gxfingerprint.default.so /system/lib64/hw/gxfingerprint.default.so
+chmod 644 /system/etc/init.qcom.post_boot.sh
+if [ $(grep -c "lazytime" fstab.qcom) -ne 0 ]; then
+cp /tmp/fstab.qcom /tmp/ramdisk/
+chmod 640 /tmp/ramdisk/fstab.qcom
+fi
+if [ -f /tmp/ramdisk/init.darkness.rc ]; then
+rm /tmp/ramdisk/init.darkness.rc
+fi
+# COMPATIBILITY FIXES END
 chmod 0750 /tmp/ramdisk/init.radon.rc
 if [ $(grep -c "import /init.radon.rc" /tmp/ramdisk/init.rc) == 0 ]; then
    sed -i "/import \/init\.\${ro.hardware}\.rc/aimport /init.radon.rc" /tmp/ramdisk/init.rc
