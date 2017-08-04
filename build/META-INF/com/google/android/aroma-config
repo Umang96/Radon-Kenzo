@@ -7,8 +7,8 @@ ini_set("rom_date",             "August 03, 2017");
 ini_set("force_colorspace","rgba");
 #ini_set("dp","6");
 
-fontresload( "0", "ttf/Roboto-Regular.ttf", "12" );
-fontresload( "1", "ttf/Roboto-Regular.ttf", "18" ); 
+fontresload( "0", "ttf/Roboto-Regular.ttf", "11" );
+fontresload( "1", "ttf/Roboto-Regular.ttf", "16" ); 
 
 theme("default");
 
@@ -32,14 +32,14 @@ alert(
 );
 
 selectbox(
-  "\n\nWhich fingerprint sensor you have ?","<@center><b>\n\n\n\n\n\nRemember !\n\nIf you don't know then try fpc1020 first, if fingerprint doesn't work, then re-flash kernel and choose goodix.\n</b></@>","","goodix.prop",
+  "\n\nWhich fingerprint sensor you have ?","<@center><b>\n\n\n\n\n\n\nRemember !\n\nIf you don't know then try fpc1020 first, if fingerprint doesn't work, then re-flash kernel and choose goodix.\n</b></@>","","goodix.prop",
   "I have fpc1020","",1,
   "I have goodix","",0
 );
 
 if prop("goodix.prop","selected.0")=="1" then
 selectbox(
-  "\n\nWhich selinux mode you want ?","<@center><b>\n\n\n\n\n\nPermissive gives more permissions to applications.\nEnforcing restricts some permissions. Choose enforcing if you are not sure.\n</b></@>","","sel.prop",
+  "\n\nWhich selinux mode you want ?","<@center><b>\n\n\n\n\n\n\nPermissive gives more permissions to applications.\nEnforcing restricts some permissions. Choose enforcing if you are not sure.\n</b></@>","","sel.prop",
   "Enforcing Selinux","",1,
   "Permissive Selinux","",0
 );
@@ -55,40 +55,40 @@ alert(
 endif;
 
 selectbox(
-  "\n\nDo you need dt2w ?","<@center><b>\n\n\n\n\n\nRemember !\n\nKeeping dt2w enabled will consume little more battery.\n</b></@>","","dt2w.prop",
+  "\n\nDo you need dt2w ?","<@center><b>\n\n\n\n\n\n\nRemember !\n\nKeeping dt2w enabled will consume little more battery.\n</b></@>","","dt2w.prop",
   "Yes, enable it (with vibration)","",0,
   "Yes, enable it (without vibration)","",0,
   "No, disable it (saves battery)","",1
 );
 
 selectbox(
-  "\n\nSet your default tuning","<@center><b>\n\n\n\n\n\nThis will tune your default kernel settings according to your requirement. Only use interactive governor for maximum results.\n</b></@>","","interactive.prop",
+  "\n\nSet your default tuning","<@center><b>\n\n\n\n\n\n\nThis will tune your default kernel settings according to your requirement. Only use interactive governor for maximum results.\n</b></@>","","interactive.prop",
   "Balanced config","",1,
   "Battery config","",0,
   "Gaming config","",0
 );
 
 selectbox(
-  "\n\n<@center>Select fsync</@>","<@center><b>\n\n\n\n\n\nKeeping fsync enabled will give more stability, keep this disabled if you prefer more performance over stability.\n</b></@>","","dfs.prop",
+  "\n\n<@center>Select fsync</@>","<@center><b>\n\n\n\n\n\n\nKeeping fsync enabled will give more stability, keep this disabled if you prefer more performance over stability.\n</b></@>","","dfs.prop",
   "Enable","",1,
   "Disable","",0
 );
 
 selectbox(
-  "\n\n<@center>Select quick charging support\nWarning ! </@>","<@center><b>\n\n\n\n\n\nThis will set your max charging rate limit.\nThis does not affect users with stock charger.\n</b></@>","","crate.prop",
+  "\n\n<@center>Select quick charging support\nWarning ! </@>","<@center><b>\n\n\n\n\n\n\nThis will set your max charging rate limit.\nThis does not affect users with stock charger.\n</b></@>","","crate.prop",
   "2000 mA (default)","",1,
   "2400 mA (quick)","",0
 );
 
 selectbox(
-  "\n\nWant enhanced colors ?","<@center><b>\n\n\n\n\n\nIf you choose yes then display colors will be tuned. Keep livedisplay off to see real colors.\n</b></@>","","color.prop",
+  "\n\nWant enhanced colors ?","<@center><b>\n\n\n\n\n\n\nIf you choose yes then display colors will be tuned. Keep livedisplay off to see real colors.\n</b></@>","","color.prop",
   "Yes, enhanced colors (warm)","",1,
   "Yes, enhanced colors (cool)","",0,
   "No, standard colors","",0
 );
 
 selectbox(
-  "\n\nDisable audio codec power gating ?","<@center><b>\n\n\n\n\n\nThis needs to be disabled for some audio mods, keep it enabled if you don't know what it is.\n</b></@>","","pgt.prop",
+  "\n\nDisable audio codec power gating ?","<@center><b>\n\n\n\n\n\n\nThis needs to be disabled for some audio mods, keep it enabled if you don't know what it is.\n</b></@>","","pgt.prop",
   "Enabled (stock)","",1,
   "Yes, disable it","",0
 );
