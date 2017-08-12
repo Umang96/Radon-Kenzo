@@ -22,7 +22,8 @@
         echo "18432,23040,27648,32256,55296,80640" > /sys/module/lowmemorykiller/parameters/minfree
     else
         echo 1 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
-        echo "14746,18432,22118,25805,40000,55000" > /sys/module/lowmemorykiller/parameters/minfree
+        echo "16384,20992,24064,30720,46080,66560" > /sys/module/lowmemorykiller/parameters/minfree
+	echo 10 > /proc/sys/vm/dirty_background_ratio
     fi
 
 	Mode=`cat /init.radon.rc | grep zrammode`
