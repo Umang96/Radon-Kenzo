@@ -18,6 +18,12 @@
 selinx=$(cat /tmp/aroma/sel.prop | cut -d '=' -f2)
 qc=$(cat /tmp/aroma/crate.prop | cut -d '=' -f2)
 pgt=$(cat /tmp/aroma/pgt.prop | cut -d '=' -f2)
+nos1=`cat /system/build.prop | grep ro.product.name=`
+nos2=${nos1:16:8}
+if [ $nos2 == "nitrogen" ]; then
+echo "NitrogenOS detected, forcing permissive"
+selinx=3
+fi
 zim=/tmp/Image1
 if [ $qc -eq 1 ]; then
 dim=/tmp/dt1.img
