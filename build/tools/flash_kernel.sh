@@ -17,7 +17,7 @@
  #
 selinx=$(cat /tmp/aroma/sel.prop | cut -d '=' -f2)
 qc=$(cat /tmp/aroma/crate.prop | cut -d '=' -f2)
-pgt=$(cat /tmp/aroma/pgt.prop | cut -d '=' -f2)
+therm=$(cat /tmp/aroma/thermal.prop | cut -d '=' -f2)
 nos1=`cat /system/build.prop | grep ro.product.name=`
 nos2=${nos1:16:8}
 if [ $nos2 == "nitrogen" ]; then
@@ -36,8 +36,9 @@ cmd=$cmd" androidboot.selinux=enforcing"
 elif [ $selinx -eq 3 ]; then
 cmd=$cmd" androidboot.selinux=permissive"
 fi
-if [ $pgt -eq 2 ]; then
-cmd=$cmd" snd-soc-msm8x16-wcd.dig_core_collapse_enable=0"
+if [ $therm -eq 1 ]; then
+echo "Using old thermal engine"
+cp /tmp/thermal-engine /system/vendor/bin/thermal-engine
 fi
 cp /tmp/radon.sh /system/etc/radon.sh
 chmod 644 /system/etc/radon.sh
