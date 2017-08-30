@@ -7,7 +7,7 @@ ini_set("rom_date",             "August 12, 2017");
 ini_set("force_colorspace","rgba");
 #ini_set("dp","6");
 
-fontresload( "0", "ttf/Roboto-Regular.ttf", "11" );
+fontresload( "0", "ttf/Roboto-Regular.ttf", "12" );
 fontresload( "1", "ttf/Roboto-Regular.ttf", "16" ); 
 
 theme("default");
@@ -72,9 +72,9 @@ selectbox(
 );
 
 selectbox(
-  "\n\nDisable audio codec power gating ?","<@center><b>\n\n\n\n\n\n\nThis needs to be disabled for some audio mods, keep it enabled if you don't know what it is.\n</b></@>","","pgt.prop",
-  "Enabled (stock)","",1,
-  "Yes, disable it","",0
+  "\n\nWant old thermal engine ?","<@center><b>\n\n\n\n\n\n\nIf you have any slow charging issue then only it is recommended to select yes here.\n</b></@>","","thermal.prop",
+  "Yes, old thermal","",0,
+  "No, new thermal","",1
 );
 
 setvar("retstatus",
