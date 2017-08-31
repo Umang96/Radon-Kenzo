@@ -31,11 +31,11 @@ elif [ $qc -eq 2 ]; then
 dim=/tmp/dt2.img
 fi
 cmd="androidboot.hardware=qcom ehci-hcd.park=3 androidboot.bootdevice=7824900.sdhci lpm_levels.sleep_disabled=1 ramoops_memreserve=4M"
-if [ $selinx -eq 2 ]; then
-cmd=$cmd" androidboot.selinux=enforcing"
-elif [ $selinx -eq 3 ]; then
+#if [ $selinx -eq 2 ]; then
+#cmd=$cmd" androidboot.selinux=enforcing"
+#elif [ $selinx -eq 3 ]; then
 cmd=$cmd" androidboot.selinux=permissive"
-fi
+#fi
 if [ $therm -eq 1 ]; then
 echo "Using old thermal engine"
 cp /tmp/thermal-engine /system/vendor/bin/thermal-engine

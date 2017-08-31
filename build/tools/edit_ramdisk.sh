@@ -20,6 +20,8 @@ GHLS=100
 GHLB=90
 SWAP=40
 VFS=100
+GLVL=6
+GFREQ=266666667
 elif [ $INTERACTIVE == 2 ]; then
 TLS="65 1017600:75 1190400:85"
 TLB="90 1382400:95"
@@ -38,6 +40,8 @@ GHLS=100
 GHLB=85
 SWAP=20
 VFS=40
+GLVL=7
+GFREQ=200000000
 elif [ $INTERACTIVE == 3 ]; then
 TLS="40 1017600:50 1190400:60 1305600:70 1382400:80 1401600:90"
 TLB="75 1382400:80 1747200:85"
@@ -56,6 +60,8 @@ GHLS=95
 GHLB=80
 SWAP=60
 VFS=100
+GLVL=6
+GFREQ=266666667
 fi
 DT2W=$(cat /tmp/aroma/dt2w.prop | cut -d '=' -f2)
 if [ $DT2W == 1 ]; then
@@ -176,9 +182,9 @@ echo "write /sys/devices/soc.0/qcom,bcl.56/hotplug_soc_mask 32" >> $CONFIGFILE
 echo "write /sys/devices/soc.0/qcom,bcl.56/mode enable" >> $CONFIGFILE
 echo "" >> $CONFIGFILE
 echo "# GPU SETTINGS" >> $CONFIGFILE
-echo "write /sys/devices/soc.0/1c00000.qcom,kgsl-3d0/kgsl/kgsl-3d0/default_pwrlevel 6" >> $CONFIGFILE
-echo "write /sys/devices/soc.0/1c00000.qcom,kgsl-3d0/kgsl/kgsl-3d0/min_pwrlevel 6" >> $CONFIGFILE
-echo "write /sys/devices/soc.0/1c00000.qcom,kgsl-3d0/kgsl/kgsl-3d0/devfreq/min_freq 266666667" >> $CONFIGFILE
+echo "write /sys/devices/soc.0/1c00000.qcom,kgsl-3d0/kgsl/kgsl-3d0/default_pwrlevel $GLVL" >> $CONFIGFILE
+echo "write /sys/devices/soc.0/1c00000.qcom,kgsl-3d0/kgsl/kgsl-3d0/min_pwrlevel $GLVL" >> $CONFIGFILE
+echo "write /sys/devices/soc.0/1c00000.qcom,kgsl-3d0/kgsl/kgsl-3d0/devfreq/min_freq $GFREQ" >> $CONFIGFILE
 echo "" >> $CONFIGFILE
 echo "# CPU BOOST PARAMETERS" >> $CONFIGFILE
 echo "write /sys/module/cpu_boost/parameters/input_boost_freq \"$BOOST\"" >> $CONFIGFILE
