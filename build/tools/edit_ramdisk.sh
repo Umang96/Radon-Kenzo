@@ -5,7 +5,7 @@ INTERACTIVE=$(cat /tmp/aroma/interactive.prop | cut -d '=' -f2)
 if [ $INTERACTIVE == 1 ]; then
 TLS="50 1017600:60 1190400:70 1305600:80 1382400:90 1401600:95"
 TLB="85 1382400:90 1747200:95"
-BOOST="0:1190400 4:998400"
+BOOST="0:1190400 4:1113600"
 HSFS=1440000
 HSFB=1382400
 FMS=691200
@@ -41,7 +41,7 @@ VFS=40
 elif [ $INTERACTIVE == 3 ]; then
 TLS="40 1017600:50 1190400:60 1305600:70 1382400:80 1401600:90"
 TLB="75 1382400:80 1747200:85"
-BOOST="0:1305600 4:1190400"
+BOOST="0:1305600 4:1305600"
 HSFS=1440000
 HSFB=1382400
 FMS=691200
@@ -97,12 +97,12 @@ echo "" >> $CONFIGFILE
 COLOR=$(cat /tmp/aroma/color.prop | cut -d '=' -f2)
 echo "# KCAL" >> $CONFIGFILE
 if [ $COLOR == 1 ]; then
-echo "write /sys/devices/platform/kcal_ctrl.0/kcal_sat 271" >> $CONFIGFILE
+echo "write /sys/devices/platform/kcal_ctrl.0/kcal_sat 269" >> $CONFIGFILE
 echo "write /sys/devices/platform/kcal_ctrl.0/kcal_val 256" >> $CONFIGFILE
 echo "write /sys/devices/platform/kcal_ctrl.0/kcal_cont 256" >> $CONFIGFILE
 echo "write /sys/devices/platform/kcal_ctrl.0/kcal \"254 252 232"\" >> $CONFIGFILE
 elif [ $COLOR == 2 ]; then
-echo "write /sys/devices/platform/kcal_ctrl.0/kcal_sat 271" >> $CONFIGFILE
+echo "write /sys/devices/platform/kcal_ctrl.0/kcal_sat 269" >> $CONFIGFILE
 echo "write /sys/devices/platform/kcal_ctrl.0/kcal_val 256" >> $CONFIGFILE
 echo "write /sys/devices/platform/kcal_ctrl.0/kcal_cont 256" >> $CONFIGFILE
 echo "write /sys/devices/platform/kcal_ctrl.0/kcal \"254 252 240"\" >> $CONFIGFILE
