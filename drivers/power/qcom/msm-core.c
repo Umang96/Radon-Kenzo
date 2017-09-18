@@ -297,7 +297,7 @@ static __ref int do_sampling(void *data)
 	static int prev_temp[NR_CPUS];
 
 	while (!kthread_should_stop()) {
-		wait_for_completion(&sampling_completion);
+		wait_for_completion_interruptible(&sampling_completion);
 		cancel_delayed_work(&sampling_work);
 
 		mutex_lock(&kthread_update_mutex);
@@ -319,7 +319,8 @@ static __ref int do_sampling(void *data)
 		if (!poll_ms)
 			goto unlock;
 
-		schedule_delayed_work(&sampling_work,
+		queue_delayed_work(system_power_efficient_wq,
+			&sampling_work,
 			msecs_to_jiffies(poll_ms));
 unlock:
 		mutex_unlock(&kthread_update_mutex);
@@ -341,6 +342,14 @@ static void clear_static_power(struct cpu_static_info *sp)
 		kfree(sp->power[i]);
 	kfree(sp->power);
 	kfree(sp);
+}
+
+static BLOCKING_NOTIFIER_HEAD(msm_core_stats_notifier_list);
+
+int register_cpu_pwr_stats_ready_notifier(struct notifier_block *nb)
+{
+	return blocking_notifier_chain_register(&msm_core_stats_notifier_list,
+						nb);
 }
 
 static int update_userspace_power(struct sched_params __user *argp)
@@ -418,6 +427,9 @@ static int update_userspace_power(struct sched_params __user *argp)
 			}
 			cpu_stats[cpu].ptable = per_cpu(ptable, cpu);
 			repopulate_stats(cpu);
+
+			blocking_notifier_call_chain(
+				&msm_core_stats_notifier_list, cpu, NULL);
 		}
 	}
 	spin_unlock(&update_lock);
@@ -546,6 +558,7 @@ static int msm_core_stats_init(struct device *dev, int cpu)
 		pstate[i].freq = cpu_node->sp->table[i].frequency;
 
 	per_cpu(ptable, cpu) = pstate;
+
 	return 0;
 }
 
