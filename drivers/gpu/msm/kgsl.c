@@ -40,7 +40,6 @@
 #include "kgsl_trace.h"
 #include "kgsl_sync.h"
 #include "kgsl_compat.h"
-#include "kgsl_pool.h"
 
 #undef MODULE_PARAM_PREFIX
 #define MODULE_PARAM_PREFIX "kgsl."
@@ -2589,7 +2588,6 @@ long kgsl_ioctl_map_user_mem(struct kgsl_device_private *dev_priv,
 	struct kgsl_map_user_mem *param = data;
 	struct kgsl_mem_entry *entry = NULL;
 	struct kgsl_process_private *private = dev_priv->process_priv;
-	struct kgsl_mmu *mmu = &dev_priv->device->mmu;
 	unsigned int memtype;
 
 	/*
@@ -2599,7 +2597,7 @@ long kgsl_ioctl_map_user_mem(struct kgsl_device_private *dev_priv,
 
 	if (param->flags & KGSL_MEMFLAGS_SECURE) {
 		/* Log message and return if context protection isn't enabled */
-		if (!kgsl_mmu_is_secured(mmu)) {
+		if (!kgsl_mmu_is_secured(&dev_priv->device->mmu)) {
 			dev_WARN_ONCE(dev_priv->device->dev, 1,
 				"Secure buffer not supported");
 			return -EOPNOTSUPP;
@@ -2666,11 +2664,10 @@ long kgsl_ioctl_map_user_mem(struct kgsl_device_private *dev_priv,
 		goto error;
 
 	if ((param->flags & KGSL_MEMFLAGS_SECURE) &&
-		(entry->memdesc.size & mmu->secure_align_mask)) {
+		!IS_ALIGNED(entry->memdesc.size, SZ_1M)) {
 			KGSL_DRV_ERR(dev_priv->device,
-				"Secure buffer size %lld not aligned to %x alignment",
-				entry->memdesc.size,
-				mmu->secure_align_mask + 1);
+				"Secure buffer size %lld must be 1MB aligned",
+				entry->memdesc.size);
 		result = -EINVAL;
 		goto error_attach;
 	}
@@ -3083,7 +3080,7 @@ static struct kgsl_mem_entry *gpumem_alloc_entry(
 		mmapsize = size;
 
 	/* For now only allow allocations up to 4G */
-	if (size == 0 || size > UINT_MAX)
+	if (size > UINT_MAX)
 		return ERR_PTR(-EINVAL);
 
 	/* Only allow a mmap size that we can actually mmap */
@@ -4183,11 +4180,8 @@ int kgsl_device_platform_probe(struct kgsl_device *device)
 	if (status)
 		goto error_close_mmu;
 
-	/* Initialize the memory pools */
-	kgsl_init_page_pools(device->pdev);
-
 	status = kgsl_allocate_global(device, &device->memstore,
-		KGSL_MEMSTORE_SIZE, 0, KGSL_MEMDESC_CONTIG);
+		KGSL_MEMSTORE_SIZE, 0, 0);
 
 	if (status != 0) {
 		KGSL_DRV_ERR(device, "kgsl_allocate_global failed %d\n",
@@ -4261,8 +4255,6 @@ void kgsl_device_platform_remove(struct kgsl_device *device)
 	destroy_workqueue(device->events_wq);
 
 	kgsl_device_snapshot_close(device);
-
-	kgsl_exit_page_pools();
 
 	kgsl_pwrctrl_uninit_sysfs(device);
 
