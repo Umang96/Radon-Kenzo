@@ -41,8 +41,6 @@
 #include <linux/ktime.h>
 #include <linux/thermal.h>
 #include "pmic-voter.h"
-#include <linux/thermal.h>
-#include <linux/device.h>
 
 #ifdef CONFIG_FORCE_FAST_CHARGE
 #include <linux/fastcharge.h>
@@ -417,7 +415,7 @@ module_param_named(
 	int, S_IRUSR | S_IWUSR
 );
 
-static int smbchg_default_hvdcp_icl_ma = 2000;
+static int smbchg_default_hvdcp_icl_ma = 1500;
 module_param_named(
 	default_hvdcp_icl_ma, smbchg_default_hvdcp_icl_ma,
 	int, S_IRUSR | S_IWUSR
@@ -1827,7 +1825,7 @@ static int smbchg_set_fastchg_current_raw(struct smbchg_chip *chip,
 #define USBIN_ACTIVE_PWR_SRC_BIT	BIT(1)
 #define DCIN_ACTIVE_PWR_SRC_BIT		BIT(0)
 #define PARALLEL_REENABLE_TIMER_MS	1000
-#define PARALLEL_CHG_THRESHOLD_CURRENT	2400
+#define PARALLEL_CHG_THRESHOLD_CURRENT	1800
 static bool smbchg_is_usbin_active_pwr_src(struct smbchg_chip *chip)
 {
 	int rc;
@@ -3534,6 +3532,7 @@ static void smbchg_external_power_changed(struct power_supply *psy)
 	if (force_fast_charge)
 		current_limit = 900;
 #endif
+
 	pr_smb(PR_MISC, "usb type = %s current_limit = %d\n",
 			usb_type_name, current_limit);
 
@@ -4390,7 +4389,6 @@ static void smbchg_reg_work(struct work_struct *work)
 			NOT_CHARGING_PERIOD_MS * HZ);
 }
 
-
 static void smbchg_hvdcp_det_work(struct work_struct *work)
 {
 	struct smbchg_chip *chip = container_of(work,
@@ -5191,6 +5189,17 @@ static int rerun_apsd(struct smbchg_chip *chip)
 	}
 
 	return rc;
+}
+
+static void smbchg_redetect_work(struct work_struct *work)
+{
+	struct smbchg_chip *chip = container_of(work,
+				struct smbchg_chip,
+				redetect_work.work);
+	int rc;
+	rc = rerun_apsd(chip);
+	if (rc)
+		pr_err("rerun_apsd error,exit\n");
 }
 
 #define SCHG_LITE_USBIN_HVDCP_5_9V		0x8
