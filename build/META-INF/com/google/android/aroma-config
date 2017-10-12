@@ -10,6 +10,8 @@ ini_set("force_colorspace","rgba");
 fontresload( "0", "ttf/Roboto-Regular.ttf", "12" );
 fontresload( "1", "ttf/Roboto-Regular.ttf", "16" ); 
 
+splash(2000, "radonsplash");
+
 theme("default");
 
 viewbox(
@@ -21,7 +23,7 @@ viewbox(
     "  RELEASED\t: <b><#selectbg_g>"+ini_get("rom_date")+"</#></b>\n\n\n" +
     "Press Next to Continue...",
 
-    "@welcome"
+	""
 );
 
 alert(
@@ -82,6 +84,14 @@ install(
   "\nInstalling",
   "<@center>\nInstalling Radon Kernel\nPlease wait</@>",
   "")
+);
+
+viewbox(
+    "\n\n<@center>Try Radon Kernel Control</@>",
+
+    "\n\nCustom profile based kernel manager\n\n\n\n\nConsider installing the radon kernel control app from play store if you like this kernel, it's a custom profile based kernel management app using which you can change kernel settings in one click.\n\nYou can switch between radon profiles and you can also make your own profiles if you want to change any settings manually like cpu, gpu frequency etc.\n\nI am always adding more features in the app to make experience better, please send me your suggestions if any.",
+
+    "@radonicon"
 );
 
 ini_set("text_next", "Finish");
