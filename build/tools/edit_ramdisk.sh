@@ -5,7 +5,7 @@ INTERACTIVE=$(cat /tmp/aroma/interactive.prop | cut -d '=' -f2)
 if [ $INTERACTIVE == 1 ]; then
 TLS="50 1017600:60 1190400:70 1305600:80 1382400:90 1401600:95"
 TLB="85 1382400:90 1747200:95"
-BOOST="0:1190400 4:1113600"
+BOOST="0"
 HSFS=1440000
 HSFB=1382400
 FMS=691200
@@ -15,10 +15,10 @@ FMAB=1843200
 TR=20000
 AID=N
 ABST=0
-TBST=1
+TBST=0
 GHLS=100
 GHLB=90
-SWAP=40
+SWAP=30
 VFS=100
 elif [ $INTERACTIVE == 2 ]; then
 TLS="65 1017600:75 1190400:85"
@@ -54,7 +54,7 @@ ABST=1
 TBST=1
 GHLS=95
 GHLB=80
-SWAP=60
+SWAP=40
 VFS=100
 fi
 DT2W=$(cat /tmp/aroma/dt2w.prop | cut -d '=' -f2)
@@ -168,13 +168,6 @@ echo "write /sys/devices/system/cpu/cpu4/cpufreq/interactive/min_sample_time 400
 echo "write /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq $FMB" >> $CONFIGFILE
 echo "write /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq $FMAB" >> $CONFIGFILE
 echo "" >> $CONFIGFILE
-echo "# ENABLE BCL & CORE CTL" >> $CONFIGFILE
-echo "write /sys/module/msm_thermal/core_control/enabled 1">> $CONFIGFILE
-echo "write /sys/devices/soc.0/qcom,bcl.56/mode disable" >> $CONFIGFILE
-echo "write /sys/devices/soc.0/qcom,bcl.56/hotplug_mask 48" >> $CONFIGFILE
-echo "write /sys/devices/soc.0/qcom,bcl.56/hotplug_soc_mask 32" >> $CONFIGFILE
-echo "write /sys/devices/soc.0/qcom,bcl.56/mode enable" >> $CONFIGFILE
-echo "" >> $CONFIGFILE
 echo "# GPU SETTINGS" >> $CONFIGFILE
 echo "write /sys/devices/soc.0/1c00000.qcom,kgsl-3d0/kgsl/kgsl-3d0/default_pwrlevel 6" >> $CONFIGFILE
 echo "write /sys/devices/soc.0/1c00000.qcom,kgsl-3d0/kgsl/kgsl-3d0/min_pwrlevel 6" >> $CONFIGFILE
@@ -182,7 +175,7 @@ echo "write /sys/devices/soc.0/1c00000.qcom,kgsl-3d0/kgsl/kgsl-3d0/devfreq/min_f
 echo "" >> $CONFIGFILE
 echo "# CPU BOOST PARAMETERS" >> $CONFIGFILE
 echo "write /sys/module/cpu_boost/parameters/input_boost_freq \"$BOOST\"" >> $CONFIGFILE
-echo "write /sys/module/cpu_boost/parameters/input_boost_ms 50" >> $CONFIGFILE
+echo "write /sys/module/cpu_boost/parameters/input_boost_ms 40" >> $CONFIGFILE
 echo "" >> $CONFIGFILE
 echo "# SET IO SCHEDULER" >> $CONFIGFILE
 echo "setprop sys.io.scheduler \"fiops\"" >> $CONFIGFILE
