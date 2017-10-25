@@ -21,21 +21,21 @@ GHLB=90
 SWAP=30
 VFS=100
 elif [ $INTERACTIVE == 2 ]; then
-TLS="65 1017600:75 1190400:85"
-TLB="90 1382400:95"
+TLS="75 1017600:85 1190400:95"
+TLB="90 1305600:95"
 BOOST="0"
 HSFS=1305600
-HSFB=1190400
+HSFB=1612600
 FMS=691200
 FMB=883200
 FMAS=1305600
 FMAB=1612600
-TR=30000
+TR=40000
 AID=Y
 ABST=0
 TBST=0
 GHLS=100
-GHLB=85
+GHLB=100
 SWAP=20
 VFS=40
 elif [ $INTERACTIVE == 3 ]; then
@@ -201,6 +201,10 @@ echo "write /sys/module/wakeup/parameters/enable_wlan_ws 0" >> $CONFIGFILE
 echo "write /sys/module/wakeup/parameters/enable_timerfd_ws 0" >> $CONFIGFILE
 echo "write /sys/module/wakeup/parameters/enable_netlink_ws 0" >> $CONFIGFILE
 echo "write /sys/module/wakeup/parameters/enable_netmgr_wl_ws 0" >> $CONFIGFILE
+echo "" >> $CONFIGFILE
+echo "# CPU & GPU UV" >> $CONFIGFILE
+echo "write /sys/devices/system/cpu/cpu0/cpufreq/GPU_mV_table \"700 720 760 800 860 900 920 980 1020\"" >> $CONFIGFILE
+echo "write /sys/devices/system/cpu/cpu0/cpufreq/UV_mV_table \"740 760 820 920 980 1020 1050 1060 1070 780 800 870 910 970 1020 1040\"" >> $CONFIGFILE
 echo "" >> $CONFIGFILE
 echo "# RUN USERTWEAKS SERVICE" >> $CONFIGFILE
 echo "start usertweaks" >> $CONFIGFILE
