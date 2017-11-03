@@ -1,6 +1,6 @@
 #!/sbin/sh
  #
- # Copyright © 2017, Umang Leekha "umang96" <umangleekha3@gmail.com> 
+ # Copyright Â© 2017, Umang Leekha "umang96" <umangleekha3@gmail.com> 
  #
  # Live ramdisk patching script
  #
@@ -46,6 +46,10 @@ cp -f /tmp/cpio /sbin/cpio
 cd /tmp/
 /sbin/busybox dd if=/dev/block/bootdevice/by-name/boot of=./boot.img
 ./unpackbootimg -i /tmp/boot.img
+if [ $(cat /tmp/boot.img-cmdline | grep -c "snd-soc-msm8x16-wcd.high_perf_mode=1 snd-soc-msm8x16-wcd.dig_core_collapse_enable=0") = 1 ];then
+echo "Found shox Audio Mod cmdline, add it"
+cmd=$cmd" snd-soc-msm8x16-wcd.high_perf_mode=1 snd-soc-msm8x16-wcd.dig_core_collapse_enable=0"
+fi
 mkdir /tmp/ramdisk
 cp /tmp/boot.img-ramdisk.gz /tmp/ramdisk/
 cd /tmp/ramdisk/
