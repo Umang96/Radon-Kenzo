@@ -99,3 +99,5 @@ build/tools/Image*
 !qc.patch
 !goodix.patch
 !build/tools/gxfingerprint.default.so
+!build/tools/old-thermal/lib/*
+!build/tools/old-thermal/lib64/*
