@@ -139,6 +139,9 @@ echo "write /sys/devices/soc.0/qcom,bcl.56/mode disable" >> $CONFIGFILE
 echo "write /sys/devices/soc.0/qcom,bcl.56/hotplug_mask 0" >> $CONFIGFILE
 echo "write /sys/devices/soc.0/qcom,bcl.56/hotplug_soc_mask 0" >> $CONFIGFILE
 echo "write /sys/devices/soc.0/qcom,bcl.56/mode disable" >> $CONFIGFILE
+echo "chmod 0644 /sys/module/msm_thermal/vdd_restriction/enable" >> $CONFIGFILE
+echo "write /sys/module/msm_thermal/vdd_restriction/enable 0" >> $CONFIGFILE
+echo "chmod 0444 /sys/module/msm_thermal/vdd_restriction/enable" >> $CONFIGFILE
 echo "" >> $CONFIGFILE
 echo "# BRING CORES ONLINE" >> $CONFIGFILE
 echo "write /sys/devices/system/cpu/cpu0/online 1" >> $CONFIGFILE
