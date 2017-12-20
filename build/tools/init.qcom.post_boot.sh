@@ -27,6 +27,9 @@ function get-set-forall() {
     write /proc/sys/kernel/sched_upmigrate 95
     write /proc/sys/kernel/sched_downmigrate 85
 
+    # android background processes are set to nice 10. Never schedule these on the a57s.
+    write /proc/sys/kernel/sched_upmigrate_min_nice 9
+
     write /proc/sys/kernel/sched_window_stats_policy 2
     write /proc/sys/kernel/sched_ravg_hist_size 5
 
