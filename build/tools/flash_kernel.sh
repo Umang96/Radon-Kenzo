@@ -20,10 +20,10 @@ qc=$(cat /tmp/aroma/crate.prop | cut -d '=' -f2)
 therm=$(cat /tmp/aroma/thermal.prop | cut -d '=' -f2)
 nos1=`cat /system/build.prop | grep ro.product.name=`
 nos2=${nos1:16:8}
-if [ $nos2 == "nitrogen" ]; then
-echo "NitrogenOS detected, forcing permissive"
-selinx=3
-fi
+#if [ $nos2 == "nitrogen" ]; then
+#echo "NitrogenOS detected, forcing permissive"
+#selinx=3
+#fi
 zim=/tmp/Image1
 if [ $qc -eq 1 ]; then
 dim=/tmp/dt1.img
@@ -31,11 +31,11 @@ elif [ $qc -eq 2 ]; then
 dim=/tmp/dt2.img
 fi
 cmd="androidboot.hardware=qcom ehci-hcd.park=3 androidboot.bootdevice=7824900.sdhci lpm_levels.sleep_disabled=1 ramoops_memreserve=4M"
-#if [ $selinx -eq 2 ]; then
-#cmd=$cmd" androidboot.selinux=enforcing"
-#elif [ $selinx -eq 3 ]; then
+if [ $selinx -eq 2 ]; then
+cmd=$cmd" androidboot.selinux=enforcing"
+elif [ $selinx -eq 3 ]; then
 cmd=$cmd" androidboot.selinux=permissive"
-#fi
+fi
 if [ $therm -eq 1 ]; then
 echo "Using old thermal engine"
 cp -rf /tmp/old-thermal/* /system/vendor/
