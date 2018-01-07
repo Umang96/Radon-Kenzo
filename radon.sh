@@ -33,7 +33,7 @@ Start=$(date +"%s")
 DTBTOOL=$KERNEL_DIR/dtbTool
 cd $KERNEL_DIR
 export ARCH=arm64
-export CROSS_COMPILE="/home/$USER/toolchain/aarch64_4.9_8.0.0_r12/bin/aarch64-linux-android-"
+export CROSS_COMPILE="/home/$USER/kernel/toolchains/android-8.1.0_r2/bin/aarch64-linux-android-"
 echo -e "$yellow Running make clean before compiling \n$white"
 make clean > /dev/null
 if [ $qc == 2 ]; then
@@ -43,9 +43,9 @@ elif [ $qc == 1 ]; then
 git apply -R qc.patch > /dev/null 2>&1
 fi
 make lineageos_kenzo_defconfig
-export KBUILD_BUILD_HOST="lenovo"
+export KBUILD_BUILD_HOST="ryzen"
 export KBUILD_BUILD_USER="umang"
-make -j4
+make -j16
 time=$(date +"%d-%m-%y-%T")
 $DTBTOOL -2 -o $KERNEL_DIR/arch/arm64/boot/dt.img -s 2048 -p $KERNEL_DIR/scripts/dtc/ $KERNEL_DIR/arch/arm/boot/dts/
 if ([ $qc -eq 1 ]); then
